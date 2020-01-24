@@ -189,7 +189,6 @@ align-self
 				<textarea id="text-input" name="userInput" form="text-form" required></textarea>
 			</div>
 			<form id="text-form" action="results_1201.py" method="post">
-<!--			<form id="text-form" onsubmit="tryXHR()" action="ajax.py" method="post"> -->
 			<input type="submit" id="submit-text" value="Summarize"/>
 				</form>
 		</section>
