@@ -195,13 +195,13 @@ align-self
 				</a>
 			<div id="text-container">
 				<textarea id="text-input" name="userInput" form="text-form" required></textarea>
-			</div>
-			<form id="text-form" action="''')
-print(results_file,sep="") 
+			</div>'''+
+			'''<form id="text-form" action="''')
+print(results_file,sep='') 
 print('''" method="post">
 			<input type="submit" id="submit-text" value="Summarize"/>
-				</form>
-		</section>
+				</form>'''+
+			'''</section>
 <!--		end of input-section-->
 
 		<section id="summary-section">

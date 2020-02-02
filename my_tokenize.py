@@ -5,7 +5,10 @@ Tokenizer
 
 import re
 
-def normalizeEndingPunctuation(str, newLineEndings=False, keepOriginalPunctuation=False):
+def normalizeEndingPunctuation(str, newLineEndings=False, keepOriginalPunctuation=True):
+    """Normalizes the punctuation at the end of sentences to vertical bar ('|'),
+       setting it up to be split by that character
+    """
     if (newLineEndings):
         sent_end_chars = ('?','?\s*', '!','!\s*','\n','\r', '.')
     else:
@@ -14,31 +17,39 @@ def normalizeEndingPunctuation(str, newLineEndings=False, keepOriginalPunctuatio
         # remove new lines, because most are not actually ends of sentences
         str = str.replace('\n',' ')
         sent_end_chars = ('?','?\s*', '!','!\s*','\r', '.')
-    # sent_end_chars = ('?','?\s*', '!','!\s*','\s*?','\s*!',)
-    normChar = '|'
+    normalizingCharacter = '|'
     str2 = str
     for c in sent_end_chars:
         if (keepOriginalPunctuation):
-            normChar = c + normChar
-        str2 = str2.replace(c,normChar)
-        normChar = '|'
+            # add original sentence punctuation before the normalizing character
+            normalizingCharacter = c + normalizingCharacter
+        str2 = str2.replace(c,normalizingCharacter)
+        # remove this sentence's punctuation, and reset the normalizing character
+        normalizingCharacter = '|' 
     return str2
 
-def sent_tokenize(strs, newLineEndings=False, keepOriginalPunctuation=False):
+def sent_tokenize(strs, newLineEndings=False, keepOriginalPunctuation=True):
     strs2 = normalizeEndingPunctuation(strs, newLineEndings, keepOriginalPunctuation)
     strs2 = strs2.replace('.\s*','.')
+    # split the sentences apart using the normalizing character
     return strs2.split('|')
 
 
 
 
 
-_re_word_start = r"[^\(\"\`{\[:;&\#\*@\)}\]\-,]"
+
+
+
+
+# ===== region Word Tokenize ==================================================
+
 """Excludes some characters from starting word tokens"""
-_re_non_word_chars = r"(?:[?!)\";}\]\*:@\'\({\[])"
+_re_word_start = r"[^\(\"\`{\[:;&\#\*@\)}\]\-,]"
 """Characters that cannot appear within words"""
-_re_multi_char_punct = r"(?:\-{2,}|\.{2,}|(?:\.\s){2,}\.)"
+_re_non_word_chars = r"(?:[?!)\";}\]\*:@\'\({\[])"
 """Hyphen and ellipsis are multi-character punctuation"""
+_re_multi_char_punct = r"(?:\-{2,}|\.{2,}|(?:\.\s){2,}\.)"
 
 myRe = r'''(
     %(MultiChar)s
@@ -53,6 +64,7 @@ myRe = r'''(
     |
     \S
 )'''
+
 _re_word_tokenizer = re.compile(
     myRe
     % {
@@ -63,9 +75,9 @@ _re_word_tokenizer = re.compile(
     re.UNICODE | re.VERBOSE,
 )
 
-"""
-Main Tokenize Function
-"""
+
 def word_tokenize(str):
     """Tokenize a string to split off punctuation other than periods"""
     return _re_word_tokenizer.findall(str)
+
+# END ===== region Word Tokenize

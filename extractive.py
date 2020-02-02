@@ -60,7 +60,12 @@ In LDA, each document may be viewed as a mixture of various topics where each do
 For example, an LDA model might have topics that can be classified as CAT_related and DOG_related. A topic has probabilities of generating various words, such as milk, meow, and kitten, which can be classified and interpreted by the viewer as "CAT_related". Naturally, the word cat itself will have high probability given this topic. The DOG_related topic likewise has probabilities of generating each word: puppy, bark, and bone might have high probability. Words without special relevance, such as "the" (see function word), will have roughly even probability between classes (or can be placed into a separate category). A topic is neither semantically nor epistemologically strongly defined. It is identified on the basis of automatic detection of the likelihood of term co-occurrence. A lexical word may occur in several topics with a different probability, however, with a different typical set of neighboring words in each topic.
 """
 
-# ### Creating Dictionary Table
+# END ===== region load text
+
+
+
+
+# ===== region Creating Dictionary Table ==================================================
 
 def create_frequency_table(article) -> dict:
 	"""Creates a table that shows the frequency of each word's occurence.
@@ -92,12 +97,14 @@ def create_frequency_table(article) -> dict:
 
 	# 3. Create dictionary for the word frequency table
 	freq_tab = dict() #this is the return value
-	# Remove stop words
+	
+	# 4. Remove stop words
 	stopWords = stopwords	
 	for word in words:
 		# word = stemmer.stem(word) # removed 1719
+		word = word.lower() # (I think stemmer does this...)
 		if word in stopWords:
-			continue # then we don't need this
+			continue # this is a stopword, we don't need it
 		if word in freq_tab: #if we already have it
 			freq_tab[word] += 1
 		else:
@@ -105,74 +112,77 @@ def create_frequency_table(article) -> dict:
 
 	return freq_tab
 
-
-# In[ ]:
-
-
+# create a frequency table from the article we received
 freq_table = create_frequency_table(article)
-# freq_table
+
+# END ===== region Creating Dictionary Table
 
 
-# ## Tokenize the sentences using NLTK's `sent_tokenize`
-
-# In[ ]:
 
 
-# Tokenizing the sentences
+# ===== region Tokenize the sentences ==================================================
+
+# Tokenize the sentences using my copy of NLTK's `sent_tokenize`
 try:
 	sentences = sent_tokenize(article)
 	if (verbose_success):
 		print('\nYES tokenized the sentences!',sentences)
 except Exception as e:
 	print('\nNO error with sentences/sent_tokenize. error=',e)
-# sentences
+# END ===== region Tokenize the sentences
 
+
+
+
+
+# ===== region Find weighted frequencies ==================================================
 
 # ## Find weighted frequencies of the sentences
 # #### Used to prioritize sentences to identify which ones should be summarized
-# 1. first
-
-# In[ ]:
-
 
 # Algorithm for scoring a sentence by its words
 def find_weighted_frequencies(sentencesThatAre, inFrequencyTable) -> dict:
+	"""Calculates the weight of a sentence. This is done by using the frequency table
+	   that was filled in create_frequency_table() 
+	   
+	Arguments:
+	   sentencesThatAre: a list of tokenized sentences
+	   inFrequencyTable: a frequency table (dict) indicating the occurence count for unique words in the article
+	   
+	Returns:
+	   dict with the sentence as the key and it's calculated weight as the value
+	"""
 
-	sentenceWeight = dict()  # return variable
+	sentenceWeights = dict()  # return variable
 	if (verbose_ON):
 		print('\nSENTENCESTHATARE:',sentencesThatAre)
+	# TODO optimize this
 	for sentence in sentencesThatAre:
-		# print('\n\nSENTENCE IS ',sentence)
-		try:
-			sentenceLength = len(word_tokenize(sentence))
-			if (verbose_success):
-				print('\nlen is ',sentenceLength)
-		except Exception as e:
-			print('\nproblem word_tokenize 107:',e)
 		sentenceLength_withoutStops = 0
 		for wordFreq in inFrequencyTable:
+			# TODO is it 'lower' in wordFreq?
 			if wordFreq in sentence.lower(): #lowercase
 				sentenceLength_withoutStops += 1 # counting the word only if it isn't a stopword
-				if sentence in sentenceWeight: # if it already exists
-					sentenceWeight[sentence] += inFrequencyTable[wordFreq] # count it up
+				if sentence in sentenceWeights: # if it already exists
+					sentenceWeights[sentence] += inFrequencyTable[wordFreq] # count it up
 				else:
-					sentenceWeight[sentence] = inFrequencyTable[wordFreq]
-		# normalize the sentenceWeight
-		try:
-			# print('\n trying sentenceWeight[sentence] where sentenceWeight is\n',sentenceWeight,'\nand sentence is\n',sentence)
-			sentenceWeight[sentence] = (sentenceWeight[sentence] / sentenceLength_withoutStops)
-		except Exception as e:
-			# print('\ntrying to divide by zero? let\'s just call it zero')
-			sentenceWeight[sentence] = 0
-	return sentenceWeight
+					sentenceWeights[sentence] = inFrequencyTable[wordFreq]
+		# normalize the sentenceWeights
+		if (sentenceLength_withoutStops == 0):
+			sentenceWeights[sentence] = 0
+		else:
+			sentenceWeights[sentence] = (sentenceWeights[sentence] / sentenceLength_withoutStops)
+		
+	return sentenceWeights
 
 
-# In[ ]:
-
-
-# sentence_scores = _calculate_sentence_scores(sentences, freq_table)
+# 
 sentence_scores = find_weighted_frequencies(sentences, freq_table)
-# sentence_scores.values()
+
+# END ===== region Find weighted frequencies
+
+
+
 
 
 # now that the sentences have scores (weighted values)...
