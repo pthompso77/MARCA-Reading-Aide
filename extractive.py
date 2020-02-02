@@ -1,16 +1,30 @@
 #!/usr/bin/env python3
 # maybe remove this!
+
+
+'''
+set verbose_success to True to see all successful "try" block messages
+'''
+verbose_success = False
+
+'''
+SET verbose_ON to True to see other print statement messages
+'''
+verbose_ON = False
+
 try:
 	import sys, os
 	os.environ["NLTK_DATA"] = "/home/pthompso/nltk_data"
 	sys.path.append("/home/pthompso/nltk_data")
-	print("\nYES0 set vars")
+	if (verbose_success):
+		print("\nYES0 set vars")
 except Exception as e:
 	print('\nno0 e:',e)
 
 try:
 	stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
-	print('\n YES1 got stopwords manually')
+	if (verbose_success):
+		print('\n YES1 got stopwords manually')
 except Exception as e:
 	print("error from extractive.py: stopwords. e=",e)
 
@@ -18,8 +32,9 @@ except Exception as e:
 try:
 	# from nltk.tokenize import word_tokenize, sent_tokenize
 	# from nltk.tokenize import sent_tokenize
-	from my_tokenize import word_tokenize, sent_tokenize
-	print("\nYES2 got my word_tokenize")
+	from my_tokenize import sent_tokenize, word_tokenize
+	if (verbose_success):
+		print("\nYES2 got my sent_tokenize, word_tokenize")
 except Exception as e:
 	print("\nNO2 error from extractive.py:  from my_tokenize import word_tokenize \ne=", e)
 
@@ -81,7 +96,8 @@ freq_table = create_frequency_table(article)
 # Tokenizing the sentences
 try:
 	sentences = sent_tokenize(article)
-	print('\nYES tokenized the sentences!',sentences)
+	if (verbose_success):
+		print('\nYES tokenized the sentences!',sentences)
 except Exception as e:
 	print('\nNO error with sentences/sent_tokenize. error=',e)
 # sentences
@@ -98,12 +114,14 @@ except Exception as e:
 def find_weighted_frequencies(sentencesThatAre, inFrequencyTable) -> dict:
 
 	sentenceWeight = dict()  # return variable
-	print('\nSENTENCESTHATARE:',sentencesThatAre)
+	if (verbose_ON):
+		print('\nSENTENCESTHATARE:',sentencesThatAre)
 	for sentence in sentencesThatAre:
 		# print('\n\nSENTENCE IS ',sentence)
 		try:
 			sentenceLength = len(word_tokenize(sentence))
-			# print('\nlen is ',sentenceLength)
+			if (verbose_success):
+				print('\nlen is ',sentenceLength)
 		except Exception as e:
 			print('\nproblem word_tokenize 107:',e)
 		sentenceLength_withoutStops = 0
@@ -119,7 +137,7 @@ def find_weighted_frequencies(sentencesThatAre, inFrequencyTable) -> dict:
 			# print('\n trying sentenceWeight[sentence] where sentenceWeight is\n',sentenceWeight,'\nand sentence is\n',sentence)
 			sentenceWeight[sentence] = (sentenceWeight[sentence] / sentenceLength_withoutStops)
 		except Exception as e:
-			print('\ntrying to divide by zero? let\'s just call it zero')
+			# print('\ntrying to divide by zero? let\'s just call it zero')
 			sentenceWeight[sentence] = 0
 	return sentenceWeight
 
@@ -216,10 +234,12 @@ def doArticleSummary(article):
 
 	#producing the summary
 	article_summary = finalizeSummary(sentences, sentence_scores, 1.0 * threshold)
-	print('\nextractive article summary:',article_summary,'\n[end summary]')
+	if (verbose_ON):
+		print('\nextractive article summary:',article_summary,'\n[end summary]')
 	return article_summary
 
 # print("article:",article,"summary:",doArticleSummary(article),sep='\n\n')
 
 if __name__ == "__main__":
-	print("\n\n__name__ == __main__")
+	if (verbose_ON):
+		print("\n\n__name__ == __main__")
