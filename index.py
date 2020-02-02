@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+'''
+set the name of the results file to be used for processing the summary
+(entered as the action in form with id="text-form")
+'''
+results_file = "results.py"
+
+
+
 print('Content-type: text/html\r\n\r\n')
 
 print ('''
@@ -188,7 +196,7 @@ align-self
 			<div id="text-container">
 				<textarea id="text-input" name="userInput" form="text-form" required></textarea>
 			</div>
-			<form id="text-form" action="results_1201.py" method="post">
+			<form id="text-form" action="''' + results_file + '''" method="post">
 			<input type="submit" id="submit-text" value="Summarize"/>
 				</form>
 		</section>
