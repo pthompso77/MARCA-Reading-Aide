@@ -10,8 +10,8 @@ results_file = "results.py"
 
 print('Content-type: text/html\r\n\r\n')
 
-print ('''
-<!doctype html>
+
+print ('''<!doctype html>
 <head>
 	<title>Summarize!</title>
 	<script src="js/xhr.js"></script>
@@ -196,7 +196,9 @@ align-self
 			<div id="text-container">
 				<textarea id="text-input" name="userInput" form="text-form" required></textarea>
 			</div>
-			<form id="text-form" action="''' + results_file + '''" method="post">
+			<form id="text-form" action="''')
+print(results_file,sep="") 
+print('''" method="post">
 			<input type="submit" id="submit-text" value="Summarize"/>
 				</form>
 		</section>
