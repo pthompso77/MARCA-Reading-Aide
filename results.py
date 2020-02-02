@@ -46,12 +46,12 @@ nameOfThisFile = "results.py"
 
 
 
-# =====> region HTML print ==================================================
+# =====> region HTML comments ==================================================
 
 print('Content-type: text/html\r\n\r\n')
 print('<!--')
 
-# END <===== region HTML print
+# END <===== region HTML comments
 
 
 
@@ -104,7 +104,7 @@ At a very high level, summarization algorithms try to find subsets of objects (l
  For as in this world, head winds are far more prevalent than winds from astern (that is, if you never violate the Pythagorean maxim), so for the most part the Commodore on the quarter-deck gets his atmosphere at second hand from the sailors on the forecastle.
  He thinks he breathes it first; but not so.
  In much the same way do the commonalty lead their leaders in many other things, at the same time that the leaders little suspect it."""
-# ===== END region get HTML form data 
+# END ===== region get HTML form data 
 
 
 
@@ -128,11 +128,12 @@ except Exception as e:
 
 	# print('got keyWordsPhrases',keyWordsPhrases)
 
-# ===== END region summarize logic 
+# END ===== region summarize logic 
 
 
 
 
+# ===== region print HTML ==================================================
 
 print(' -->')
 
@@ -399,3 +400,5 @@ At a very high level, summarization algorithms try to find subsets of objects (l
 </div>
 </body>
 ''')
+
+# END ===== region print HTML 
