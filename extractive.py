@@ -216,7 +216,7 @@ def doArticleSummary(article):
 
 	#tokenizing the sentences
 #	 sentences = #sent_tokenize(article)
-	sentences = sent_tokenize(article)
+	sentences = sent_tokenize(article, keepOriginalPunctuation=True)
 #	 print("sentences",sentences)
 
 	#algorithm for scoring a sentence by its words
