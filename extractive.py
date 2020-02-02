@@ -182,7 +182,7 @@ def finalizeSummary(sentences, sentence_weight, threshold):
 	for sentence in sentences:
 		if (sentence in sentence_weight) and sentence_weight[sentence] >= (threshold):
 #			 print('yes',sentence_weight[sentence],'thresh:',threshold)
-			article_summary += sentence + ".<br>"
+			article_summary += sentence + "<br>"
 			sentence_counter += 1
 
 	return article_summary
