@@ -1,28 +1,77 @@
 #!/usr/bin/env python3
 
-print('Content-type: text/html\r\n\r\n')
-print('<!--')
-import cgi, cgitb; cgitb.enable()
-import os, traceback, sys
+# ===== region debug/testing ==================================================
 
 # set verbose_success to True to see all successful "try" block messages
 verbose_success = False
 
+# ===== END region debug/testing
+
+
+
+
+
+# ===== region imports ==================================================
+
+import cgi, cgitb; cgitb.enable()
+import os, traceback, sys
+# import my code `extractive`
+try:
+	import extractive
+	if (verbose_success):
+		print('\nimported extractive from results.py')
+except Exception as e:
+	print('\nfailed to import extractive. Exception is:',e)
+	exc_type, exc_value, exc_traceback = sys.exc_info()
+	print("*** print_tb:")
+	traceback.print_tb(exc_traceback, file=sys.stdout)
+
+# ===== END region imports
+
+
+
+
+
+# ===== region local variables ==================================================
+
+# references HTML field storage element (placeholder) for later retrieval
+html_form = cgi.FieldStorage()
+
 #set nameOfThisFile to the name of this file
 nameOfThisFile = "results.py"
 
+# END ===== region local variables
 
-form = cgi.FieldStorage()
+
+
+
+
+# =====> region HTML print ==================================================
+
+print('Content-type: text/html\r\n\r\n')
+print('<!--')
+
+# END <===== region HTML print
+
+
+
+
+
+# ===== region get HTML form data ==================================================
+
+# get full text from textarea name=userInput
 try:
-	userInput = form.getvalue('userInput')
-	if (verbose_success):
-		print('\nsuccess in results: got form\'s userInput')
+	userInput = html_form.getvalue('userInput')
+	if (verbose_success): 
+		print('\nsuccess in results: got html_form\'s userInput')
 except:
 	print('\nerror in results1')
 	userInput = '[error getting userInput]'
 
+# default value for full text if there was an error in retrieving from user
 if userInput is None:
 	print('\nOH NO! results: userInput is None')
+	#use a default/test value
 	userInput = '''There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on. The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query. Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.
 
 An example of a summarization problem is document summarization, which attempts to automatically produce an abstract from a given document. Sometimes one might be interested in generating a summary from a single source document, while others can use multiple source documents (for example, a cluster of articles on the same topic). This problem is called multi-document summarization. A related application is summarizing news articles. Imagine a system, which automatically pulls together news articles on a given topic (from the web), and concisely represents the latest news as a summary.
@@ -55,23 +104,18 @@ At a very high level, summarization algorithms try to find subsets of objects (l
  For as in this world, head winds are far more prevalent than winds from astern (that is, if you never violate the Pythagorean maxim), so for the most part the Commodore on the quarter-deck gets his atmosphere at second hand from the sailors on the forecastle.
  He thinks he breathes it first; but not so.
  In much the same way do the commonalty lead their leaders in many other things, at the same time that the leaders little suspect it."""
-# from camra import camIO
-# import camra
-try:
-	
-	import extractive
-	if (verbose_success):
-		print('\nimported extractive from results.py')
-except Exception as e:
-	print('\nfailed to import extractive. Exception is:',e)
-	exc_type, exc_value, exc_traceback = sys.exc_info()
-	print("*** print_tb:")
-	traceback.print_tb(exc_traceback, file=sys.stdout)
+# ===== END region get HTML form data 
+
+
+
+
+
+# ===== region summarize logic ==================================================
 
 try: #try to get the 'processed' text from the processing engine
 	if (verbose_success):
 		print('\ntrying in results, userinput:',userInput)
-	# keyWordsPhrases, argmnts = camra.summarizeThisText(userInput) #form.getvalue('userInput')
+	# keyWordsPhrases, argmnts = camra.summarizeThisText(userInput) #html_form.getvalue('userInput')
 	# keyWordsPhrases = camra.summarizeThisText(userInput)
 	keyWordsPhrases = extractive.doArticleSummary(userInput)
 	if (verbose_success):
@@ -83,6 +127,11 @@ except Exception as e:
 	# keyWordsPhrases = '[error getting keyWordsPhrases]'
 
 	# print('got keyWordsPhrases',keyWordsPhrases)
+
+# ===== END region summarize logic 
+
+
+
 
 
 print(' -->')
@@ -275,16 +324,16 @@ align-self
 			<h1>Insert Text to Summarize Below</h1>
 				</a>
 			<div id="text-container">
-				<textarea id="text-input" name="userInput" form="text-form" required>'''
+				<textarea id="text-input" name="userInput" html_form="text-html_form" required>'''
 	  + userInput +
 				'''</textarea>
 			</div>
-			<form id="text-form" action='''
+			<html_form id="text-html_form" action='''
 				+ nameOfThisFile +
 				''' method="post">
-<!--			<form id="text-form" onsubmit="tryXHR()" action="ajax.py" method="post"> -->
+<!--			<html_form id="text-html_form" onsubmit="tryXHR()" action="ajax.py" method="post"> -->
 			<input type="submit" id="submit-text" value="Summarize"/>
-				</form>
+				</html_form>
 		</section>
 <!--		end of input-section-->
 
