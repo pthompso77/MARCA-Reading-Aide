@@ -5,14 +5,10 @@ print('<!--')
 import cgi, cgitb; cgitb.enable()
 import os, traceback, sys
 
-'''
-set verbose_success to True to see all successful "try" block messages
-'''
+# set verbose_success to True to see all successful "try" block messages
 verbose_success = False
 
-'''
-set nameOfThisFile to the name of this file
-'''
+#set nameOfThisFile to the name of this file
 nameOfThisFile = "results.py"
 
 
