@@ -159,8 +159,8 @@ def find_weighted_frequencies(sentencesThatAre, inFrequencyTable) -> dict:
 	# TODO optimize this
 	for sentence in sentencesThatAre:
 		sentenceLength_withoutStops = 0
+		# TODO, simply reverse the lookup/iteration?		
 		for wordFreq in inFrequencyTable:
-			# TODO is it 'lower' in wordFreq?
 			if wordFreq in sentence.lower(): #lowercase
 				sentenceLength_withoutStops += 1 # counting the word only if it isn't a stopword
 				if sentence in sentenceWeights: # if it already exists
@@ -171,6 +171,7 @@ def find_weighted_frequencies(sentencesThatAre, inFrequencyTable) -> dict:
 		if (sentenceLength_withoutStops == 0):
 			sentenceWeights[sentence] = 0
 		else:
+			# sets the sentence weight to the average score of the whole-document frequency of words that appear in this sentence
 			sentenceWeights[sentence] = (sentenceWeights[sentence] / sentenceLength_withoutStops)
 		
 	return sentenceWeights
@@ -184,45 +185,46 @@ sentence_scores = find_weighted_frequencies(sentences, freq_table)
 
 
 
+# ===== region Get a threshold ==================================================
 
 # now that the sentences have scores (weighted values)...
 # ## Get a threshold by finding average score for each sentence
-#
-
-# In[ ]:
-
 
 # Getting the threshold
 def getThresholdUsingSentenceWeights(sentence_weights) -> int:
 	valueSum = 0
+	#TODO find better more robust ways to calculate this
 	for key in sentence_weights:
 		valueSum += sentence_weights[key]
+	#TODO calculate this with a higher threshold (or a custom one)
 	return (valueSum / len(sentence_weights))
 
 # threshold = _calculate_average_score(sentence_scores)
 threshold = getThresholdUsingSentenceWeights(sentence_scores)
 
+# END ===== region Get a threshold
 
-# now that we have a threshold weight
+
+
+
+# ===== region Get the Summary! ==================================================
+
+# now that we have a threshold weight...
 # ## Get the Summary!
 
-# In[ ]:
-
-
-# Producing the summary
-def finalizeSummary(sentences, sentence_weight, threshold):
+# Assembling the summary
+def assembleSummary(sentences, sentence_weight, threshold):
 	sentence_counter = 0
 	article_summary = ''
 
 	for sentence in sentences:
-		if (sentence in sentence_weight) and sentence_weight[sentence] >= (threshold):
-#			 print('yes',sentence_weight[sentence],'thresh:',threshold)
+		if (sentence in sentence_weight) and (sentence_weight[sentence] >= (threshold)):
 			article_summary += sentence + "<br>"
 			sentence_counter += 1
 
 	return article_summary
 
-# finalizeSummary(sentences, sentence_scores, 1.5 * threshold)
+# assembleSummary(sentences, sentence_scores, 1.5 * threshold)
 
 article_other = """NLTK is a leading platform for building Python programs to work with human language data. It provides easy-to-use interfaces to over 50 corpora and lexical resources such as WordNet, along with a suite of text processing libraries for classification, tokenization, stemming, tagging, parsing, and semantic reasoning, wrappers for industrial-strength NLP libraries, and an active discussion forum.
 
@@ -234,46 +236,35 @@ Natural Language Processing with Python provides a practical introduction to pro
 
 
 # # and now all together
-
-# In[259]:
-
-
 def doArticleSummary(article):
 
 	#creating a dictionary for the word frequency table
-#	 frequency_table = #_create_dictionary_table(article)
 	try:
 		freq_table = create_frequency_table(article)
 	except:
 		print('''cannot set freq_table
 			article is:''',article)
-	# print(freq_table)
 
 	#tokenizing the sentences
-#	 sentences = #sent_tokenize(article)
 	sentences = sent_tokenize(article, keepOriginalPunctuation=True)
-#	 print("sentences",sentences)
-
-	#algorithm for scoring a sentence by its words
-#	 sentence_scores = #_calculate_sentence_scores(sentences, frequency_table)
+	
 	sentence_scores = find_weighted_frequencies(sentences, freq_table)
-#	 print("sentence_scores",sentence_scores)
-
 
 	#getting the threshold
-#	 threshold = #_calculate_average_score(sentence_scores)
 	threshold = getThresholdUsingSentenceWeights(sentence_scores)
-#	 print("threshold",threshold)
-	# print("sentence_scores","(1.2*threshold=",1.2*threshold,")",sentence_scores.values())
-
 
 	#producing the summary
-	article_summary = finalizeSummary(sentences, sentence_scores, 1.0 * threshold)
+	article_summary = assembleSummary(sentences, sentence_scores, 1.0 * threshold)
 	if (verbose_ON):
 		print('\nextractive article summary:',article_summary,'\n[end summary]')
+		
 	return article_summary
 
-# print("article:",article,"summary:",doArticleSummary(article),sep='\n\n')
+# END ===== region Get the Summary! 
+
+
+
+
 
 if __name__ == "__main__":
 	if (verbose_ON):
