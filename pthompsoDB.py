@@ -39,8 +39,11 @@ def runGetQuery(connection, getQuery):
     cursor = connection.cursor()
     cursor.execute(getQuery)
     connection.commit()
-    print(cursor.fetchall())
+    output = cursor.fetchall()
+    print(output)
     connection.close()
+    return output
+    
     
 def runSetQuery(connection, setQuery):
     cursor = connection.cursor()
