@@ -7,7 +7,7 @@ print('''<!doctype html>
 </head>
 <body>
 	<h1>Let's Log In!</h1>
-	<form id="user-login-form" action="user-login.py">
+        <form id="user-login-form" action="user-login.py" method="post">
 	    <label for="username_in">Username</label>
 	    <input type="text" id="uname" name="username_in"><br><br>
 	    

@@ -44,3 +44,16 @@ nameOfThisFile = "user-login.py"
 
 
 username_in = html_form.getvalue('username_in')
+
+print('''Content-type: text/html\r\n\r\n
+        <!doctype html>
+<head>
+	<title>Login</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<h1>Success??</h1>
+	<p id="success_YN">
+
+	</p>
+</body>''')
