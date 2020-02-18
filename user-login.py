@@ -24,6 +24,10 @@ nameOfThisFile = "user-login.py"
 username_in = html_form.getvalue('username_in')
 password_in = html_form.getvalue('password_in')
 
+#for testing
+if username_in is None:
+    username_in = 'myUsername'
+    
 messageOut = 'got username = {} and password = {}'.format(username_in, password_in)
 
 
