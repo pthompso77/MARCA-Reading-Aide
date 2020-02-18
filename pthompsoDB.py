@@ -23,24 +23,27 @@ print('query is'.format(query))
 print('trying to connect')
 
 
-def getDBConnection():
+def getDBConnection(printing = False):
     try:
         dbConnect = MySQLdb.connect(host, user, pw, schema)
-        print('success to {} on AVL'.format(schema))
+        if printing:
+            rint('success to {} on AVL'.format(schema))
     except Exception as e:
-        print('\nerror in connecting to {}:{}'.format(schema,e))
+        if printing:
+            print('\nerror in connecting to {}:{}'.format(schema,e))
         errMessage = '[error getting keyWordsPhrases]\n' + str(e)    
     
     return dbConnect
 
 connection = getDBConnection()
 
-def runGetQuery(connection, getQuery):
+def runGetQuery(connection, getQuery, printing=False):
     cursor = connection.cursor()
     cursor.execute(getQuery)
     connection.commit()
     output = cursor.fetchall()
-    print(output)
+    if printing:
+        print(output)
     connection.close()
     return output
     
