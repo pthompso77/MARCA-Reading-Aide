@@ -35,9 +35,12 @@ messageOut = 'got username = {} and password = {}'.format(username_in, password_
 dbConnect = db.getDBConnection()
 cursor = dbConnect.cursor()
 procName = 'getPassword_andSalt_ByUsername'
-procArgs = (username_in)
+procArgs = ("'{}'".format(username_in),0,0)
 
-dbResult = cursor.callproc(procName, procArgs)
+#dbResult = cursor.callproc(procName, procArgs) #this isn't working
+q = "SELECT `password`, `NaCl` FROM `pthompsoDB`.`userAccounts` WHERE `username` = '{}';".format(username_in)
+
+dbResult = db.runGetQuery(dbConnect, q)
 
 
 print('''Content-type: text/html\r\n\r\n
