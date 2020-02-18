@@ -18,10 +18,16 @@ tokenDocs_TABLE = 'TokenizedDocs_Pickled'
 tokenDocs_pickle_COLUMN = 'TokenizedDocs_Pickledcol'
 
 query = "SELECT * FROM " + tokenDocs_TABLE
-print(query)
+print('query is'.format(query))
 
 print('trying to connect')
-dbConnect = MySQLdb.connect(host, user, pw, schema)
+
+try:
+    dbConnect = MySQLdb.connect(host, user, pw, schema)
+    print('success to {} on AVL'.format(schema))
+except Exception as e:
+    print('\nerror in connecting to {}:{}'.format(schema,e))
+    errMessage = '[error getting keyWordsPhrases]\n' + str(e)    
 
 cursor = dbConnect.cursor()
 
