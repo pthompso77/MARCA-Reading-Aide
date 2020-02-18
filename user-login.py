@@ -21,6 +21,10 @@ nameOfThisFile = "user-login.py"
 
 
 username_in = html_form.getvalue('username_in')
+password_in = html_form.getvalue('password_in')
+
+
+messageOut = 'got username = {} and password {}'.format(username_in, password_in)
 
 print('''Content-type: text/html\r\n\r\n
         <!doctype html>
@@ -33,4 +37,4 @@ print('''Content-type: text/html\r\n\r\n
 	<p id="success_YN">
     {message}
 	</p>
-</body>'''.format(message='got: '+username_in))
+</body>'''.format(message=messageOut))
