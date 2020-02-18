@@ -17,10 +17,10 @@ DB table and column name(s)
 tokenDocs_TABLE = 'TokenizedDocs_Pickled'
 tokenDocs_pickle_COLUMN = 'TokenizedDocs_Pickledcol'
 
-query = "SELECT * FROM " + tokenDocs_TABLE
-print('query is'.format(query))
+#query = "SELECT * FROM " + tokenDocs_TABLE
+#print('query is'.format(query))
 
-print('trying to connect')
+#print('trying to connect')
 
 
 def getDBConnection(printing = False):
