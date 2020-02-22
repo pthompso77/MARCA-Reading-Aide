@@ -5,10 +5,7 @@ import MySQLdb
 '''
 connection values
 '''
-host = 'avl.cs.unca.edu'
-user ='pthompso'
-pw = 'sql4you'
-schema = 'pthompsoDB'
+from myDBConnect import *
 
 
 '''
