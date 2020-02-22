@@ -146,7 +146,7 @@ print('''
 <!doctype html>
 <head>
 	<title>Summarize!</title>
-	<script src="js/xhr.js"></script>
+	<script src="scripts/JS/highlight.js"></script>
 	<meta charset="utf-8">
   <meta name="description" content="Summarize any length of text">
   <meta name="keywords" content="Summary, Abstract, NLP, Computer science, artificial intelligence">
