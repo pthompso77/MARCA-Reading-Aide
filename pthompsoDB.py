@@ -14,12 +14,6 @@ DB table and column name(s)
 tokenDocs_TABLE = 'TokenizedDocs_Pickled'
 tokenDocs_pickle_COLUMN = 'TokenizedDocs_Pickledcol'
 
-#query = "SELECT * FROM " + tokenDocs_TABLE
-#print('query is'.format(query))
-
-#print('trying to connect')
-
-
 def getDBConnection(printing = False):
     try:
         dbConnect = MySQLdb.connect(host, user, pw, schema)
@@ -52,5 +46,5 @@ def runSetQuery(connection, setQuery):
     connection.close()
     
 if (__name__ == '__main__'):
-    runGetQuery(dbConnect,query)
+    runGetQuery(connection,"SELECT * FROM userAccounts")
     
