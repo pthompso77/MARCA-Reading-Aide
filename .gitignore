@@ -5,3 +5,4 @@
 *.pyc
 *.pickle
 *.pkl
+myDBConnect.py
