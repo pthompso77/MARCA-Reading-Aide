@@ -45,7 +45,7 @@ procName = 'getPassword_andSalt_ByUsername'
 procArgs = ("'{}'".format(username_in),0,0)
 
 #dbResult = cursor.callproc(procName, procArgs) #this isn't working
-q = "SELECT `password`, `NaCl` FROM `pthompsoDB`.`userAccounts` WHERE `username` = '{}';".format(username_in)
+q = "SELECT `password`, `NaCl` FROM `pthompsoDB`.`userAccounts` WHERE `email` = '{}';".format(username_in)
 
 dbResult = db.runGetQuery(dbConnect, q)
 
