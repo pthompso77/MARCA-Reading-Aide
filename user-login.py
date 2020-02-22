@@ -30,6 +30,13 @@ if username_in is None:
     
 messageOut = 'got username = {} and password = {}'.format(username_in, password_in)
 
+def authenticateUser():
+    ''' (for every page being loaded)
+	reads cookie value
+    select from DB SESSION where userid
+    if returns 1 row, ok, else except
+    (unsetting = change exp to yesterday)
+	'''
 
 """ connecting to DB """
 dbConnect = db.getDBConnection()
