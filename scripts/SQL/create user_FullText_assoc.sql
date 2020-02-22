@@ -1,5 +1,5 @@
 -- DROP TABLE `pthompsoDB`.`user_FullText_assoc`;
-
+/*
 CREATE TABLE `pthompsoDB`.`user_FullText_assoc` (
   `email` VARCHAR(255) NOT NULL,
   `FullTextID` INT(11) NOT NULL,
@@ -15,6 +15,7 @@ CREATE TABLE `pthompsoDB`.`user_FullText_assoc` (
     REFERENCES `pthompsoDB`.`userAccounts` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
+*/
 
 
 -- changed 02-22
@@ -37,3 +38,4 @@ CREATE TABLE `pthompsoDB`.`user_FullText_assoc` (
     REFERENCES `pthompsoDB`.`userAccounts` (`email`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
+	
