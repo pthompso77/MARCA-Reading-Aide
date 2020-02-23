@@ -19,6 +19,9 @@ class DatabaseObject(ABC):
     def updateDB(self, newValues_dict):
         # TODO some kind of error handling for dict/col values
         pass
+    def selectFromDB(*args):
+        # this will just return the row matching the primary key of th DB object
+        pass
 
 
 class userAccount(DatabaseObject):
@@ -39,7 +42,22 @@ class userAccount(DatabaseObject):
         print(query)
         results = dbConnect.runSetQuery(self._myDBconnection, query)
         print(results)
-    
+    def _getEmailBySessionID(self, sessID):
+        self._myDBconnection = dbConnect.getDBConnection(printing=False)
+        sessionID = 'sessionID'
+        query = "SELECT `email` FROM `{tableName}`\
+        WHERE `{whereKey}` = '{whereValue}';\
+        ".format(tableName=self._tableName, whereKey=sessionID,\
+                 whereValue=sessID)
+        print(query)
+        results = dbConnect.runGetQuery(self._myDBconnection, query)
+        if len(results) < 1:
+            return None
+        print(results)
+        return results
+    def getEmailBySessionID(sessID):
+        ua = userAccount(dict())
+        return ua._getEmailBySessionID(sessID)
 
 
 
@@ -60,6 +78,7 @@ def doTesting():
     
     newVals = {'email':'new email'}
     ua.updateDB(newVals)
+    ua.getEmailBySessionID('singsongdadadoo')
     ua._printme()
     
 
