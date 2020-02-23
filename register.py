@@ -31,21 +31,21 @@ print('''
 
 
 print('''
-<body>
+    <body>
 	<h1>Register</h1>
-        <form id="user-register-form" action="user-register.py" method="post">
-	    <label for="username_in">Username</label>
-	    <input type="text" id="uname" name="username_in"><br><br>
+        <form id="user-register-form" action="" method="get">
+	    <label for="email_in">Email</label>
+	    <input type="text" id="uname" name="email_in"><br><br>
 
 	    <label for="password_in">Password</label>
 	    <input type="password" id="pwd" name="password_in"><br><br>
 
-        <input type="submit" value="Submit">
 	</form>
-	<!-- <input type="submit" value="Submit" onclick="getTasks()"> -->
+	<input type="submit" value="Submit" onclick="getTasks()">
 
+	<!--<input type="submit" value="Submit" >-->
 	<div id="test-output">
 	    (default)
 	</div>
-</body>
+    </body>
 ''')
