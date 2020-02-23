@@ -9,23 +9,6 @@ print('''
 <head>
 	<title>Register</title>
 	<meta charset="utf-8">
-    	<script>
-            function getTasks() {
-                var xmlhttp;
-                var parameters = "My Params!";
-                var scriptName = "testXHR.py";
-                //may be .cgi as well depending on how you are using it
-                xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST", scriptName, true);
-                xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                        out = document.getElementById("test-output");
-                        out.innerText = "got this from AJAX";
-                    }
-                };
-                xmlhttp.send(parameters);
-            }
-	</script>
 </head>
 ''')
 
@@ -33,7 +16,7 @@ print('''
 print('''
     <body>
 	<h1>Register</h1>
-        <form id="user-register-form" action="user-register.py" method="post">
+        <form id="user-register-form" action="confirmRegister.py" method="post">
 	    <label for="email_in">Email</label>
 	    <input type="text" id="uname" name="email_in"><br><br>
 
@@ -42,7 +25,6 @@ print('''
 
 	    <input type="submit" value="Submit" >
 	</form>
-	<!--<input type="submit" value="Submit" onclick="getTasks()">-->
 
 	<div id="test-output">
 	    (default)
