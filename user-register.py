@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """user-register.py"""
 print('Content-type: text/html\r\n\r\n')
-import cgi, cgitb, dbConnect
+
 import cgi, cgitb, dbConnect, html
 from User import User
 cgitb.enable()
