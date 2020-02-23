@@ -1,4 +1,4 @@
-# connects to pthompsoDB on avl.cs.unca.edu
+
 
 import MySQLdb
 
