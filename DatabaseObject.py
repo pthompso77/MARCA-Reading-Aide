@@ -1,6 +1,8 @@
+from abc import ABC, abstractmethod
 
-class DatabaseObject:
+class DatabaseObject(ABC):
     _cols = []
+    _pk = ''
     _columns = dict()
     def __setDict(self, rows_dict):
         for key, value in rows_dict.items():
@@ -10,15 +12,19 @@ class DatabaseObject:
     def __init__(self, dict_Values):
         self._columns = dict((key, '') for key in self._cols)
         self.__setDict(dict_Values)
-    def printme(self):
+    def _printme(self): #just for testing
         print(self._columns)
-    def setCols(self, colsList):
-        self._coldict = dict((key, '') for key in colsList)
-        #return _coldict
-        
-        
+    @abstractmethod
+    def updateDB(self, newValues_dict):
+        pass
+
+
 class userAccount(DatabaseObject):
     _cols = ['email','password','NaCl','create-time','sessionID']
+    _pk = _cols[0]
+    def updateDB(self, newValues_dict):
+        pass
+    
 
 
 
@@ -31,11 +37,11 @@ class userAccount(DatabaseObject):
 def doTesting():
     testDict = {'email':'a','password':'e','NaCl':'d'}
     ua = userAccount(testDict)
-    ua.printme()
+    ua._printme()
     
     testDict = {'email':'a','password':'e','NaCl':''}
     ua = userAccount(testDict)
-    ua.printme()
+    ua._printme()
 
 if __name__ == '__main__':
     doTesting()
