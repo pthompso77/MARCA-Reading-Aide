@@ -16,15 +16,25 @@ def registerNewUser():
     pw_in = getFormDataByName(form, 'pw_in')
     user = User(email_in, pw_in)
     con = dbConnect.getDBConnection()
-    dbConnect.insertUser(con, userObj=user)
+    message, successful = dbConnect.insertUser(con, userObj=user)
+    return message, successful
     #user._putMeInDB()
 
 
 
 
 def isSuccess():
-    registerNewUser()
-    return "something"
+    message, successful = registerNewUser()
+    responseDict = dict()
+    if successful:
+        responseDict['h1'] = 'placeholder1'
+        responseDict['successMessage'] = 'placeholder2'
+        responseDict['linkToNext'] = 'placeholder3'
+    else:
+        responseDict['h1'] = 'placeholder4'
+        responseDict['successMessage'] = 'placeholder5'
+        responseDict['linkToNext'] = 'placeholder6'
+    return responseDict
 
 print("""
 <!doctype html>
@@ -33,9 +43,10 @@ print("""
 	<meta charset="utf-8">
 </head>
 <body>
-	<h1>Register Success??</h1>
+	<h1>{h1}</h1>
 	<p id="success_YN">
-        {success_YN}
+        {successMessage} <br>
+        {linkToNext}
 	</p>
 </body>
-""".format(success_YN=isSuccess()))
+""".format(**isSuccess()))

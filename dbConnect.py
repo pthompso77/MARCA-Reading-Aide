@@ -58,9 +58,9 @@ def insertUser(connection, userObj):
     try:
         runSetQuery(connection, query)
     except Exception as ex:
-        print("""Error inserting a new user with email: {emailaddress}
-        {exception}""".format(emailaddress=userObj.email, exception=ex))
-    
+        return("""Error inserting a new user with email: {emailaddress}
+        {exception}""".format(emailaddress=userObj.email, exception=ex), False)
+    return "Success", True
 
 
 
