@@ -180,6 +180,16 @@ align-self
 /*			align-self: flex-start;*/
 		}
 
+		/* nav-bar section */
+	    #nav-bar {
+		display:flex;
+		padding:20px;
+	    }
+
+	    .login_register {
+		padding: 20px;
+	    }
+
 
 </style>
 </head>
@@ -187,6 +197,18 @@ align-self
 <!--A Flexible Layout must have a parent element with the display property set to flex. Direct child elements(s) of the flexible container automatically becomes flexible items.-->
 
 <body>
+
+	<!--Navigation Bar-->
+	<div id="nav-bar">
+	    <section id="login-button" class="login_register">
+		<a href="login.py">Log In</a>
+	    </section>
+	    <section id="register-button" class="login_register">
+		<a href="register.py">Register</a>
+	    </section>
+	</div>
+	<!--end Navigation Bar-->
+
 	<div class="flex-container">
 
 		<section id="input-section">
@@ -197,7 +219,7 @@ align-self
 				<textarea id="text-input" name="userInput" form="text-form" required></textarea>
 			</div>'''+
 			'''<form id="text-form" action="''')
-print(results_file,sep='') 
+print(results_file,sep='')
 print('''" method="post">
 			<input type="submit" id="submit-text" value="Summarize"/>
 				</form>'''+
