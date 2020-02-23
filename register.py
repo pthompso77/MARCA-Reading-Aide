@@ -11,19 +11,18 @@ print('''
 	<meta charset="utf-8">
     	<script>
             function getTasks() {
-                //put more processing in the function as needed
                 var xmlhttp;
-                var parameters = "This must be a string which will be the parameters you will receive in your python script";
-                var scriptName = "text.py";
+                var parameters = "My Params!";
+                var scriptName = "testXHR.py";
                 //may be .cgi as well depending on how you are using it
                 xmlhttp = new XMLHttpRequest();
                 xmlhttp.open("POST", scriptName, true);
                 xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        //retrieve a json response and parse it into userTasks
-                        usersTasks = JSON.parse(xmlhttp.responseText);
+                    if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                        out = document.getElementById("test-output");
+                        out.innerText = "got this from AJAX";
                     }
-                }
+                };
                 xmlhttp.send(parameters);
             }
 	</script>
@@ -34,15 +33,19 @@ print('''
 print('''
 <body>
 	<h1>Register</h1>
-        <form id="user-register-form" action="" method="post">
+        <form id="user-register-form" action="" method="get">
 	    <label for="username_in">Username</label>
 	    <input type="text" id="uname" name="username_in"><br><br>
 
 	    <label for="password_in">Password</label>
 	    <input type="password" id="pwd" name="password_in"><br><br>
 
-	    <input type="submit" value="Submit">
-
 	</form>
+	<input type="submit" value="Submit" onclick="getTasks()">
+
+	<!--<input type="submit" value="Submit" >-->
+	<div id="test-output">
+	    (default)
+	</div>
 </body>
 ''')
