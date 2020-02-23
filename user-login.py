@@ -37,7 +37,7 @@ def authenticateUser():
     if returns 1 row, ok, else except
     (unsetting = change exp to yesterday)
 	'''
-    userAuthDict = dict()
+    userAuthDict = {"successMessage":"#TODO", "linkToNext":"#TODO"}
     #TODO finish the authentication process
     
     return userAuthDict
