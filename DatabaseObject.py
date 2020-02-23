@@ -34,10 +34,8 @@ class userAccount(DatabaseObject):
         super().__init__(initDict)
         self.__putInDB()
     def __putInDB(self):
-        query = "INSERT INTO {}\
-        ('email','password','NaCl','sessionID')\
-        VALUES ('{email}','{password}','{NaCl}','{sessionID}')\
-        "
+        query = "INSERT INTO {tablename} ('email','password','NaCl','sessionID') VALUES ('{email}','{password}','{NaCl}','{sessionID}')".format(tablename=self._tableName,**self._rowVals)
+        dbConnect.runSetQuery(self._myDBconnection,
     def updateDB(self, newValues_dict):
         #TODO make sure newValues has only one value? maybe...
         items = list(newValues_dict.items())
@@ -79,16 +77,16 @@ def doTesting():
     testDict = {'email':'a','password':'e','NaCl':'d'}
     ua = userAccount(testDict)
     ua._printme()
-    
+
     testDict = {'email':'testemail1@mail.com','password':'e','NaCl':''}
     ua = userAccount(testDict)
     ua._printme()
-    
+
     newVals = {'email':'new email'}
     ua.updateDB(newVals)
     emailFetched = userAccount.getEmailBySessionID('singsongdadadoo')
     ua._printme()
-    
+
 
 if __name__ == '__main__':
     doTesting()
