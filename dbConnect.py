@@ -45,6 +45,23 @@ def runSetQuery(connection, setQuery):
     connection.commit()
     connection.close()
     
+
+def insertUser(connection, userObj):
+    query = "INSERT INTO userAccounts \
+    (email, password, NaCl) \
+    VALUES \
+    ('{email}', \
+    '{pwHash}', \
+    '{salt}'); \
+    ".format(email= userObj.email\
+               , pwHash= userObj.password_hashed\
+               , salt= userObj.pwSalt)
+    runSetQuery(connection, query)
+    print("done??")
+    
+
+
+
 if (__name__ == '__main__'):
     connection = getDBConnection()    
     snoutput = runGetQuery(connection,"SELECT * FROM userAccounts")

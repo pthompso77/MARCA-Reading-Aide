@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """user-register.py"""
 print('Content-type: text/html\r\n\r\n')
-import cgi, cgitb
+import cgi, cgitb, dbConnect
 from User import User
 cgitb.enable()
 
@@ -15,6 +15,7 @@ class User:
     def _putMeInDB(self):
         initDict = {'email':self.email, 'password':self.password_hashed, 'NaCl':self.pwSalt}
         dbUser = dbObj.userAccount(initDict)
+        dbUser.updateDB(initDict)
         return dbUser
     def authenticateMe(self, sessionID):
         dbUser = dbObj.userAccount.getEmailBySessionID(sessionID)
@@ -29,7 +30,9 @@ def registerNewUser():
     email_in = getFormDataByName(form, 'email_in')
     pw_in = getFormDataByName(form, 'pw_in')
     user = User(email_in, pw_in)
-    user._putMeInDB()
+    con = dbConnect.getDBConnection()
+    dbConnect.insertUser(con, userObj=user)
+    #user._putMeInDB()
 
 
 

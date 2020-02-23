@@ -15,6 +15,8 @@ class DatabaseObject(ABC):
         self._myDBconnection = dbConnect.getDBConnection(printing=False)
     def _printme(self): #just for testing
         print(self._rowVals)
+    def getDBconnection(self):
+        return self._myDBconnection
     @abstractmethod
     def updateDB(self, newValues_dict):
         # TODO some kind of error handling for dict/col values
@@ -28,6 +30,14 @@ class userAccount(DatabaseObject):
     _tableName = 'userAccounts'
     _cols = ['email','password','NaCl','create-time','sessionID']
     _pk = _cols[0]
+    def __init__(self, initDict):
+        super().__init__(initDict)
+        self.__putInDB()
+    def __putInDB(self):
+        query = "INSERT INTO {}\
+        ('email','password','NaCl','sessionID')\
+        VALUES ('{email}','{password}','{NaCl}','{sessionID}')\
+        "
     def updateDB(self, newValues_dict):
         #TODO make sure newValues has only one value? maybe...
         items = list(newValues_dict.items())

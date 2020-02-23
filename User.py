@@ -18,7 +18,9 @@ class User:
     def _putMeInDB(self):
         initDict = {'email':self.email, 'password':self.password_hashed, 'NaCl':self.pwSalt}
         dbUser = dbObj.userAccount(initDict)
+        dbUser.updateDB(initDict)
         return dbUser
+    
     def authenticateMe(self, sessionID):
         dbUser = dbObj.userAccount.getEmailBySessionID(sessionID)
         return dbUser is not None
