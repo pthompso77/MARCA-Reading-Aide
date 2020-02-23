@@ -16,7 +16,6 @@ tokenDocs_pickle_COLUMN = 'TokenizedDocs_Pickledcol'
 
 def getDBConnection(printing = False):
     try:
-        print(host, user, pw, schema)
         dbConnect = MySQLdb.connect(host, user, pw, schema)
         if printing:
             print('success to {} on AVL'.format(schema))
@@ -59,8 +58,8 @@ def insertUser(connection, userObj):
     try:
         runSetQuery(connection, query)
     except Exception as ex:
-        print(ex)
-    print("done??")
+        print("""Error inserting a new user with email: {emailaddress}
+        {exception}""".format(emailaddress=userObj.email, exception=ex))
     
 
 
