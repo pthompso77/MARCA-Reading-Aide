@@ -56,7 +56,10 @@ def insertUser(connection, userObj):
     ".format(email= userObj.email\
                , pwHash= userObj.password_hashed\
                , salt= userObj.pwSalt)
-    runSetQuery(connection, query)
+    try:
+        runSetQuery(connection, query)
+    except Exception as ex:
+        print(ex)
     print("done??")
     
 
