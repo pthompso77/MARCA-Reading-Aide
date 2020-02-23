@@ -6,3 +6,4 @@
 *.pickle
 *.pkl
 myDBConnect.py
+*.commits
