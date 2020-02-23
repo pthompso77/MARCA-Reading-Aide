@@ -4,7 +4,6 @@ import cgitb
 cgitb.enable()
 
 
-
 print('''
 <!doctype html>
 <head>
