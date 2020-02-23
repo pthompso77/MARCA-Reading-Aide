@@ -8,7 +8,7 @@ import cgitb
 cgitb.enable()
 
 
-args=sys.stdin.readlines() #args comes in as a list with one item in it
+args=sys.stdin.readline() #args comes in as a list with one item in it
 # which is the parameter that you sent in from javascript
 arguments=args[0]
 
