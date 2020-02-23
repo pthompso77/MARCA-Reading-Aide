@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 print('Content-type: text/html\r\n\r\n')
 
-import cgi, cgitb, dbConnect, html
+import cgitb; cgitb.enable()
+import cgi, dbConnect, html
 from User import User
-cgitb.enable()
 
 def getFormDataByName(cgiFieldStorageObject, fieldName):
     dataOut = cgiFieldStorageObject.getfirst(fieldName, "empty").upper()
