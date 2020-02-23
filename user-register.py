@@ -27,13 +27,13 @@ def isSuccess():
     message, successful = registerNewUser()
     responseDict = dict()
     if successful:
-        responseDict['h1'] = 'placeholder1'
-        responseDict['successMessage'] = 'placeholder2'
-        responseDict['linkToNext'] = 'placeholder3'
+        responseDict['h1'] = 'Success'
+        responseDict['successMessage'] = message
+        responseDict['linkToNext'] = '<a href=dashboard.py>Go To Dashboard</a>'
     else:
-        responseDict['h1'] = 'placeholder4'
-        responseDict['successMessage'] = 'placeholder5'
-        responseDict['linkToNext'] = 'placeholder6'
+        responseDict['h1'] = 'Error'
+        responseDict['successMessage'] = message
+        responseDict['linkToNext'] = '<a href=register.py>Try again</a>'
     return responseDict
 
 print("""
