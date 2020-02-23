@@ -11,7 +11,7 @@ this file holds the logic to enable users to log in, including
 
 import cgi, cgitb; cgitb.enable()
 import os, traceback, sys
-import pthompsoDB as db
+import dbConnect as db
 
 
 # references HTML field storage element (placeholder) for later retrieval
