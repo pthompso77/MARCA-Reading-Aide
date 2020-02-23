@@ -48,7 +48,7 @@ class userAccount(DatabaseObject):
         WHERE `{whereKey}` = '{whereValue}';\
         ".format(tableName=self._tableName, setKey=key, newValue=value,\
                  whereKey=self._pk, whereValue=self._rowVals[self._pk])
-        #dbConnect.runSetQuery(self._myDBconnection, query)
+        self._myDBconnection = dbConnect.getDBConnection(printing=False)
         print(query)
         results = dbConnect.runSetQuery(self._myDBconnection, query)
         print(results)
