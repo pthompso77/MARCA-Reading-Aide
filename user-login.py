@@ -53,7 +53,7 @@ dbResult = db.runGetQuery(dbConnect, q)
 
 
 
-print("""
+print("""Content-type: text/html\r\n\r\n
 <!doctype html>
 <head>
 	<title>Register</title>
