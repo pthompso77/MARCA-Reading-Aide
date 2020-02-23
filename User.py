@@ -25,6 +25,13 @@ class User:
         dbUser = dbObj.userAccount.getEmailBySessionID(sessionID)
         return dbUser is not None
         
+def authenticate():
+    #look for sessionID cookie in browser
+    #if there: check it against the database
+    #if not match: go back to login page
+    #if match: break and continue with other process
+    #if not there: go back to login page
+    return False
         
 def doTesting():
     testPW = "morepw"
