@@ -5,11 +5,16 @@ cgitb.enable()
 
 
 
-print('''<!doctype html>
+print('''
+<!doctype html>
 <head>
 	<title>Register</title>
 	<meta charset="utf-8">
 </head>
+''')
+
+
+print('''
 <body>
 	<h1>Register</h1>
         <form id="user-register-form" action="" method="post">
@@ -22,4 +27,5 @@ print('''<!doctype html>
 	    <input type="submit" value="Submit">
 
 	</form>
-</body>''')
+</body>
+''')
