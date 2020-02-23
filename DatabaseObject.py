@@ -49,9 +49,7 @@ class userAccount(DatabaseObject):
         ".format(tableName=self._tableName, setKey=key, newValue=value,\
                  whereKey=self._pk, whereValue=self._rowVals[self._pk])
         self._myDBconnection = dbConnect.getDBConnection(printing=False)
-        print(query)
         results = dbConnect.runSetQuery(self._myDBconnection, query)
-        print(results)
     def _getEmailBySessionID(self, sessID):
         self._myDBconnection = dbConnect.getDBConnection(printing=False)
         sessionID = 'sessionID'

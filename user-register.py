@@ -6,22 +6,6 @@ import cgi, cgitb, dbConnect, html
 from User import User
 cgitb.enable()
 
-'''
-class User:
-    def __init__(self, email, password):
-        self.email = email
-        self.password_hashed, self.pwSalt = crypt.hash_password(password)
-        #put me in the DB (or getme out)
-        dbUser = self._putMeInDB()
-    def _putMeInDB(self):
-        initDict = {'email':self.email, 'password':self.password_hashed, 'NaCl':self.pwSalt}
-        dbUser = dbObj.userAccount(initDict)
-        dbUser.updateDB(initDict)
-        return dbUser
-    def authenticateMe(self, sessionID):
-        dbUser = dbObj.userAccount.getEmailBySessionID(sessionID)
-        return dbUser is not None
-'''
 def getFormDataByName(cgiFieldStorageObject, fieldName):
     dataOut = cgiFieldStorageObject.getfirst(fieldName, "empty").upper()
     return html.escape(dataOut)
