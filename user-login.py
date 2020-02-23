@@ -9,8 +9,8 @@ this file holds the logic to enable users to log in, including
  - ...
 '''
 
-import cgi, cgitb; cgitb.enable()
-import os, traceback, sys
+import cgitb; cgitb.enable()
+import cgi, os, traceback, sys
 import dbConnect as db
 
 
