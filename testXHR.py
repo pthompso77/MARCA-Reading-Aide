@@ -7,7 +7,7 @@ print('Content-type: text/html\r\n\r\n')
 import cgitb
 cgitb.enable()
 
-
+print("okay...")
 args=sys.stdin.readline() #args comes in as a list with one item in it
 # which is the parameter that you sent in from javascript
 arguments=args[0]
