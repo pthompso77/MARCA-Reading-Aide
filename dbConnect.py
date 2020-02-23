@@ -64,6 +64,8 @@ def insertUser(connection, userObj):
 
 
 
+
+"""__main__ for testing"""
 if (__name__ == '__main__'):
     connection = getDBConnection()    
     snoutput = runGetQuery(connection,"SELECT * FROM userAccounts")
