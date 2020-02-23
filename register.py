@@ -40,10 +40,10 @@ print('''
 	    <label for="password_in">Password</label>
 	    <input type="password" id="pwd" name="password_in"><br><br>
 
+        <input type="submit" value="Submit">
 	</form>
-	<input type="submit" value="Submit" onclick="getTasks()">
+	<!-- <input type="submit" value="Submit" onclick="getTasks()"> -->
 
-	<!--<input type="submit" value="Submit" >-->
 	<div id="test-output">
 	    (default)
 	</div>
