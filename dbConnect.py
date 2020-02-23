@@ -22,7 +22,7 @@ def getDBConnection(printing = False):
     except Exception as e:
         if printing:
             print('\nerror in connecting to {}:{}'.format(schema,e))
-        errMessage = '[error getting keyWordsPhrases]\n' + str(e)    
+        errMessage = '[error getting keyWordsPhrases]\n' + str(e)
         dbConnect = None
     return dbConnect
 
@@ -36,14 +36,29 @@ def runGetQuery(connection, getQuery, printing=False):
         print(output)
     connection.close()
     return output
-    
-    
-def runSetQuery(connection, setQuery):
+
+
+def runSetQuery(setQuery, connection=None, returnPK=False):
+    """runs a set query (or insert...)
+
+    parameters:
+      setQuery (str): SQL statement
+
+    returns:
+      primary Key of last inserted
+    """
+    if connection is None:
+        connection = getDBConnection()
     cursor = connection.cursor()
-    cursor.execute(setQuery)
+    # TODO handle an exception from the DB (like where PK already exists)
+    response = cursor.execute(setQuery)
+    rowcount = cursor.rowcount
     connection.commit()
+    lastrowID = cursor.lastrowid
     connection.close()
-    
+    if returnPK:
+        return lastrowID # lastrowID=0 if the table does not have an auto-increment ID
+
 
 def insertUser(connection, userObj):
     query = "INSERT INTO userAccounts \
@@ -67,7 +82,11 @@ def insertUser(connection, userObj):
 
 """__main__ for testing"""
 if (__name__ == '__main__'):
-    connection = getDBConnection()    
+    connection = getDBConnection()
+    #testing INSERT
+    outp = runSetQuery("INSERT INTO `pthompsoDB`.`userAccounts` (`email`, `password`, `NaCl`) VALUES ('email', 'passwordd','saltyfresh');", returnPK=True)
+    print(outp)
+    #testing SELECT
     snoutput = runGetQuery(connection,"SELECT * FROM userAccounts")
     print('result type:',type(snoutput))
     print('result type[0]:',type(snoutput[0]))
