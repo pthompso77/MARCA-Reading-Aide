@@ -4,7 +4,7 @@ print('Content-type: text/html\r\n\r\n')
 import cgi, cgitb, dbConnect, html
 from User import User
 cgitb.enable()
-
+#deletethis!
 def getFormDataByName(cgiFieldStorageObject, fieldName):
     dataOut = cgiFieldStorageObject.getfirst(fieldName, "empty").upper()
     return html.escape(dataOut)
