@@ -88,7 +88,7 @@ def doTesting():
     
     newVals = {'email':'new email'}
     ua.updateDB(newVals)
-    ua.getEmailBySessionID('singsongdadadoo')
+    emailFetched = userAccount.getEmailBySessionID('singsongdadadoo')
     ua._printme()
     
 
