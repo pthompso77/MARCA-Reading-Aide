@@ -33,7 +33,7 @@ print('''
 print('''
 <body>
 	<h1>Register</h1>
-        <form id="user-register-form" action="" method="get">
+        <form id="user-register-form" action="user-register.py" method="post">
 	    <label for="username_in">Username</label>
 	    <input type="text" id="uname" name="username_in"><br><br>
 
