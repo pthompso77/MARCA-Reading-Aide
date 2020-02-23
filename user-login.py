@@ -37,12 +37,14 @@ def authenticateUser():
     if returns 1 row, ok, else except
     (unsetting = change exp to yesterday)
 	'''
+    userAuthDict = dict()
+    #TODO finish the authentication process
+    
+    return userAuthDict
 
 """ connecting to DB """
 dbConnect = db.getDBConnection()
 cursor = dbConnect.cursor()
-procName = 'getPassword_andSalt_ByUsername'
-procArgs = ("'{}'".format(username_in),0,0)
 
 #dbResult = cursor.callproc(procName, procArgs) #this isn't working
 q = "SELECT `password`, `NaCl` FROM `pthompsoDB`.`userAccounts` WHERE `email` = '{}';".format(username_in)
@@ -50,16 +52,18 @@ q = "SELECT `password`, `NaCl` FROM `pthompsoDB`.`userAccounts` WHERE `email` = 
 dbResult = db.runGetQuery(dbConnect, q)
 
 
-print('''Content-type: text/html\r\n\r\n
-        <!doctype html>
+
+print("""
+<!doctype html>
 <head>
-	<title>Login</title>
+	<title>Register</title>
 	<meta charset="utf-8">
 </head>
 <body>
-	<h1>Success??</h1>
+	<h1>{h1}</h1>
 	<p id="success_YN">
-    {message}
-    {dbResult}
+        {successMessage} <br>
+        {linkToNext}
 	</p>
-</body>'''.format(message = messageOut, dbResult = dbResult))
+</body>
+""".format(**authenticateUser()))
