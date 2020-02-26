@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import dbConnect
-
 class DatabaseObject(ABC):
     _tableName = ''
     _cols = []
@@ -90,3 +89,4 @@ def doTesting():
 
 if __name__ == '__main__':
     doTesting()
+
