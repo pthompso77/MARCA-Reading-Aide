@@ -1,11 +1,11 @@
 
-#try:
-    #import MySQLdb
-#except:
-    #import mysql.connector
+try:
+    import MySQLdb
+except:
+    import mysql.connector
 
-import mysql.connector
-from mysql.connector import errorcode
+#import mysql.connector
+#from mysql.connector import errorcode
 
 '''
 connection values
