@@ -1,4 +1,5 @@
 /nbproject/*
+*_orig.py
 /MARCA-seq2seq/jlist_full_tuple.pkl
 /MARCA-seq2seq/glove.6B.zip
 /__pycache__/*
