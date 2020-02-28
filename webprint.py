@@ -5,11 +5,11 @@ from os import environ
 results_file = "results.py"
 
 
-def printContentType(setCookie=False):
+def printContentType(setCookie=False, includeDoctype=True):
 	if setCookie:
 		pass
-	print('''Content-type: text/html\r\n\r\n
-    <!doctype html>''')
+	contentTypeMessage = '''Content-type: text/html\r\n\r\n''' + "<!doctype html>" if includeDoctype else ""
+	print(contentTypeMessage)
 
 def parseArgs(tagType, attribute, args):
 	opentag = "<{tagType} {attr}=".format(tagType=tagType, attr=attribute)
