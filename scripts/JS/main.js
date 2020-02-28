@@ -44,8 +44,8 @@ function tryXHR(msg) {
 	xhr.onload = function () {
 		if (xhr.readyState === xhr.DONE) {
 			if (xhr.status === 200) {
-				console.log(xhr.response);
-				console.log(xhr.responseText);
+				console.log("xhr.response = "+xhr.response);
+				console.log("xhr.responseText = " + xhr.responseText);
 			}
 		}
 	};
