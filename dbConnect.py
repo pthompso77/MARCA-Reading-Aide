@@ -1,6 +1,10 @@
 
 
-import MySQLdb
+try:
+    import MySQLdb
+except:
+    print('importing pymysql as MySQLdb instead')
+    import pymysql as MySQLdb
 
 '''
 connection values
@@ -49,8 +53,15 @@ def runSetQuery(setQuery, connection=None, returnPK=False):
     """
     if connection is None:
         connection = getDBConnection()
+    else:
+        try:
+            if not isinstance(pymysql.connections.Connection, connection):
+                connection = getDBConnection()
+        except:
+            connection = getDBConnection()
     cursor = connection.cursor()
     # TODO handle an exception from the DB (like where PK already exists)
+    print(setQuery)
     response = cursor.execute(setQuery)
     rowcount = cursor.rowcount
     connection.commit()
@@ -84,7 +95,7 @@ def insertUser(connection, userObj):
 if (__name__ == '__main__'):
     connection = getDBConnection()
     #testing INSERT
-    outp = runSetQuery("INSERT INTO `pthompsoDB`.`userAccounts` (`email`, `password`, `NaCl`) VALUES ('email', 'passwordd','saltyfresh');", returnPK=True)
+    outp = runSetQuery("INSERT INTO `pthompsoDB`.`userAccounts` (email, password, NaCl) VALUES ('email', 'passwordd','saltyfresh');", returnPK=True)
     print(outp)
     #testing SELECT
     snoutput = runGetQuery(connection,"SELECT * FROM userAccounts")

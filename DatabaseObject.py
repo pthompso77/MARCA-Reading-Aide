@@ -34,7 +34,7 @@ class userAccount(DatabaseObject):
         super().__init__(initDict)
         self.__putInDB()
     def __putInDB(self):
-        query = "INSERT INTO {tablename} ('email','password','NaCl','sessionID') VALUES ('{email}','{password}','{NaCl}','{sessionID}')".format(tablename=self._tableName,**self._rowVals)
+        query = "INSERT INTO {tablename} (email,password,NaCl,sessionID) VALUES ('{email}','{password}','{NaCl}','{sessionID}')".format(tablename=self._tableName,**self._rowVals)
         dbConnect.runSetQuery(query)
     def updateDB(self, newValues_dict):
         #TODO make sure newValues has only one value? maybe...

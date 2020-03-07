@@ -27,7 +27,7 @@ password_in = html_form.getvalue('password_in')
 #for testing
 if username_in is None:
     username_in = 'myUsername'
-    
+
 messageOut = 'got username = {} and password = {}'.format(username_in, password_in)
 
 def authenticateUser():
@@ -39,7 +39,7 @@ def authenticateUser():
 	'''
     userAuthDict = {"h1":"#TODO","successMessage":"#TODO", "linkToNext":"#TODO"}
     #TODO finish the authentication process
-    
+
     return userAuthDict
 
 """ connecting to DB """
@@ -65,5 +65,10 @@ print("""Content-type: text/html\r\n\r\n
         {successMessage} <br>
         {linkToNext}
 	</p>
+    <p>
+    (TODO: finish the authenticate User)
+    and
+    (TODO: this should go to dashboard, not user-login.py)
+    </p>
 </body>
 """.format(**authenticateUser()))

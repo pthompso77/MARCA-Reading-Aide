@@ -14,7 +14,7 @@ print('Content-type: text/html\r\n\r\n')
 print ('''<!doctype html>
 <head>
 	<title>Summarize!</title>
-	<script src="scripts/JS/highlight.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<meta charset="utf-8">
   <meta name="description" content="Summarize any length of text">
   <meta name="keywords" content="Summary, Abstract, NLP, Computer science, artificial intelligence">
