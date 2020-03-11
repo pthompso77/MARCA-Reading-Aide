@@ -62,7 +62,12 @@ def runSetQuery(setQuery, connection=None, returnPK=False):
     cursor = connection.cursor()
     # TODO handle an exception from the DB (like where PK already exists)
     print(setQuery)
-    response = cursor.execute(setQuery)
+    try:
+        #response = cursor.execute(setQuery)
+        cursor.execute(setQuery)
+    except Exception as e:
+        print('runSetQuery() Exception with setQuery = ',setQuery,'\n')
+        print(e)
     rowcount = cursor.rowcount
     connection.commit()
     lastrowID = cursor.lastrowid
@@ -91,11 +96,17 @@ def insertUser(connection, userObj):
 
 
 
+
+
 """__main__ for testing"""
 if (__name__ == '__main__'):
     connection = getDBConnection()
     #testing INSERT
-    outp = runSetQuery("INSERT INTO `pthompsoDB`.`userAccounts` (email, password, NaCl) VALUES ('email', 'passwordd','saltyfresh');", returnPK=True)
+    import random
+    testEmail = 'email'+str(random.randint(0,3333))
+    test_query0311 = "INSERT INTO userAccounts (email,password,NaCl,sessionID) VALUES ('"+testEmail+"','d342be2fb321a0c5653b76a1a3910a8f674de77c6c5318e8dcb903f55b3a02fa','e28f7bcf5090fa97f53ab0fdc6bf44a2848f3f87a06eb2395ff53d3cb1c53fdf','')"
+    #outp = runSetQuery("INSERT INTO `pthompsoDB`.`userAccounts` (email, password, NaCl) VALUES ('email', 'passwordd','saltyfresh');", returnPK=True)
+    outp = runSetQuery(test_query0311, returnPK=True)
     print(outp)
     #testing SELECT
     snoutput = runGetQuery(connection,"SELECT * FROM userAccounts")

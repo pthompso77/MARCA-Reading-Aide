@@ -27,7 +27,7 @@ def isSuccess():
     responseDict = dict()
     if successful:
         responseDict['h1'] = 'Success'
-        responseDict['successMessage'] = message
+        responseDict['successMessage'] = message #''#this is for testing if needed #message
         responseDict['linkToNext'] = '<a href=dashboard.py>Go To Dashboard</a>'
     else:
         responseDict['h1'] = 'Error'
