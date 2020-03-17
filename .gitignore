@@ -5,7 +5,7 @@
 *.pyc
 *.pickle
 *.pkl
-myDBConnect.py
+realDBConnect.py
 *.commits
 
 
