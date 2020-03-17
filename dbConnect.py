@@ -1,48 +1,57 @@
 
-
 try:
     import MySQLdb
 except:
-    print('importing pymysql as MySQLdb instead')
-    import pymysql as MySQLdb
+    import mysql.connector
 
 '''
 connection values
 '''
 from myDBConnect import *
-
-
-'''
-DB table and column name(s)
-'''
-tokenDocs_TABLE = 'TokenizedDocs_Pickled'
-tokenDocs_pickle_COLUMN = 'TokenizedDocs_Pickledcol'
+config = {
+  'user': user,
+  'password': pw,
+  'host': host,
+  'database': schema,
+  'raise_on_warnings': True
+}
 
 def getDBConnection(printing = False):
     try:
         dbConnect = MySQLdb.connect(host, user, pw, schema)
         if printing:
             print('success to {} on AVL'.format(schema))
-    except Exception as e:
-        if printing:
-            print('\nerror in connecting to {}:{}'.format(schema,e))
-        errMessage = '[error getting keyWordsPhrases]\n' + str(e)
-        dbConnect = None
+    except:
+        try:
+            dbConnect = mysql.connector.connect(**config)
+            if printing:
+                print('success to {} on AVL'.format(schema))
+        except Exception as e:
+            if printing:
+                print('\nerror in connecting to {}:{}'.format(schema,e))
+            errMessage = '[error getting keyWordsPhrases]\n' + str(e)
+            dbConnect = None
     return dbConnect
 
 
-def runGetQuery(connection, getQuery, printing=False):
+def runGetQuery(getQuery, connection=None, multi=False, printing=False):
+    if connection is None:
+        connection = getDBConnection()
     cursor = connection.cursor()
-    cursor.execute(getQuery)
-    connection.commit()
-    output = cursor.fetchall()
+    cursor.execute(getQuery, multi=multi)
     if printing:
-        print(output)
+        for tup in cursor:
+            print("{}".format(tup))
+    output = cursor.lastrowid
+    alls = cursor.fetchall()
+    #if printing:
+        #print(output)
+    cursor.close()
     connection.close()
     return output
 
 
-def runSetQuery(setQuery, connection=None, returnPK=False):
+def runSetQuery(setQuery, connection=None, returnPK=False, multi=False):
     """runs a set query (or insert...)
 
     parameters:
@@ -109,9 +118,18 @@ if (__name__ == '__main__'):
     outp = runSetQuery(test_query0311, returnPK=True)
     print(outp)
     #testing SELECT
-    snoutput = runGetQuery(connection,"SELECT * FROM userAccounts")
-    print('result type:',type(snoutput))
-    print('result type[0]:',type(snoutput[0]))
-    for each in snoutput:
-        print(each)
+    query1 = "SELECT email, create_time FROM pthompsoDB.userAccounts WHERE email = '{}' ORDER BY create_time DESC;"
+    query2 = "SELECT email, create_time FROM pthompsoDB.userAccounts WHERE email = %s ORDER BY create_time DESC;"
+    query2 = "SELECT * FROM pthompsoDB.userAccounts WHERE email = %s ORDER BY create_time DESC;"
+    #query = "SELECT email, create_time FROM pthompsoDB.userAccounts ORDER BY create_time DESC;"
+    emailadd = 'email49944'
+    curs = connection.cursor()
+    #curs.execute(query1.format(emailadd))
+    curs.execute(query2,(emailadd,))
+    #curs.execute(query)
+    #for (email, time) in curs:
+        #print("{}".format(time))
+    for tup in curs:
+        print("{}".format(tup))
+    #runGetQuery(query)
     pause = True
