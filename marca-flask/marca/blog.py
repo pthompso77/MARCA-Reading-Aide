@@ -1,5 +1,7 @@
 """
 Define the blueprint and register it in the application factory.
+
+Later, define the `index` view
 """
 
 from flask import (
@@ -34,4 +36,17 @@ except:
         print("Error importing login_required or get_db:", e)
 
 bp = Blueprint('blog', __name__)
+
+
+'''=============================INDEX VIEW============================='''
+
+@bp.route('/')
+def index():
+    db = get_db()
+    posts = db.execute(
+        'SELECT p.id, title, body, created, author_id, username'
+        ' FROM post p JOIN user u on p.author_id = u.id'
+        ' ORDER by created DESC'
+    ).fetchall()
+    return render_template('blog/index.html', posts=posts)
 
