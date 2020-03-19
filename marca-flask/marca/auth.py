@@ -50,6 +50,13 @@ called with :class:`~flask.blueprints.BlueprintSetupState` when the blueprint
 is registered on an application.
 '''
 
+
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+
 '''=======================Register and Login variables======================='''
 
 # HTTP request methods
