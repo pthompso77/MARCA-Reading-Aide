@@ -53,6 +53,9 @@ blueprint is registered on an application.
 
 @bp.route('/logout')
 def logout():
+    '''Logs the user out (clears the session)
+    and returns to index page
+    '''
     session.clear()
     return redirect(url_for('index'))
 
