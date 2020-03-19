@@ -37,5 +37,9 @@ def create_app(test_config=None):
     and new flask command `init-db` which calls db's init_db_command()
     '''
 
+    from . import auth
+    app.register_blueprint(auth.bp)
+    '''Blueprint imported and registered from auth.py using app.register_blueprint().'''
+
     return app
 
