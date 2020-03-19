@@ -31,5 +31,11 @@ def create_app(test_config=None):
         whom = 'Wooorld'
         return f'Helloooo {whom}!'
 
+    import db
+    db.init_app(app)
+    '''adds teardown_appcontext
+    and new flask command `init_db_command`
+    '''
+
     return app
 
