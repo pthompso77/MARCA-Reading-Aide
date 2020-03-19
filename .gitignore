@@ -8,6 +8,8 @@
 realDBConnect.py
 *.commits
 
+*.wpr
+*.wpu
 
 venv/
 
