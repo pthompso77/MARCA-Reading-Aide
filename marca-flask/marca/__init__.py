@@ -34,7 +34,7 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
     '''adds teardown_appcontext
-    and new flask command `init_db_command`
+    and new flask command `init-db` which calls db's init_db_command()
     '''
 
     return app

@@ -49,6 +49,7 @@ def init_db(schemaFile='schema.sql'):
     with current_app.open_resource(schemaFile) as f:
         db.executescript(f.read().decode('utf8'))
 
+
 # defines a command line command called init-db that calls the init_db function and shows a success message to the user
 @click.command('init-db')
 @with_appcontext
