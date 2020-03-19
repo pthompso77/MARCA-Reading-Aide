@@ -8,7 +8,10 @@ from flask import current_app, g
 g is a special object that is unique for each request.
 It is used to store data that might be accessed by multiplefunctions during the request.
 '''
-from flask.cli import with_appcontext # Wraps a callback so that it's guaranteed to be executed with the script's application context
+from flask.cli import with_appcontext
+'''with_appcontextWraps a callback so that it's guaranteed to be executed
+with the script's application context
+'''
 
 
 def get_db():
@@ -37,4 +40,20 @@ def close_db(e=None):
 
     if db is not None:
         db.close()
+
+
+def init_db(schemaFile='schema.sql'):
+    db = get_db() # returns a database connection
+
+    # open_resource opens a file relative to the marca package
+    with current_app.open_resource(schemaFile) as f:
+        db.executescript(f.read().decode('utf8'))
+
+# defines a command line command called init-db that calls the init_db function and shows a success message to the user
+@click.command('init-db')
+@with_appcontext
+def init_db_command():
+    '''Clear the existing data and create new tables'''
+    init_db()
+    click.echo('Initialized the database')
 
