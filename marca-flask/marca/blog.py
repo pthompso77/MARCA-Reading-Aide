@@ -42,16 +42,24 @@ bp = Blueprint('blog', __name__)
 # HTTP request methods
 GET = 'GET'
 POST = 'POST'
+# HTTP codes
+http_notFound = 404
+http_forbidden = 403
 
 
 '''=============================INDEX VIEW============================='''
+
+# Database table names
+blogPostTable = 'post'
+userTable = 'user'
+
 
 @bp.route('/')
 def index():
     db = get_db()
     posts = db.execute(
         'SELECT p.id, title, body, created, author_id, username'
-        ' FROM post p JOIN user u on p.author_id = u.id'
+        f' FROM {blogPostTable} p JOIN {userTable} u on p.author_id = u.id'
         ' ORDER by created DESC'
     ).fetchall()
     return render_template('blog/index.html', posts=posts)
@@ -61,9 +69,6 @@ def index():
 
 # Error messages
 noTitleError = 'Title is required'
-
-# Database table names
-blogPostTable = 'post'
 
 
 @bp.route('/create', methods=[GET, POST])
@@ -93,4 +98,25 @@ def create():
 
     # only if there is no new blog entry submitted
     return render_template('blog/create.html')
+
+
+'''=============================UPDATE BLOG POST VIEW========================'''
+
+def get_post(id, check_author=True):
+    post = get_db().execute(
+        'SELECT p.id, title, body, created, author_id, username'
+        f' FROM {blogPostTable} p JOIN {userTable} u'
+        ' WHERE p.id = ?',
+        (id,)
+    ).fetchone()
+
+    # Post not found
+    if post is None:
+        abort(http_notFound, f"Post id {id} doesn't exist")
+
+    # User is not the author
+    if check_author and post['author-id'] != g.user['id']:
+        abort(http_forbidden)
+
+    return post
 
