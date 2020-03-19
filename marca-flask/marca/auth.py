@@ -6,10 +6,14 @@ The url_prefix will be prepended to all the URLs associated with the blueprint.
 """
 
 import functools # Tools for working with functions and callable objects
+from flask import g
+'''Whenever something is bound to g.user / g.request the proxy objects
+will forward all operations.
+If no object is bound a :exc:`RuntimeError` will be raised.
+'''
 from flask import (
     Blueprint,
     flash,
-    g,
     redirect,
     render_template,
     request,
@@ -46,8 +50,7 @@ called with :class:`~flask.blueprints.BlueprintSetupState` when the blueprint
 is registered on an application.
 '''
 
-
-'''=========================The First View: Register========================='''
+'''=======================Register and Login variables======================='''
 
 # HTTP request methods
 GET = 'GET'
@@ -56,18 +59,21 @@ POST = 'POST'
 # HTML form input names and errors
 uname = 'username'
 uname_empty_err = 'Username is required.'
+uname_wrong_err = 'Incorrect username'
 pw = 'password'
 pw_empty_err = 'Password is required.'
+pw_wrong_err = "Incorrect password"
 
 # Database table names
 userTable = 'user'
-
 
 # SQL dictionary associated with HTML form input names
 SQLdict = {
     'TODO':'maybe'
     }
 
+
+'''=========================The First View: Register========================='''
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -99,3 +105,55 @@ def register():
 
     return render_template('auth/register.html')
 
+'''=========================The Second View: Login========================='''
+
+@bp.route('/login')
+def login():
+    onSuccess_redirectTo = 'index'
+
+    if request.method == POST:
+        username = request.form[uname]
+        password = request.form[pw]
+        db = get_db()
+        error = None
+        #: get user from database
+        user = db.execute(
+            f'SELECT * FROM {userTable} WHERE username = ?', (username,)
+        ).fetchone()
+
+        if user is None:
+            error = uname_wrong_err
+        elif not check_password_hash(user['password'], password):
+            error = pw_wrong_err
+
+        if error is None:
+            # things are good, user checks out
+            session.clear()
+            #: set the session
+            session['user_id'] = user['id']
+            '''session is a dict that stores data across requests.'''
+            return redirect(url_for(onSuccess_redirectTo))
+
+        flash(error)
+
+    return render_template('auth/login.html')
+
+# before_app_request is executed before each request, even if outside of a blueprint
+@bp.before_app_request
+def load_logged_in_user():
+    '''bp.before_app_request() registers a function that runs before the view
+    function, no matter what URL is requested.
+
+    load_logged_in_user checks if a user id is stored in the session and gets
+    that user’s data from the database, storing it on g.user, which lasts for
+    the length of the request. If there is no user id, or if the id doesn’t
+    exist, g.user will be None.
+    '''
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = get_db().execute(
+            f'SELECT * FROM {userTable} WHERE id = ?', (user_id,)
+        ).fetchone()
