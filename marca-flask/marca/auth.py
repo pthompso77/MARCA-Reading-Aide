@@ -37,17 +37,17 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 '''Blueprint is imported and registered from the factory
 using app.register_blueprint().
 
-Represents a blueprint, a collection of routes and other app-related functions
-that can be registered on a real application later.
+Represents a blueprint, a collection of routes and other app-related
+functions that can be registered on a real application later.
 
 A blueprint is an object that allows defining application functions without
 requiring an application object ahead of time. It uses the same decorators
-as :class:`~flask.Flask`, but defers the need for an application by recording
-them for later registration.
+as :class:`~flask.Flask`, but defers the need for an application by
+recording them for later registration.
 
 Decorating a function with a blueprint creates a deferred function that is
-called with :class:`~flask.blueprints.BlueprintSetupState` when the blueprint
-is registered on an application.
+called with :class:`~flask.blueprints.BlueprintSetupState` when the
+blueprint is registered on an application.
 '''
 
 
@@ -144,6 +144,24 @@ def login():
         flash(error)
 
     return render_template('auth/login.html')
+
+
+def login_required(view):
+    '''This decorator returns a new view function that wraps the original
+    view it’s applied to.
+    The new function checks if a user is loaded and redirects to the login
+    page otherwise.
+    If a user is loaded the original view is called and continues normally.
+    '''
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
 
 # before_app_request is executed before each request, even if outside of a blueprint
 @bp.before_app_request
