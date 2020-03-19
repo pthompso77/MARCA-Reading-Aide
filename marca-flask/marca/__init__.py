@@ -9,7 +9,7 @@ def create_app(test_config=None):
     #: set some default configuration that the app will use
     app.config.from_mapping(
         SECRET_KEY='dev', #TODO set to a random value when deploying
-        DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
+        DATABASE = os.path.join(app.instance_path, 'marca.sqlite'),
     )
 
     if test_config is None: # overrides the default configuration
@@ -31,7 +31,7 @@ def create_app(test_config=None):
         whom = 'Wooorld'
         return f'Helloooo {whom}!'
 
-    import db
+    from . import db
     db.init_app(app)
     '''adds teardown_appcontext
     and new flask command `init_db_command`
