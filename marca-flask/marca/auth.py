@@ -85,7 +85,7 @@ SQLdict = {
 
 '''=========================The First View: Register========================='''
 
-@bp.route('/register', methods=['GET', 'POST'])
+@bp.route('/register', methods=[GET, POST])
 def register():
     if request.method == POST:
         username = request.form[uname]
