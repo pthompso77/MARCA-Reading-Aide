@@ -80,11 +80,12 @@ def create():
         body = request.form['body']
         error = None
 
+        # set error if title field is empty
         if not title:
             error = noTitleError
 
         if error is not None:
-            #: make the error available to display
+            #: make the error available to display in HTML
             flash(error)
         else: # no errors, all is well
             db = get_db()
@@ -94,15 +95,19 @@ def create():
                 (title, body, g.user['id'])
             )
             db.commit()
+            #: go back to index after create
             return redirect(url_for('blog.index'))
 
     # only if there is no new blog entry submitted
     return render_template('blog/create.html')
 
 
-'''=============================UPDATE BLOG POST VIEW========================'''
+'''=======================UPDATE/DELETE BLOG POST VIEWS======================'''
 
 def get_post(id, check_author=True):
+    '''Returns a blog post from database, searching by post ID
+    This method is used by update view and delete view
+    '''
     post = get_db().execute(
         'SELECT p.id, title, body, created, author_id, username'
         f' FROM {blogPostTable} p JOIN {userTable} u'
@@ -119,4 +124,46 @@ def get_post(id, check_author=True):
         abort(http_forbidden)
 
     return post
+
+
+'''==========UPDATE VIEW=========='''
+
+# Error messages
+
+
+
+@bp.route('/<int:id>/update', methods=[GET, POST])
+@login_required
+def update(id):
+    post = get_post(id)
+
+    # if there is something to sumbmit (POST data)
+    if request.method == POST:
+        title = request.form['title']
+        body = request.form['body']
+        error = None
+
+        # set error if title field is empty
+        if not title:
+            error = noTitleError
+
+        if error is not None:
+            #: make the error available to display in HTML
+            flash(error)
+        else: # no errors, update the blog post in database
+            db = get_db()
+            db.execute(
+                f'UPDATE {blogPostTable} SET title = ?, body = ?'
+                ' WHERE id = ?',
+                (title, body, id)
+            )
+            db. commit()
+            #: go back to index after update
+            return redirect(url_for('blog.index'))
+
+        # only gets here if there is an error
+        assert error is not None # TODO review this assertion
+        return render_template('blog/update.html', post=post)
+
+
 
