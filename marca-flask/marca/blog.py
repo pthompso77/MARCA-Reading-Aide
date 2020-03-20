@@ -71,7 +71,7 @@ def index():
 noTitleError = 'Title is required'
 
 
-@bp.route('/create', methods=[GET, POST])
+@bp.route('/create', methods=(GET, POST))
 @login_required
 def create():
     # only if a new blog entry is submitted
@@ -132,7 +132,7 @@ def get_post(id, check_author=True):
 
 
 
-@bp.route('/<int:id>/update', methods=[GET, POST])
+@bp.route('/<int:id>/update', methods=(GET, POST))
 @login_required
 def update(id):
     post = get_post(id)
@@ -165,5 +165,16 @@ def update(id):
         assert error is not None # TODO review this assertion
         return render_template('blog/update.html', post=post)
 
+'''==========DELETE VIEW=========='''
 
+@bp.route('/<ind:id>/delete', methods=(POST,))
+@login_required
+def delete(id):
+    '''Deletes a post with the id provided'''
+    get_post(id)
+    db = get_db()
+    db.execute(f'DELETE from {blogPostTable} WHERE id = ?', (id,))
+    db.commit()
+    # after deleting, return to blog index
+    return redirect(url_for('blog.index'))
 
