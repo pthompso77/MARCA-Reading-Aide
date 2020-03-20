@@ -117,7 +117,7 @@ def register():
 
 '''=========================The Second View: Login========================='''
 
-@bp.route('/login')
+@bp.route('/login', methods=(GET, POST))
 def login():
     onSuccess_redirectTo = 'index'
 
