@@ -91,11 +91,15 @@ def create():
             db = get_db()
             try:
                 userID = g.user['id']
-                q = f'''INSERT INTO {blogPostTable} (title, body, author_id VALUES ({title}, {body}, {userID})'''
+                print("got userID:", userID)
+                q = f'''INSERT INTO {blogPostTable} (title, body, author_id) VALUES ('{title}', '{body}', '{userID}')'''
+                print('trying to execute:\n',q)
                 db.execute(q)
-            except:
+                print('SUCCESS!')
+            except Exception as e:
+                print("Excepted: ", e)
                 db.execute(
-                f'INSERT INTO {blogPostTable} (title, body, author_id'
+                f'INSERT INTO {blogPostTable} (title, body, author_id)'
                 ' VALUES (?, ?, ?)',
                 (title, body, g.user['id'])
             )
