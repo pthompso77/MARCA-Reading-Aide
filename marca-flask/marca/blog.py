@@ -128,8 +128,14 @@ def get_post(id, check_author=True):
     if post is None:
         abort(http_notFound, f"Post id {id} doesn't exist")
 
-    # User is not the author
-    if check_author and post['author-id'] != g.user['id']:
+    try:
+        # User is not the author
+        if check_author and post['author_id'] != g.user['id']:
+            abort(http_forbidden)
+    except Exception as e:
+        print(f'''Error - {e}
+        post keys = {post.keys()}
+        g.user keys = {g.user.keys()}''')
         abort(http_forbidden)
 
     return post
@@ -170,9 +176,9 @@ def update(id):
             #: go back to index after update
             return redirect(url_for('blog.index'))
 
-        # only gets here if there is an error
-        assert error is not None # TODO review this assertion
-        return render_template('blog/update.html', post=post)
+    # only gets here if there is an error
+    # assert error is not None # TODO review this assertion
+    return render_template('blog/update.html', post=post)
 
 '''==========DELETE VIEW=========='''
 
