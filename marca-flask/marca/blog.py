@@ -89,7 +89,12 @@ def create():
             flash(error)
         else: # no errors, all is well
             db = get_db()
-            db.execute(
+            try:
+                userID = g.user['id']
+                q = f'''INSERT INTO {blogPostTable} (title, body, author_id VALUES ({title}, {body}, {userID})'''
+                db.execute(q)
+            except:
+                db.execute(
                 f'INSERT INTO {blogPostTable} (title, body, author_id'
                 ' VALUES (?, ?, ?)',
                 (title, body, g.user['id'])
