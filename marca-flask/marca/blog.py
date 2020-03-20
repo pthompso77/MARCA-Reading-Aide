@@ -167,7 +167,7 @@ def update(id):
 
 '''==========DELETE VIEW=========='''
 
-@bp.route('/<ind:id>/delete', methods=(POST,))
+@bp.route('/<int:id>/delete', methods=(POST,))
 @login_required
 def delete(id):
     '''Deletes a post with the id provided'''
