@@ -1,0 +1,4 @@
+include marca/schema.sql
+graft marca/static
+graft marca/templates
+global-exclude *.pyc
