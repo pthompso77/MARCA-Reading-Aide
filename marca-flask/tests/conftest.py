@@ -1,5 +1,4 @@
 import os, sys
-verbose = sys.argv[1] == '-v'
 import tempfile
 
 import pytest
