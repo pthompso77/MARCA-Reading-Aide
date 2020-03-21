@@ -68,7 +68,7 @@ def index():
 '''=============================CREATE BLOG POST VIEW========================'''
 
 # Error messages
-noTitleError = 'Title is required'
+noTitleError = 'Title is required.'
 
 
 @bp.route('/create', methods=(GET, POST))

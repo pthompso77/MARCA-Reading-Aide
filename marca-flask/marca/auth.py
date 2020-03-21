@@ -69,10 +69,10 @@ POST = 'POST'
 # HTML form input names and errors
 uname = 'username'
 uname_empty_err = 'Username is required.'
-uname_wrong_err = 'Incorrect username'
+uname_wrong_err = 'Incorrect username.'
 pw = 'password'
 pw_empty_err = 'Password is required.'
-pw_wrong_err = "Incorrect password"
+pw_wrong_err = "Incorrect password."
 
 # Database table names
 userTable = 'user'
