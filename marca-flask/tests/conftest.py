@@ -93,5 +93,9 @@ class AuthActions(object):
 
 @pytest.fixture
 def auth(client):
+    '''With the auth fixture, you can call auth.login() in a test to log in as 
+    the test user, which was inserted as part of the test data in the app 
+    fixture.
+    '''
     return AuthActions(client)
 
