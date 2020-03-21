@@ -28,8 +28,7 @@ def create_app(test_config=None):
     # a simple page to say Helloooo!
     @app.route('/hello')
     def hello():
-        whom = 'Wooorld'
-        return f'Helloooo {whom}!'
+        return 'Hello, World!'
 
     from . import db
     db.init_app(app)
