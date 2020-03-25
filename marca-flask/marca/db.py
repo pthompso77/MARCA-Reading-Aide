@@ -1,8 +1,8 @@
 """Sets up connection to database"""
 
-#import sqlite3
-from mysql import connector
-print('got mysql',connector)
+from flaskext.mysql import MySQL
+#from mysql import connector
+#print('got mysql',connector)
 
 import click # Click is a simple Python module inspired by the stdlib optparse to make writing command line scripts fun.
 from flask import current_app, g
@@ -11,7 +11,7 @@ g is a special object that is unique for each request.
 It is used to store data that might be accessed by multiplefunctions during the request.
 '''
 from flask.cli import with_appcontext
-'''with_appcontextWraps a callback so that it's guaranteed to be executed
+'''with_appcontext Wraps a callback so that it's guaranteed to be executed
 with the script's application context
 '''
 
@@ -20,32 +20,39 @@ def get_db():
     '''get_db will be called when the application has been created and is handling a request,
     so current_app can be used
     '''
-    if 'db' not in g:
+    #with current_app.app_context():
+    if 'db' not in g: #yeah
         #: Establish a connection to the file pointed at by the DATABASE configuration key
         try:
-            print('trying: `g.db = connector.connect()`')
-            g.db = connector.connect()
+            print('''trying: `g.db = current_app.config['DATABASE']`''')
+#            g.db = connect
+            #g.db = MySQL(current_app)
+            g.db = current_app.config['DATABASE']
                 #current_app.config['DATABASE'],
 #                detect_types=sqlite3.PARSE_DECLTYPES
 #            )
-            print(f'''success with connector?
-            g.db = {g.db}''')
-        except:
-            print('mysql connector failed... trying sqlite3')
-            g.db = sqlite3.connect(
-                current_app.config['DATABASE'],
-                detect_types=sqlite3.PARSE_DECLTYPES
-            )
+            print(f'''success with connector?\n\tg.db = {g.db}''')
+        except Exception as e:
+            print('mysql connector failed... E=',e)
+            print('''--------
+            trying: g.db = mysql''')
+            try: 
+                print('current_app=',current_app)
+                with current_app.app_context():
+                    print(current_app.config)
+                    g.db = mysql.connect.cursor()
+            except Exception as e:
+                print('FAILED, e = ',e)
         #: Tell the connection to return rows that behave like dicts. This allows accessing the columns by name.
         # REPLACING: g.db.row_factory = sqlite3.Row
-        print(f'''
-         REPLACING: g.db.row_factory = sqlite3.Row''')
+        #print(f'''
+        # REPLACING: g.db.row_factory = sqlite3.Row''')
         def make_dicts(cursor, row):
             return dict((cursor.description[idx][0], value)
                        for idx, value in enumerate(row))
-        
-        g.db.row_factory = make_dicts
-        print('success: `g.db.row_factory = make_dicts`')
+
+        #g.db.row_factory = make_dicts
+        #print('success: `g.db.row_factory = make_dicts`')
 
     return g.db
 
@@ -63,6 +70,12 @@ def close_db(e=None):
 
 
 def init_db(schemaFile='schema.sql'):
+    print('''
+    
+    -----------
+    DO WE EVER GET HERE?
+    -----------
+    ''')
     db = get_db() # returns a database connection
 
     # open_resource opens a file relative to the marca package

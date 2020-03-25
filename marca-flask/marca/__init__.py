@@ -1,18 +1,20 @@
 import os
 
 from flask import Flask
-from flask_mysqldb import MySQL
+#from flask_mysqldb import MySQL
+from flaskext.mysql import MySQL
+from pymysql.cursors import DictCursor
 # DB credentials
 try:
-    print('trying: `myDBConnect import host, user, pw, schema`')
-    from myDBConnect import host, user, pw, schema
+    print('trying: `from marca.myDBConnect import host, user, pw, schema`')
+    from marca.myDBConnect import host, user, pw, schema
     print('success __init__.py 1')
 except Exception as e:
     print(f'''{e} 
-        error in "from myDBConnect import host, user, pw, schema"
-        trying: from marca.myDBConnect import host, user, pw, schema''')
-    try:
-        from marca.myDBConnect import host, user, pw, schema
+        error in `from marca.myDBConnect import host, user, pw, schema`
+        trying: from myDBConnect import host, user, pw, schema''')
+    try:        
+        from myDBConnect import host, user, pw, schema
         print('success __init__.py 2')
     except Exception as e:
         print(f'''Nope, still... {e}''')
@@ -21,7 +23,6 @@ except Exception as e:
 def create_app(test_config=None):
     #: create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    mysql = MySQL(app)
     #: set some default configuration that the app will use
     print('trying to     app.config.from_mapping')
     app.config.from_mapping(
@@ -29,8 +30,20 @@ def create_app(test_config=None):
         MYSQL_HOST = host, 
         MYSQL_USER = user, 
         MYSQL_PASSWORD = pw, 
-        MYSQL_DB = schema
+        MYSQL_DB = schema,
+        MYSQL_CURSORCLASS = 'DictCursor'
     )
+    app.config.from_mapping(
+        SECRET_KEY='dev', #TODO set to a random value when deploying
+        MYSQL_DATABASE_HOST = host, 
+        MYSQL_DATABASE_USER = user, 
+        MYSQL_DATABASE_PASSWORD = pw, 
+        MYSQL_DATABASE_DB = schema,
+        MYSQL_DATABASE_CURSORCLASS = 'DictCursor'
+    )
+    mysql = MySQL(app)
+    mysql = MySQL(app, cursorclass=DictCursor)
+    app.config.from_mapping(DATABASE = mysql) # yep
     print('success in __init__.py:create_app()')
 
     if test_config is None: # overrides the default configuration
