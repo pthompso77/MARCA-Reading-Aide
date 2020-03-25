@@ -39,9 +39,9 @@ def create_app(test_config=None):
         MYSQL_DATABASE_USER = user, 
         MYSQL_DATABASE_PASSWORD = pw, 
         MYSQL_DATABASE_DB = schema,
-        MYSQL_DATABASE_CURSORCLASS = 'DictCursor'
+        MYSQL_DATABASE_CURSORCLASS = 'DictCursor' #prob not necessary
     )
-    mysql = MySQL(app)
+    #mysql = MySQL(app)
     mysql = MySQL(app, cursorclass=DictCursor)
     app.config.from_mapping(DATABASE = mysql) # yep
     print('success in __init__.py:create_app()')
