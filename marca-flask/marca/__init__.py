@@ -1,16 +1,37 @@
 import os
 
 from flask import Flask
+from flask_mysqldb import MySQL
+# DB credentials
+try:
+    print('trying: `myDBConnect import host, user, pw, schema`')
+    from myDBConnect import host, user, pw, schema
+    print('success __init__.py 1')
+except Exception as e:
+    print(f'''{e} 
+        error in "from myDBConnect import host, user, pw, schema"
+        trying: from marca.myDBConnect import host, user, pw, schema''')
+    try:
+        from marca.myDBConnect import host, user, pw, schema
+        print('success __init__.py 2')
+    except Exception as e:
+        print(f'''Nope, still... {e}''')
 
 
 def create_app(test_config=None):
     #: create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    mysql = MySQL(app)
     #: set some default configuration that the app will use
+    print('trying to     app.config.from_mapping')
     app.config.from_mapping(
         SECRET_KEY='dev', #TODO set to a random value when deploying
-        DATABASE = os.path.join(app.instance_path, 'marca.sqlite'),
+        MYSQL_HOST = host, 
+        MYSQL_USER = user, 
+        MYSQL_PASSWORD = pw, 
+        MYSQL_DB = schema
     )
+    print('success in __init__.py:create_app()')
 
     if test_config is None: # overrides the default configuration
         #: load the instance config, if it exists, when not testing
