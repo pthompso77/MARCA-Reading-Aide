@@ -1,6 +1,8 @@
 """Sets up connection to database"""
 
-import sqlite3
+#import sqlite3
+from mysql import connector
+print('got mysql',connector)
 
 import click # Click is a simple Python module inspired by the stdlib optparse to make writing command line scripts fun.
 from flask import current_app, g
@@ -20,12 +22,30 @@ def get_db():
     '''
     if 'db' not in g:
         #: Establish a connection to the file pointed at by the DATABASE configuration key
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
+        try:
+            print('trying: `g.db = connector.connect()`')
+            g.db = connector.connect()
+                #current_app.config['DATABASE'],
+#                detect_types=sqlite3.PARSE_DECLTYPES
+#            )
+            print(f'''success with connector?
+            g.db = {g.db}''')
+        except:
+            print('mysql connector failed... trying sqlite3')
+            g.db = sqlite3.connect(
+                current_app.config['DATABASE'],
+                detect_types=sqlite3.PARSE_DECLTYPES
+            )
         #: Tell the connection to return rows that behave like dicts. This allows accessing the columns by name.
-        g.db.row_factory = sqlite3.Row
+        # REPLACING: g.db.row_factory = sqlite3.Row
+        print(f'''
+         REPLACING: g.db.row_factory = sqlite3.Row''')
+        def make_dicts(cursor, row):
+            return dict((cursor.description[idx][0], value)
+                       for idx, value in enumerate(row))
+        
+        g.db.row_factory = make_dicts
+        print('success: `g.db.row_factory = make_dicts`')
 
     return g.db
 
@@ -66,4 +86,8 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     #: Add a new command that can be called with the flask command
     app.cli.add_command(init_db_command)
+
+
+# delete me
+#db = get_db()
 
