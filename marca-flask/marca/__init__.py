@@ -10,10 +10,10 @@ try:
     from marca.myDBConnect import host, user, pw, schema
     print('success __init__.py 1')
 except Exception as e:
-    print(f'''{e} 
+    print(f'''{e}
         error in `from marca.myDBConnect import host, user, pw, schema`
         trying: from myDBConnect import host, user, pw, schema''')
-    try:        
+    try:
         from myDBConnect import host, user, pw, schema
         print('success __init__.py 2')
     except Exception as e:
@@ -27,17 +27,17 @@ def create_app(test_config=None):
     print('trying to     app.config.from_mapping')
     app.config.from_mapping(
         SECRET_KEY='dev', #TODO set to a random value when deploying
-        MYSQL_HOST = host, 
-        MYSQL_USER = user, 
-        MYSQL_PASSWORD = pw, 
+        MYSQL_HOST = host,
+        MYSQL_USER = user,
+        MYSQL_PASSWORD = pw,
         MYSQL_DB = schema,
         MYSQL_CURSORCLASS = 'DictCursor'
     )
     app.config.from_mapping(
         SECRET_KEY='dev', #TODO set to a random value when deploying
-        MYSQL_DATABASE_HOST = host, 
-        MYSQL_DATABASE_USER = user, 
-        MYSQL_DATABASE_PASSWORD = pw, 
+        MYSQL_DATABASE_HOST = host,
+        MYSQL_DATABASE_USER = user,
+        MYSQL_DATABASE_PASSWORD = pw,
         MYSQL_DATABASE_DB = schema,
         MYSQL_DATABASE_CURSORCLASS = 'DictCursor' #prob not necessary
     )
@@ -75,8 +75,14 @@ def create_app(test_config=None):
     '''Blueprint imported and registered from auth.py using
     app.register_blueprint().
     '''
-    from . import blog
-    app.register_blueprint(blog.bp)
+
+    #from . import blog
+    #app.register_blueprint(blog.bp)
+    ##: this has no url_prefix because we want it to be the index
+    #app.add_url_rule('/', endpoint='index')
+
+    from . import marca
+    app.register_blueprint(marca.bp)
     #: this has no url_prefix because we want it to be the index
     app.add_url_rule('/', endpoint='index')
 
