@@ -3,8 +3,8 @@ Main page for Marca app (index)
 """
 
 import logging as log
-log.basicConfig(filename='marca.log', level=log.DEBUG, format='%(asctime)s %(message)s')
-log.info('Starting marca.py')
+log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
+log.info('Starting marcaBP.py')
 
 
 from flask import (
@@ -34,7 +34,7 @@ except:
 
 
 #: Initialize Blueprint
-bp = Blueprint('marca', __name__)
+bp = Blueprint('marcaBP', __name__)
 
 
 '''=======================Variables======================='''
@@ -54,16 +54,16 @@ blogPostTable = 'post'
 userTable = 'user'
 
 
-@bp.route('/')
+@bp.route('/marca')
 def index():
     log.info('Starting def index()')
-    db = get_db().connect()
-    cur = db.cursor()
+    #db = get_db().connect()
+    #cur = db.cursor()
 
     # TODO -
 
     log.info('Finished def index()')
-    return render_template('blog/index.html', posts=posts)
+    return render_template('summary/index.html')
 
 
 
