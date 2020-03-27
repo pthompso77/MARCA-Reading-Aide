@@ -9,6 +9,7 @@ realDBConnect.py
 *.commits
 *.cgi
 *.old
+*.log
 
 *.wpr
 *.wpu
