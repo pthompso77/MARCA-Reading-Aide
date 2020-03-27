@@ -56,12 +56,25 @@ userTable = 'user'
 
 @bp.route('/')
 def index():
-    db = get_db()
-    posts = db.execute(
+#    db = get_db()
+    db = get_db().connect()
+    cur = db.cursor()
+    print(f'''
+    TRYING `posts = db.execute(...)`
+    db = {db}''')
+    cur.execute(
         'SELECT p.id, title, body, created, author_id, username'
         f' FROM {blogPostTable} p JOIN {userTable} u on p.author_id = u.id'
         ' ORDER by created DESC'
-    ).fetchall()
+    )
+    db.commit()        
+    posts = cur.fetchall()
+    
+#    posts = db.execute(
+#        'SELECT p.id, title, body, created, author_id, username'
+#        f' FROM {blogPostTable} p JOIN {userTable} u on p.author_id = u.id'
+#        ' ORDER by created DESC'
+#    ).fetchall()
     return render_template('blog/index.html', posts=posts)
 
 
@@ -88,17 +101,25 @@ def create():
             #: make the error available to display in HTML
             flash(error)
         else: # no errors, all is well
-            db = get_db()
+#            db = get_db()
+            db = get_db().connect()
+            cur = db.cursor()
+          
+            
             try:
+                print(f'''g.user.keys() = 
+                {g.user.keys()}'''
+                     )
                 userID = g.user['id']
                 print("got userID:", userID)
                 q = f'''INSERT INTO {blogPostTable} (title, body, author_id) VALUES ('{title}', '{body}', '{userID}')'''
                 print('trying to execute:\n',q)
-                db.execute(q)
+#                db.execute(q)
+                cur.execute(q)
                 print('SUCCESS!')
             except Exception as e:
                 print("Excepted: ", e)
-                db.execute(
+                cur.execute(
                 f'INSERT INTO {blogPostTable} (title, body, author_id)'
                 ' VALUES (?, ?, ?)',
                 (title, body, g.user['id'])

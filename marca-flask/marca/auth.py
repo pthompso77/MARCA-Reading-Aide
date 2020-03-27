@@ -75,7 +75,8 @@ pw_empty_err = 'Password is required.'
 pw_wrong_err = "Incorrect password."
 
 # Database table names
-userTable = 'user'
+userTable = 'userAccounts'
+
 
 # SQL dictionary associated with HTML form input names
 SQLdict = {
@@ -90,23 +91,38 @@ def register():
     if request.method == POST:
         username = request.form[uname]
         password = request.form[pw]
-        db = get_db()
+        #db = get_db()
+        db = get_db().connect()
+        cur = db.cursor()
+        #test
+        q=(f'''SELECT userID FROM {userTable} WHERE email = "{username}"''')
+        print('q is:',q)
+        res = cur.execute(q)
+        print('res: ',res)
+        #done test
         error = None
 
         if not username:
             error = uname_empty_err
         elif not password:
             error = pw_empty_err
-        # TODO come back to this... what is this funky thing with the ? in the string???
-        elif db.execute(
-            f'SELECT id FROM {userTable} WHERE username = ?', (username,)
-        ).fetchone() is not None:
+        #elif db.execute(
+#            f'SELECT userID FROM {userTable} WHERE email = ?', (username,)
+#        ).fetchone() is not None:
+        elif cur.execute(f'''SELECT userID FROM {userTable} 
+            WHERE email = "{username}"'''
+            ) > 0:
             error = f'User {username} is already registered.'
 
         if error is None:
-            db.execute(
-                f'INSERT INTO {userTable} (username, password) VALUES (?, ?)',
-                (username, generate_password_hash(password))
+#            db.execute(
+#                f'INSERT INTO {userTable} (email, password) VALUES (?, ?)',
+#                (username, generate_password_hash(password))
+#            )
+            cur.execute(
+                f'''INSERT INTO {userTable} (email, password, NaCl) 
+                VALUES ("{username}", "{generate_password_hash(password)}",
+                "this_salt")'''
             )
             db.commit()
             return redirect(url_for('auth.login'))
@@ -127,9 +143,14 @@ def login():
         db = get_db()
         error = None
         #: get user from database
-        user = db.execute(
-            f'SELECT * FROM {userTable} WHERE username = ?', (username,)
-        ).fetchone()
+#        user = db.execute(
+#            f'SELECT * FROM {userTable} WHERE email = ?', (username,)
+#        ).fetchone()
+        db = get_db().connect()
+        cur = db.cursor()
+        q = f'''SELECT * FROM {userTable} WHERE email = "{username}"'''
+        cur.execute(q)
+        user = cur.fetchone()
 
         if user is None:
             error = uname_wrong_err
@@ -178,10 +199,40 @@ def load_logged_in_user():
     exist, g.user will be None.
     '''
     user_id = session.get('user_id')
+    user_id = 1
 
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            f'SELECT * FROM {userTable} WHERE id = ?', (user_id,)
+        #new
+        db = get_db().connect()
+        cur = db.cursor()
+        cur.execute(
+            f'SELECT * FROM {userTable} WHERE email = {user_id}'
+        )
+        db.commit()        
+        g.user = cur.fetchone()
+        print(f'''
+        
+        ==================
+        GOT USER
+        
+        RIGHT??
+        
+        user = {g.user}
+        
+        ==================
+        ''')
+        
+        return
+    
+        #orig
+        g.user = get_db().connect().cursor().execute(
+            f'SELECT * FROM {userTable} WHERE userID = ?', (user_id,)
         ).fetchone()
+        # again...
+        db = get_db()
+        cur = db.cursor().execute(
+            f'SELECT * FROM {userTable} WHERE userID = {user_id}'
+        )
+        #g.user = get_db().connect().
