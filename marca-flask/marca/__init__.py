@@ -76,10 +76,10 @@ def create_app(test_config=None):
     app.register_blueprint().
     '''
 
-    from . import blog
-    app.register_blueprint(blog.bp)
-    #: this has no url_prefix because we want it to be the index
-    app.add_url_rule('/', endpoint='index')
+    #from . import blog
+    #app.register_blueprint(blog.bp)
+    ##: this has no url_prefix because we want it to be the index
+    #app.add_url_rule('/', endpoint='index')
 
 
     '''Now registering marca Blueprint'''
@@ -89,7 +89,7 @@ def create_app(test_config=None):
     from . import marcaBP
     app.register_blueprint(marcaBP.bp)
     #: this has no url_prefix because we want it to be the index
-    #app.add_url_rule('/', endpoint='index')
+    app.add_url_rule('/', endpoint='index')
 
     return app
 

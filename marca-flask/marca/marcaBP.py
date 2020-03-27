@@ -54,7 +54,7 @@ blogPostTable = 'post'
 userTable = 'user'
 
 
-@bp.route('/marca')
+@bp.route('/')
 def index():
     log.info('Starting def index()')
     #db = get_db().connect()
