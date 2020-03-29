@@ -36,7 +36,8 @@ flex-basis
 flex
 align-self
 */
-#input-section {
+/* #input-section { */
+#topLeft-section {
 /*	order: 2;*/
         flex-grow: 2;/* default is 0
 /*	flex-shrink: 0; default is 1*/
