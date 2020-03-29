@@ -67,3 +67,18 @@ def index():
 
 
 
+'''=======================Actions======================='''
+
+# TODO
+@bp.route('/submitText', methods=(POST,))
+def submitText():
+    '''takes submitted text
+    returns a summary
+    form id="text-form"
+    '''
+    # TODO
+    return('TODO')
+
+
+
+
