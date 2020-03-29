@@ -30,7 +30,7 @@
         <!--g is automatically available in templates-->
         {% if g.user %}
               <li><span>g.user['username'] (fix this)</span>
-              <li><a href="url_for('auth.logout')">Log Out</a>
+              <li><a href="{{url_for('auth.logout')}}">Log Out</a>
 
         {% else %}
               <li><a id="user-login" href="{{ url_for('auth.login') }}">
@@ -51,12 +51,17 @@
 
 <!----TOP HALF---->
 <div class="flex-container">
-
+{% block topHalf %}
 
     <!--TOP LEFT-->
-    <section id="input-section">
+    <section id="topLeft-section">
+    {% block topLeft %}
 
-              <h1>Insert Text to Summarize Below</h1>
+              <h1>
+              {% block topLeft_H1 %}
+              Insert Text to Summarize Below
+              {% endblock topLeft_H1 %}
+              </h1>
 
               <div id="text-container">
                   <textarea id="text-input" name="userInput" form="text-form" required>
@@ -66,6 +71,7 @@
               <form id="text-form" action="{{ url_for('marcaBP.submitText') }}" method="post">
                   <input type="submit" id="submit-text" value="Summarize"/>
               </form>
+    {% endblock topLeft %}
     </section>
     <!--end TOP LEFT-->
 
@@ -88,6 +94,7 @@
   <!--end TOP RIGHT-->
 
 
+{% endblock topHalf %}
 </div>
 <!----end TOP HALF---->
 
@@ -101,9 +108,9 @@
 
 <div id="{% block bottomDivID %} test-text {% endblock bottomDivID %}">
     <h1>
-    {% block bottomH1 %}
+    {% block bottom_H1 %}
         Sample Text
-    {% endblock bottomH1 %}
+    {% endblock bottom_H1 %}
     </h1>
     <section>
       <article>
