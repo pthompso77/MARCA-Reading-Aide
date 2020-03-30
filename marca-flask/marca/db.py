@@ -36,7 +36,7 @@ def get_db():
             print('mysql connector failed... E=',e)
             print('''--------
             trying: g.db = mysql''')
-            try: 
+            try:
                 print('current_app=',current_app)
                 with current_app.app_context():
                     print(current_app.config)
@@ -57,6 +57,15 @@ def get_db():
     return g.db
 
 
+#def get_db_trying(includeCursor=False):
+    #dbConnect = get_db()
+    #cursor = dbConnect.cursor()
+    #if includeCursor:
+        #return dbConnect, cursor
+    #else:
+        #return dbConnect
+
+
 def close_db(e=None):
     '''Checks if a connection was created by checking if g.db was set.
     If the connection exists, it is closed.
@@ -74,7 +83,7 @@ def close_db(e=None):
 
 def init_db(schemaFile='schema.sql'):
     print('''
-    
+
     -----------
     DO WE EVER GET HERE?
     -----------
