@@ -19,10 +19,17 @@ except Exception as e:
     except Exception as e:
         print(f'''Nope, still... {e}''')
 
+import logging as log
+log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
+log.info('Starting __init__.py')
+
+
 
 def create_app(test_config=None):
     #: create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True, )
+    app = Flask(import_name=__name__, static_url_path='/~pthompso/MARCA-Reading-Aide/marca-flask/marca/static', static_host=None, host_matching=False, subdomain_matching=True, template_folder="templates", instance_path=None, instance_relative_config=True, root_path=None)
+
     #: set some default configuration that the app will use
     print('trying to     app.config.from_mapping')
     app.config.from_mapping(
@@ -92,4 +99,7 @@ def create_app(test_config=None):
     app.add_url_rule('/', endpoint='index')
 
     return app
+
+if __name__ == '__main__':
+    stopHere=True
 
