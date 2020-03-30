@@ -25,10 +25,11 @@ from werkzeug.security import (
     generate_password_hash
 )
 try:
-    from db import get_db
-except:
+    from marca.db import get_db
+except Exception as e:
+    print("Exception: ",e)
     try:
-        from marca.db import get_db
+        from db import get_db
     except Exception as e:
         print("Exception in auth.py:", e)
 
@@ -109,7 +110,7 @@ def register():
         #elif db.execute(
 #            f'SELECT userID FROM {userTable} WHERE email = ?', (username,)
 #        ).fetchone() is not None:
-        elif cur.execute(f'''SELECT userID FROM {userTable} 
+        elif cur.execute(f'''SELECT userID FROM {userTable}
             WHERE email = "{username}"'''
             ) > 0:
             error = f'User {username} is already registered.'
@@ -120,7 +121,7 @@ def register():
 #                (username, generate_password_hash(password))
 #            )
             cur.execute(
-                f'''INSERT INTO {userTable} (email, password, NaCl) 
+                f'''INSERT INTO {userTable} (email, password, NaCl)
                 VALUES ("{username}", "{generate_password_hash(password)}",
                 "this_salt")'''
             )
@@ -210,22 +211,22 @@ def load_logged_in_user():
         cur.execute(
             f'SELECT * FROM {userTable} WHERE email = {user_id}'
         )
-        db.commit()        
+        db.commit()
         g.user = cur.fetchone()
         print(f'''
-        
+
         ==================
         GOT USER
-        
+
         RIGHT??
-        
+
         user = {g.user}
-        
+
         ==================
         ''')
-        
+
         return
-    
+
         #orig
         g.user = get_db().connect().cursor().execute(
             f'SELECT * FROM {userTable} WHERE userID = ?', (user_id,)
