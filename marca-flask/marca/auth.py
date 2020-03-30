@@ -129,9 +129,8 @@ def register():
 #                (username, generate_password_hash(password))
 #            )
             cur.execute(
-                f'''INSERT INTO {userTable} (email, password, NaCl)
-                VALUES ("{username}", "{generate_password_hash(password)}",
-                "this_salt")'''
+                f'''INSERT INTO {userTable} (email, password)
+                VALUES ("{username}", "{generate_password_hash(password)}")'''
             )
             db.commit()
             return redirect(url_for('auth.login'))
