@@ -34,6 +34,12 @@ except Exception as e:
         print("Exception in auth.py:", e)
 
 
+'''Log File'''
+import logging as log
+log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
+log.info('Starting auth.py')
+
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 '''Blueprint is imported and registered from the factory
 using app.register_blueprint().
@@ -97,9 +103,11 @@ def register():
         cur = db.cursor()
         #test
         q=(f'''SELECT userID FROM {userTable} WHERE email = "{username}"''')
-        print('q is:',q)
         res = cur.execute(q)
-        print('res: ',res)
+        log.info(f'''
+            SUCCESS in @route /register
+            with query: {q}
+            got res: {res}''')
         #done test
         error = None
 
@@ -153,6 +161,13 @@ def login():
         cur.execute(q)
         user = cur.fetchone()
 
+        # test
+        log.info(f'''
+            SUCCESS in @route /login
+            with query: {q}
+            got user: {user}''')
+        # done test
+
         if user is None:
             error = uname_wrong_err
         elif not check_password_hash(user['password'], password):
@@ -162,7 +177,15 @@ def login():
             # things are good, user checks out
             session.clear()
             #: set the session
-            session['user_id'] = user['id']
+            try:
+                log.info('''trying session['user_id'] = user['id']''')
+                session['user_id'] = user['id']
+                log.info('''(success)''')
+            #except:
+            except Exception as e:
+                log.info(f'''(failed: Exception={e}) trying session['user_id'] = user['userID']''')
+                session['user_id'] = user['userID']
+                log.info('''(success)''')
             '''session is a dict that stores data across requests.'''
             return redirect(url_for(onSuccess_redirectTo))
 
