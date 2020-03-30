@@ -53,8 +53,8 @@ http_forbidden = 403
 '''=============================INDEX VIEW============================='''
 
 # Database table names
-blogPostTable = 'post'
-userTable = 'user'
+fullTextTable = 'FullText'
+userTable = 'userAccounts'
 
 
 @bp.route('/')
@@ -68,6 +68,11 @@ def index():
     log.info('Finished def index()')
     return render_template('summary/index.html')
 
+
+'''=============================DASHBOARD VIEW============================='''
+
+
+#@bp.route(rule)
 
 
 '''=======================Actions======================='''

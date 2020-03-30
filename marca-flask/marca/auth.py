@@ -144,9 +144,13 @@ def register():
 
 @bp.route('/login', methods=(GET, POST))
 def login():
+    log.info('Starting login()')
     onSuccess_redirectTo = 'index'
 
     if request.method == POST:
+        log.info(f'''   GOT POST request:
+            {request}
+            {request.form}''')
         username = request.form[uname]
         password = request.form[pw]
         db = get_db()
@@ -170,6 +174,8 @@ def login():
 
         if user is None:
             error = uname_wrong_err
+            log.error('''   Error in auth.py
+            user is None''')
         elif not check_password_hash(user['password'], password):
             error = pw_wrong_err
 
@@ -179,7 +185,7 @@ def login():
             #: set the session
             try:
                 log.info('''trying session['user_id'] = user['id']''')
-                session['user_id'] = user['id']
+                session['user_id'] = user['userID']
                 log.info('''(success)''')
             #except:
             except Exception as e:
@@ -187,6 +193,8 @@ def login():
                 session['user_id'] = user['userID']
                 log.info('''(success)''')
             '''session is a dict that stores data across requests.'''
+            log.info(f'''
+            We good here? error = {error}''')
             return redirect(url_for(onSuccess_redirectTo))
 
         flash(error)
@@ -223,7 +231,9 @@ def load_logged_in_user():
     exist, g.user will be None.
     '''
     user_id = session.get('user_id')
-    user_id = 1
+    log.info(f'''
+    in load_logged_in_user: got user_id = {user_id}''')
+    #user_id = 1
 
     if user_id is None:
         g.user = None
@@ -232,7 +242,7 @@ def load_logged_in_user():
         db = get_db().connect()
         cur = db.cursor()
         cur.execute(
-            f'SELECT * FROM {userTable} WHERE email = {user_id}'
+            f'SELECT * FROM {userTable} WHERE userID = {user_id}'
         )
         db.commit()
         g.user = cur.fetchone()
