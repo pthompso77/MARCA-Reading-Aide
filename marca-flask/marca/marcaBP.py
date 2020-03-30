@@ -7,6 +7,7 @@ log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(m
 log.info('Starting marcaBP.py')
 
 
+log.info('Starting imports in marcaBP.py')
 from flask import (
     Blueprint,
     flash,
@@ -22,6 +23,7 @@ abort(404)  # 404 Not Found
 abort(Response('Hello World'))
 '''
 
+log.info('Starting importing auth.login_required and db.get_db in marcaBP.py')
 try:
     from auth import login_required
     from db import get_db
@@ -34,6 +36,7 @@ except:
 
 
 #: Initialize Blueprint
+log.info('Initializing Blueprint in marcaBP.py')
 bp = Blueprint('marcaBP', __name__)
 
 
@@ -72,11 +75,13 @@ def index():
 # TODO
 @bp.route('/submitText', methods=(POST,))
 def submitText():
+    log.info('Starting submitText() in marcaBP.py')
     '''takes submitted text
     returns a summary
     form id="text-form"
     '''
     # TODO
+    log.info('Finished submitText() in marcaBP.py')
     return('TODO')
 
 
