@@ -167,3 +167,5 @@ align-self
             .login_register {
                 padding: 20px;
             }
+
+*{border: .5px dotted red;}
