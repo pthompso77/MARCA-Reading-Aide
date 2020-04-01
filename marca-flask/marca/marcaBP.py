@@ -82,12 +82,57 @@ def index():
 def submitText():
     log.info('Starting submitText() in marcaBP.py')
     '''takes submitted text
-    returns a summary
-    form id="text-form"
+        returns a summary
+        form id="text-form"
     '''
-    # TODO
+
+    # TODO - FINISH AND TEST THIS
+
+    #: get text from request (POST)
+    rawText = "TODO"
+
+    #: tokenize the text
+    tokenizedText = "TODO"
+
+    # query to call the MySQL proc call
+    # like: CALL `pthompsoDB`.`insert_FullText`(<{IN tokenizedText TEXT}>, <{OUT output INT}>);
+    insertTextQuery = f'''CALL `pthompsoDB`.`insert_FullText` ({tokenizedText}, );'''
+
+    #: submit to DB, get return value (tokenizedTextID)
+    tokenizedTextID = "TODO"
+
+    #: get userAccountsID from g.user
+    userAccountsID = "TODO"
+
+    # insert statement for text/user association
+    fullText_UserAccount_assoc_Query = f'''INSERT INTO `pthompsoDB`.`user_FullText_assoc`
+            (`userID`,
+            `FullTextID`)
+        VALUES
+            ({userAccountsID},
+            {tokenizedTextID});
+        '''
     log.info('Finished submitText() in marcaBP.py')
+
+    #: return redirect(?) to dashboard
     return('TODO')
+
+
+
+# TODO
+@bp.route('/<int:paragraphID>/<int:textID>/loadParagraph')
+@login_required
+def loadParagraph(paragraphID, textID):
+    """ Retrieves FullText from DB that matches textID,
+        retrieves the highlighted sections that appear in that paragraph,
+        then returns the paragraph section matching paragraphID
+        to display on the summary dashboard
+    """
+
+    #TODO
+
+
+
 
 
 
