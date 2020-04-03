@@ -21,14 +21,85 @@ except Exception as e:
 
 import logging as log
 log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
-log.info('Starting __init__.py')
+log.info('''
 
+
+
+
+=======================
+
+
+
+Starting __init__.py
+''')
+
+
+def logAppDetails(appp):
+    logmessage=(f'''
+
+    DEFAULTS : CURRENT SETTING
+        #app.import_name : {appp.import_name}
+        #app.static_url_path=None : {appp.static_url_path}
+        #app.static_folder='static' : {appp.static_folder}
+        #app.subdomain_matching=False : {appp.subdomain_matching}
+        #app.template_folder='templates' : {appp.template_folder}
+        #app.instance_path=None : {appp.instance_path}
+        #app.root_path=None : {appp.root_path}''')
+
+    try:
+        deet = appp.instance_relative_config
+    except Exception as e:
+        deet = e
+    logmessage += f'''
+        #app.instance_relative_config=False : {deet}'''
+
+
+    try:
+        deet = appp.static_host
+    except Exception as e:
+        deet = e
+    logmessage += f'''
+        #app.static_host=None : {deet}'''
+
+
+    try:
+        deet = appp.host_matching
+    except Exception as e:
+        deet = e
+    logmessage += f'''
+        #app.host_matching=False : {deet}
+
+        '''
+
+
+    log.info(logmessage)
 
 
 def create_app(test_config=None):
     #: create and configure the app
-    app = Flask(__name__, instance_relative_config=True, )
+    app1 = Flask(__name__)
+
     app = Flask(import_name=__name__, static_url_path='/~pthompso/MARCA-Reading-Aide/marca-flask/marca/static', static_host=None, host_matching=False, subdomain_matching=True, template_folder="templates", instance_path=None, instance_relative_config=True, root_path=None)
+
+    testApp = Flask(import_name=__name__,
+                static_url_path='/~pthompso/MARCA-Reading-Aide/marca-flask/marca/static',
+                static_folder='static',
+                static_host=None,
+                host_matching=False,
+                subdomain_matching=False,
+                #subdomain_matching=True,
+                template_folder='templates',
+
+                #instance_path=None,
+                instance_path = '/home/pthompso/public_html/MARCA-Reading-Aide/marca-flask/instance',
+                #instance_relative_config=False,
+                instance_relative_config=True,
+                root_path=None)
+    #testApp.config['SERVER_NAME'] = 'cs.unca.edu/~pthompso'
+    #testApp.config['SERVER_NAME'] = 'cs.unca.edu'
+    #testApp.config['SERVER_NAME'] = '0.0.0.0'
+
+    #app = testApp
 
     #: set some default configuration that the app will use
     print('trying to     app.config.from_mapping')
@@ -79,6 +150,7 @@ def create_app(test_config=None):
 
     from . import auth
     app.register_blueprint(auth.bp)
+    #app.register_blueprint(auth.bp, url_prefix='/~pthompso')
     '''Blueprint imported and registered from auth.py using
     app.register_blueprint().
     '''
@@ -97,6 +169,12 @@ def create_app(test_config=None):
     app.register_blueprint(marcaBP.bp)
     #: this has no url_prefix because we want it to be the index
     app.add_url_rule('/', endpoint='index')
+
+
+    #log.info(app1.config)
+    #logAppDetails(app1)
+    log.info(app.config)
+    logAppDetails(app)
 
     return app
 

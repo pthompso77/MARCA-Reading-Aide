@@ -41,6 +41,8 @@ log.info('Starting auth.py')
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+#bp = Blueprint('auth', __name__, url_prefix = '/~pthompso/MARCA-Reading-Aide/marca-flask/marca.cgi/auth')
+
 '''Blueprint is imported and registered from the factory
 using app.register_blueprint().
 
