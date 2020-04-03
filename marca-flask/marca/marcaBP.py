@@ -75,6 +75,14 @@ def index():
 #@bp.route(rule)
 
 
+'''============================== REVIEW VIEW============================='''
+
+@bp.route('/review', methods=(GET, POST))
+@login_required
+def review():
+    return render_template('summary/review.html')
+
+
 '''=======================Actions======================='''
 
 # TODO
