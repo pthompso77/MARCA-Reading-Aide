@@ -1,20 +1,29 @@
 <!doctype html>
 <head>
 
-<title>{% block title %}{% endblock %} - MARCA</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='marca_style.css') }}">
+<title>
+  {% block title %}
+  {% endblock title %}
+  - MARCA
+</title>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="
+  {{ url_for('static', filename='marca_style.css') }}
+">
 <meta charset="utf-8">
 <meta name="description" content="Summarize any length of text">
 <meta name="keywords" content="Summary, Abstract, NLP, Computer science, artificial intelligence">
 <meta name="author" content="Peter T">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!--ADDITIONAL HEAD ELEMENTS (optional)-->
+{% block headPlus %}
+{% endblock headPlus %}
+
 </head>
 
 
-<!--A Flexible Layout must have a parent element with the display property set to flex. Direct child elements(s) of the flexible container automatically becomes flexible items.-->
 
 
 <body>
@@ -22,28 +31,54 @@
 
 <!--NAV-->
 <div id="nav-bar">
-<!--<nav>-->
-{% block header %}
-  <h1>
-    <a href="{{ url_for('index') }}">MARCA</a>
-  </h1>
-      <ul>
-        <!--g is automatically available in templates-->
-        {% if g.user %}
-              <li><span>Hello {{g.user['email']}}</span>
-              <li><a href="{{url_for('auth.logout')}}">Log Out</a>
 
-        {% else %}
-              <li><a id="user-login" href="{{ url_for('auth.login') }}">
-                Log In
-                </a>
-              <li><a id="user-register" href="{{ url_for('auth.register') }}">
-                Register
-                </a>
-        {% endif %}
-      </ul>
-<!--</nav>-->
+{% block header %}
+
+  <h1>
+    <a href=
+      "{{ url_for('index') }}"
+    >MARCA</a>
+  </h1>
+
+  <ul>
+    {% if g.user %}
+
+      <li>
+        <span>Hello
+          {{g.user['email']}}
+        </span>
+
+      <li>
+        <a href=
+          "{{url_for('auth.logout')}}"
+          >
+          Log Out
+        </a>
+
+    {% else %}
+
+          <li>
+            <a id="user-login" href=
+              "{{ url_for('auth.login') }}"
+              >
+              Log In
+            </a>
+          </li>
+
+          <li>
+            <a id="user-register" href=
+              "{{ url_for('auth.register') }}"
+              >
+              Register
+            </a>
+          </li>
+
+    {% endif %}
+
+  </ul>
+
 {% endblock header %}
+
 </div>
 <!--end NAV-->
 
@@ -56,8 +91,8 @@
 {% block topHalf %}
 
     <!--TOP LEFT-->
-    <section id="topLeft-section">
     {% block topLeft %}
+    <section id="topLeft-section">
 
               <h1>
               {% block topLeft_H1 %}
@@ -73,13 +108,14 @@
               <form id="text-form" action="{{ url_for('marcaBP.submitText') }}" method="post">
                   <input type="submit" id="submit-text" value="Summarize"/>
               </form>
-    {% endblock topLeft %}
     </section>
+    {% endblock topLeft %}
     <!--end TOP LEFT-->
 
 <!----------------------------------------------------------------------------->
 
     <!--TOP RIGHT-->
+    {% block topRight %}
     <section id="summary-section">
         <h2>Summary</h2>
         <div id="summary-container" class="generated">
@@ -93,6 +129,7 @@
         <!--end summary-container-->
     </section>
 
+    {% endblock topRight %}
   <!--end TOP RIGHT-->
 
 
@@ -108,7 +145,11 @@
 <!----BOTTOM HALF---->
 {% block bottomHalf %}
 
-<div id="{% block bottomDivID %} test-text {% endblock bottomDivID %}">
+<div id="
+  {% block bottomDivID %}
+      test-text
+  {% endblock bottomDivID %}"
+>
     <h1>
     {% block bottom_H1 %}
         Sample Text

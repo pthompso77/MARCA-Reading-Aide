@@ -1,0 +1,37 @@
+.flex {
+    /*border: 2px dashed red;*/
+    display: flex;
+    flex-direction: row;
+}
+
+
+.main-border-top {
+    margin: 30px 30px 0px 30px ;
+}
+
+
+#nav-bar {
+    flex-direction: row;
+    align-items: baseline;
+}
+
+#nav-bar * {
+    flex-grow: 1;
+    text-decoration: none;
+}
+
+#nav-ul {
+    display: flex;
+    justify-content: flex-end;
+    list-style-type: none;
+}
+
+#nav-ul li {
+/*nav-bar li {*/
+    text-align: right;
+}
+
+
+
+
+
