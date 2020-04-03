@@ -1,0 +1,64 @@
+<!--base_base_ref.html-->
+<!--This just shows the basic Jinja layout-->
+{% extends 'marca_base.html' %}
+
+<!--HEAD-->
+{% block title %}
+{% endblock title %}
+
+
+{% block headPlus %}
+{% endblock headPlus %}
+<!--END HEAD-->
+
+
+
+<!--BODY-->
+{% block body %}
+
+<!--==================NAV-HEADER=================-->
+
+    {% block header %}
+    {% endblock header %}
+
+
+<!--==============================TOP HALF===================================-->
+
+    {% block topHalf %}
+
+        {% block topLeft %}
+
+                {% block topLeft_H1 %}
+                {% endblock topLeft_H1 %}
+
+        {% endblock topLeft %}
+
+
+        {% block topRight %}
+        {% endblock topRight %}
+
+    {% endblock topHalf %}
+
+<!--=============================BOTTOM HALF=================================-->
+
+
+    {% block bottomHalf %}
+
+        {% block bottomDivID %}
+        {% endblock bottomDivID %}
+
+        {% block bottom_H1 %}
+        {% endblock bottom_H1 %}
+
+    {% endblock bottomHalf %}
+
+
+
+{% endblock body %}
+
+
+
+
+
+
+
