@@ -72,10 +72,26 @@ def index():
 '''=============================DASHBOARD VIEW============================='''
 
 
-@bp.route('/dashboard')
+@bp.route('/dashboard', methods=(GET, POST))
 @login_required
 def dashboard():
-    return render_template('summary/dashboard.html')
+    # TODO
+    #: get user id
+    userID = g.user['userID']
+
+    #if method is POST
+        #: get the text input
+        #: process the new text (tokenize and summarize)
+        #: send text and userID to DB (make sure they are associated)
+
+
+    # continues if POST, jumps here if GET
+    #: select texts from DB that match user
+    userTexts = ['get','fromDB']
+
+
+    #: render the dashboard template, send the user Texts also
+    return render_template('summary/dashboard.html', userTexts=userTexts)
 
 
 '''============================== REVIEW VIEW============================='''
@@ -88,6 +104,8 @@ def review():
     # it should only be POST (probably)
     if request.method == POST:
         fullTextID = request.form['fullTextID']
+
+        #TODO finish this
 
     return render_template('summary/review.html')
 
