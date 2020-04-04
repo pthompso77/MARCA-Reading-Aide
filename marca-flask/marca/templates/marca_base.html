@@ -9,8 +9,29 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link rel="stylesheet" href="
-  {{ url_for('static', filename='marca_style.css') }}
+    {{ url_for('static', filename='marca_style.css') }}
 ">
+<link rel="stylesheet" href="
+    {{ url_for('static', filename= 'header_style.css') }}
+    ">
+<link rel="stylesheet" href="
+    {{ url_for('static', filename= 'docTitle.css')}}
+    ">
+<link rel="stylesheet" href="
+    {{ url_for('static', filename= 'paraSummy.css')}}
+    ">
+<link rel="stylesheet" href="
+    {{ url_for('static', filename= 'docNav.css')}}
+    ">
+<link rel="stylesheet" href="
+    {{ url_for('static', filename= 'midDiv.css')}}
+    ">
+<link rel="stylesheet" href="
+    {{ url_for('static', filename= 'userNotes.css')}}
+    ">
+<link rel="stylesheet" href="
+    {{ url_for('static', filename= 'rating.css')}}
+    ">
 <meta charset="utf-8">
 <meta name="description" content="Summarize any length of text">
 <meta name="keywords" content="Summary, Abstract, NLP, Computer science, artificial intelligence">
@@ -84,6 +105,7 @@
 
 
 
+{% block subBody %}
 
 
 <!----TOP HALF---->
@@ -202,6 +224,7 @@
 
 {% endblock bottomHalf %}
 <!----end BOTTOM HALF---->
+{% endblock subBody %}
 
 {% endblock body %}
 </body>

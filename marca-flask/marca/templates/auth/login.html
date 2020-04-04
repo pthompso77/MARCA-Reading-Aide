@@ -1,19 +1,46 @@
 {% extends 'marca_base.html' %}
 
-{% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
-{% endblock %}
 
-{% block topHalf %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
-  </form>
-{% endblock topHalf %}
+{% block headPlus %}
+<style>
+.userEntry, .userEntry>form {
+    display: flex;
+    flex-direction: column;
+}
+.userEntry * {
+    margin-bottom: .5em;
+}
+input[type=submit] {
+    align-self: start;
+    min-width: 10em;
+}
+.userEntry > h1 {
+    border-bottom: 1px solid lightgray;
+}
+</style>
+{% endblock headPlus %}
 
 
-{% block bottomHalf %}
-{% endblock bottomHalf %}
+
+{% block subBody %}
+    {% block userEntry %}
+
+        <div class="userEntry main-border-sides">
+            <h1>{% block title %}Log In{% endblock %}</h1>
+            <form method="post" action =
+                    {% block formAction %}
+                        "/auth/login"
+                    {% endblock formAction %}
+            >
+                <label for="username">Username</label>
+                    <input name="username" id="username" required>
+                <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required>
+                <input type="submit"
+                value=  "{% block submitValue %} Login {% endblock submitValue %}">
+            </form>
+        </div>
+
+    {% endblock userEntry %}
+{% endblock subBody %}
+

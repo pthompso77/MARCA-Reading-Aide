@@ -1,19 +1,16 @@
-{% extends 'marca_base.html' %}
-
-{% block header %}
-  <h1>{% block title %}Register{% endblock %}</h1>
-{% endblock %}
-
-{% block topHalf %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Register">
-  </form>
-{% endblock topHalf %}
+{% extends 'auth/login.html' %}
+<!--% extends 'marca_base.html' %-->
 
 
-{% block bottomHalf %}
-{% endblock bottomHalf %}
+{% block title %}
+    {% block submitValue %}
+        Register
+    {% endblock submitValue %}
+{% endblock title%}
+
+
+{% block formAction %}
+    "/auth/register"
+{% endblock formAction %}
+
+
