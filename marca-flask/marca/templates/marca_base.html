@@ -71,9 +71,11 @@
         <ul id="nav-ul">
           {% if g.user %}
               <li>
-                <span>Hello
-                  {{g.user['email']}}
-                </span>
+                <a href="
+                    {{ url_for('marcaBP.dashboard') }}
+                    "
+                    >Hello {{g.user['email']}}
+                </a>
               </li>
               <li>
                 <a href=
