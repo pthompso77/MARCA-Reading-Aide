@@ -1,0 +1,10 @@
+<!--Dashboard.html-->
+{% extends 'base_base_ref.html' %}
+
+{% block body %}
+<h2>Let's go to Review</h2>
+<form action="/review" method="POST">
+<input type="text" name="fullTextID">
+<input type="submit" value="Go">
+</form>
+{% endblock body %}
