@@ -97,6 +97,7 @@ SQLdict = {
 
 @bp.route('/register', methods=(GET, POST))
 def register():
+    onSuccess_redirectTo = 'marcaBP.dashboard'
     if request.method == POST:
         username = request.form[uname]
         password = request.form[pw]
@@ -135,7 +136,25 @@ def register():
                 VALUES ("{username}", "{generate_password_hash(password)}")'''
             )
             db.commit()
-            return redirect(url_for('auth.login'))
+
+            #: get the new userID from DB
+            q = f'''SELECT * FROM {userTable} WHERE email = "{username}"'''
+            cur.execute(q)
+            user = cur.fetchone()
+
+            #: set the session
+            session.clear()
+            try:
+                session['user_id'] = user['userID']
+            except Exception as e:
+                log.info(f'''(failed in /register: Exception={e}) trying session['user_id'] = user['userID']''')
+                session['user_id'] = user['userID']
+                log.info('''(success)''')
+            '''session is a dict that stores data across requests.'''
+            log.info(f'''
+            We good here? error = {error}''')
+
+            return redirect(url_for(onSuccess_redirectTo))
 
         flash(error)
 
@@ -146,7 +165,7 @@ def register():
 @bp.route('/login', methods=(GET, POST))
 def login():
     log.info('Starting login()')
-    onSuccess_redirectTo = 'index'
+    onSuccess_redirectTo = 'marcaBP.dashboard'
 
     if request.method == POST:
         log.info(f'''   GOT POST request:
@@ -190,7 +209,7 @@ def login():
                 log.info('''(success)''')
             #except:
             except Exception as e:
-                log.info(f'''(failed: Exception={e}) trying session['user_id'] = user['userID']''')
+                log.info(f'''(failed in /login: Exception={e}) trying session['user_id'] = user['userID']''')
                 session['user_id'] = user['userID']
                 log.info('''(success)''')
             '''session is a dict that stores data across requests.'''
