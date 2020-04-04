@@ -72,7 +72,10 @@ def index():
 '''=============================DASHBOARD VIEW============================='''
 
 
-#@bp.route(rule)
+@bp.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('summary/dashboard.html')
 
 
 '''============================== REVIEW VIEW============================='''
@@ -84,7 +87,7 @@ def review():
 
     # it should only be POST (probably)
     if request.method == POST:
-        fullTextID = request.form['TODO_whatIsIt?']
+        fullTextID = request.form['fullTextID']
 
     return render_template('summary/review.html')
 
