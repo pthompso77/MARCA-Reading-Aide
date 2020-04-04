@@ -78,8 +78,14 @@ def index():
 '''============================== REVIEW VIEW============================='''
 
 @bp.route('/review', methods=(GET, POST))
+# TODO change this to only POST method?
 @login_required
 def review():
+
+    # it should only be POST (probably)
+    if request.method == POST:
+        fullTextID = request.form['TODO_whatIsIt?']
+
     return render_template('summary/review.html')
 
 
