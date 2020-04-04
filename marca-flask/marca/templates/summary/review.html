@@ -40,37 +40,10 @@
 
 
 <!--BODY-->
-{% block body %}
+{% block subBody %}
 <div class="TODO"> BODY - started</div>
 <!--==================NAV-HEADER=================-->
 
-    {% block header %}
-    <!--START NAV-->
-      <section id="nav-bar" class="flex main-border-top">
-        <div id="nav-left">
-          <h1>
-            <a href="/">MARCA</a>
-          </h1>
-        </div>
-        <div id="nav-right">
-          <ul id="nav-ul">
-            <!--g is automatically available in templates-->
-
-            <li>
-              <a id="user-login" href="/auth/login">
-                Log In
-              </a>
-            </li>
-            <li>
-              <a id="user-register" href="/auth/register">
-                Register
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-    <!--END NAV-->
-    {% endblock header %}
 
 
 <!--==============================TOP HALF===================================-->
@@ -237,7 +210,7 @@
 
 
 
-{% endblock body %}
+{% endblock subBody %}
 
 
 
