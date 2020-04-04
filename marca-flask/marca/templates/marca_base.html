@@ -50,58 +50,60 @@
 <body>
 {% block body %}
 
-<!--NAV-->
-<div id="nav-bar">
 
 {% block header %}
 
-  <h1>
-    <a href=
-      "{{ url_for('index') }}"
-    >MARCA</a>
-  </h1>
+<section id="nav-bar" class="flex main-border-top">
+    <div id="nav-left">
+      <h1>
+        <a href="
+            {% if g.user %}
+                {{ url_for('marcaBP.dashboard') }}
+            {% else %}
+                {{ url_for('index') }}
+            {% endif %}
+            "
+        >MARCA</a>
+      </h1>
+    </div>
+    <div id="nav-right">
 
-  <ul>
-    {% if g.user %}
+        <ul id="nav-ul">
+          {% if g.user %}
+              <li>
+                <span>Hello
+                  {{g.user['email']}}
+                </span>
+              </li>
+              <li>
+                <a href=
+                  "{{url_for('auth.logout')}}"
+                  >
+                  Log Out
+                </a>
+              </li>
+          {% else %}
+              <li>
+                  <a id="user-login" href=
+                  "{{url_for('auth.login')}}"
+                  >
+                    Log In
+                  </a>
+              </li>
+              <li>
+                  <a id="user-register" href=
+                  "{{url_for('auth.register')}}"
+                  >
+                    Register
+                  </a>
+              </li>
+          {% endif %}
+        </ul>
+    </div>
 
-      <li>
-        <span>Hello
-          {{g.user['email']}}
-        </span>
-
-      <li>
-        <a href=
-          "{{url_for('auth.logout')}}"
-          >
-          Log Out
-        </a>
-
-    {% else %}
-
-          <li>
-            <a id="user-login" href=
-              "{{ url_for('auth.login') }}"
-              >
-              Log In
-            </a>
-          </li>
-
-          <li>
-            <a id="user-register" href=
-              "{{ url_for('auth.register') }}"
-              >
-              Register
-            </a>
-          </li>
-
-    {% endif %}
-
-  </ul>
-
+  </section>
 {% endblock header %}
 
-</div>
-<!--end NAV-->
 
 
 

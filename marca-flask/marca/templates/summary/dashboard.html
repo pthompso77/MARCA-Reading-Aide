@@ -89,63 +89,13 @@ Dashboard
 {% endblock headPlus %}
 <!--END HEAD-->
 
-{% block body %}
+{% block subBody %}
 
 
 
 <!--==================NAV-HEADER=================-->
-<!--(should be inherited)--><!--NAV-->
-<div id="nav-bar">
+<!--(should be inherited)-->
 
-        {% block header %}
-
-          <h1>
-            <a href=
-              "{{ url_for('index') }}"
-            >MARCA</a>
-          </h1>
-
-          <ul>
-            {% if g.user %}
-
-              <li>
-                <span>Hello
-                  {{g.user['email']}}
-                </span>
-
-              <li>
-                <a href=
-                  "{{url_for('auth.logout')}}"
-                  >
-                  Log Out
-                </a>
-
-            {% else %}
-
-                  <li>
-                    <a id="user-login" href=
-                      "{{ url_for('auth.login') }}"
-                      >
-                      Log In
-                    </a>
-                  </li>
-
-                  <li>
-                    <a id="user-register" href=
-                      "{{ url_for('auth.register') }}"
-                      >
-                      Register
-                    </a>
-                  </li>
-
-            {% endif %}
-
-          </ul>
-
-        {% endblock header %}
-
-</div>
-<!--end NAV-->
 
 
 <!--==============================TOP HALF===================================-->
@@ -242,4 +192,4 @@ Dashboard
 
 
 
-{% endblock body %}
+{% endblock subBody %}
