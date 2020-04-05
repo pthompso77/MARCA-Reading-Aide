@@ -164,6 +164,7 @@ def dashboard():
 
 
     # continues if POST, jumps here if GET
+
     #: select texts from DB that match user
     userTexts = getTextAssociatedWithUserID(userAccountsID)
 
@@ -174,23 +175,29 @@ def dashboard():
 '''===========Dashboard helpers==========='''
 
 def getTextAssociatedWithUserID(userAccountsID):
-    #TODO
+    # test response
     response = [{'email': 'me', 'FullText_ID': 42, 'title': 'Untitled', 'text_tokenized': "['New', 'Document', 'duh']", 'full_text': 'New Document duh'},
                 {'email': 'me', 'FullText_ID': 43, 'title': '5 CONCLUSION', 'text_tokenized': "['The', 'media', 'landscape', 'has', 'experienced', 'a', 'massive', 'change', 'with', 'the', 'arrival', 'of', 'internet', 'and', 'the', 'recent', 'advent', 'of', 'Web', '3.0', 'and', 'has', 'influenced', ',', 'in', 'fact', ',', 'completely', 'changed', 'the', 'ways', 'in', 'which', 'information', 'communication', 'takes', 'place.', 'The', 'information', 'explosion', 'on', 'social', 'media', 'platforms', 'has', 'made', 'them', 'a', 'lot', 'more', 'engaging', 'than', 'stand', 'alone', 'communication', 'platforms', '[', '89', ']', '.', 'Social', 'media', 'platforms', 'are', 'utilized', 'for', 'discussions', 'surrounding', 'various', 'domains', 'including', 'healthcare', '[', '90', ']', ',', 'internet', 'of', 'things', '[', '91', ']', ',', 'politics', '[', '92', ']', ',', 'amongst', 'others.', 'In', 'the', 'current', 'scenario', ',', 'the', 'majority', 'of', 'people', 'get', 'to', 'know', 'about', 'recent', 'happenings', 'around', 'the', 'globe', 'through', 'social', 'media', 'platforms.', 'However', ',', 'the', 'content', 'being', 'shared', 'may', 'not', 'always', 'be', 'from', 'the', 'right', 'source', 'or', 'may', 'not', 'share', 'the', 'correct', 'information.', 'This', 'makes', 'these', 'platforms', 'vulnerable', 'to', 'propagation', 'of', 'misinformation.', 'Thus', ',', 'these', 'platforms', 'often', 'make', 'the', 'source', 'of', 'several', 'rumors', 'and', 'false', 'content.']", 'full_text': '\r\nThe media landscape has experienced a massive change with the arrival of internet and the recent advent of Web 3.0 and has influenced, in fact, completely changed the ways in which information communication takes place. The information explosion on social media platforms has made them a lot more engaging than stand alone communication platforms [89]. Social media platforms are utilized for discussions surrounding various domains including healthcare [90], internet of things [91], politics [92], amongst others. In the current scenario, the majority of people get to know about recent happenings around the globe through social media platforms. However, the content being shared may not always be from the right source or may not share the correct information. This makes these platforms vulnerable to propagation of misinformation. Thus, these platforms often make the source of several rumors and false content.'}
                 ]
+    db = get_db().connect()
+    cur = db.cursor()
+
+    query = f'''SELECT u.email, ft.FullText_ID, ft.title, ft.text_tokenized,
+    ft.full_text FROM userAccounts u, pthompsoDB.FullText ft
+    INNER JOIN pthompsoDB.user_FullText_assoc fta
+    ON ft.FullText_ID = fta.FullTextID
+    WHERE fta.userID = {userAccountsID} AND fta.userID = u.userID;
+    '''
+    cur.execute(query)
+    response = cur.fetchall()
     return response
-    return [{'email': 'me',
-             'FullText_ID': userAccountsID,
-             'full_text': "New Document duh"
-             }]
 
 
 '''============================== REVIEW VIEW============================='''
 
-@bp.route('/review', methods=(GET, POST))
-# TODO change this to only POST method?
+@bp.route('/<int:textID>/review', methods=(GET, POST))
 @login_required
-def review():
+def review(textID):
 
     # it should only be POST (probably)
     if request.method == POST:
@@ -198,7 +205,24 @@ def review():
 
         #TODO finish this
 
-    return render_template('summary/review.html')
+    text = getTextByTextID(textID)
+    return render_template('summary/review.html',textID=textID, text=text)
+    # (or return a redirect?)
+
+
+'''===========Review helpers==========='''
+
+def getTextByTextID(textID):
+    # test response
+    response = {'FullText_ID': 40, 'title': 'Untitled', 'text_tokenized': "['Your', 'Saved', 'Documents', 'Your', 'Saved', 'Documents', 'Your', 'Saved', 'Documents']", 'full_text': 'Your Saved Documents Your Saved Documents Your Saved Documents'}
+
+    db = get_db().connect()
+    cur = db.cursor()
+
+    query = f'''SELECT * FROM pthompsoDB.FullText WHERE FullText_ID = {textID};'''
+    cur.execute(query)
+    response = cur.fetchone()
+    return response
 
 
 '''=======================Actions======================='''
