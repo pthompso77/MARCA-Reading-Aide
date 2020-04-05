@@ -1,0 +1,212 @@
+<!--Review_Base.html-->
+{% extends 'marca_base.html' %}
+
+<!--HEAD-->
+{% block title %}
+    Review
+{% endblock title %}
+
+
+{% block headPlus %}
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'header_style.css') }}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'docTitle.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'paraSummy.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'docNav.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'midDiv.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'userNotes.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'rating.css')}}
+        ">
+    <style>
+    /* TODO delete this :) */
+    .TODO {background-color: red; max-width: 50px; display: none}
+    </style>
+{% endblock headPlus %}
+<!--END HEAD-->
+
+
+
+<!--BODY-->
+{% block subBody %}
+
+
+
+<!--==============================TOP HALF===================================-->
+
+    {% block topHalf %}
+
+  <!--START TOP HALF-->
+    <section id="topHalf" class="main-border-sides">
+
+        <!--START DOCUMENT TITLE-->
+        <section id="topHalf-Title" class="flex">
+          <div id="documentTitle" >
+          {% block docTitle %}
+            BLOCK
+          {% endblock docTitle %}
+          </div>
+        </section> <!--topHalf-Title-->
+        <!--END DOCUMENT TITLE-->
+
+
+    <!--START SUMMARY SECTION-->
+    <div id="top-summary-container" class="flex">
+
+          {% block topLeft %}
+
+                  {% block topLeft_H1 %}
+                  {% endblock topLeft_H1 %}
+
+
+                  <!--START PARAGRAPH SUMMARY-->
+                <section id="paragraph-summary">
+                {% block paragraph %}
+                  (fill me in!)
+                {% endblock paragraph %}
+                </section>
+                <!--END PARAGRAPH SUMMARY-->
+
+          {% endblock topLeft %}
+
+
+          {% block topRight %}
+            <div class="TODO"> topRight - started </div>
+
+                <!--START DOCUMENT NAVIGATION-->
+                <section id="document-navigation">
+                  <h4>Navigate</h4>
+
+                  <div id="doc-nav-links" class="flex">
+                {% block navLinks %}
+                  (fill me in!)
+                {% endblock navLinks %}
+                  </div>
+
+                </section>
+                <!--END DOCUMENT NAVIGATION-->
+
+          {% endblock topRight %}
+
+    </div><!--top-summary-container-->
+    <!--END SUMMARY SECTION-->
+
+  </section> <!--topHalf-->
+    {% endblock topHalf %}
+
+
+  <!--====================================-->
+
+  <!--START MIDDLE-->
+  <section id="midDivide" class="flex main-border-sides">
+    <span id="active-highlight">
+      {% block activeHighlight %}
+        (fill me in!)
+      {% endblock activeHighlight %}
+    </span>
+  </section>
+  <!--END MIDDLE-->
+
+  <!--====================================-->
+
+
+
+<!--=============================BOTTOM HALF=================================-->
+    {% block bottomHalf %}
+
+  <!--START BOTTOM HALF-->
+  <section id="bottomHalf" class="flex main-border-sides">
+
+
+      {% block ratingScript %}
+        (fill me in!)
+      {% endblock ratingScript %}
+
+    <!--START RATING BUTTONS-->
+    <div id="userRatings">
+      <h5 id="ratingHeader">Rate This Auto-Selection</h5>
+      <!--<form id="rate-select-form" name="rate-select" class="flex" method="post" action="TODO">-->
+      <div id="rate-select-containter" class="flex">
+            <span>
+              <input type="radio" id="rate1" name="userRating" value="1"
+                onclick="setRating(this.value)"/>
+              <label for="1">1</label>
+            </span>
+            <span>
+              <input type="radio" id="rate1" name="userRating" value="2"
+                onclick="setRating(this.value)"/>
+              <label for="2">2</label>
+            </span>
+            <span>
+              <input type="radio" id="rate1" name="userRating" value="3"
+                onclick="setRating(this.value)"/>
+              <label for="3">3</label>
+            </span>
+            <span>
+              <input type="radio" id="rate1" name="userRating" value="4"
+                onclick="setRating(this.value)"/>
+              <label for="4">4</label>
+            </span>
+        </div>
+      <!--</form>-->
+
+    </div>
+    <!--END RATING BUTTONS-->
+
+
+    <!--START USER NOTES-->
+    <div id="userNotes-container">
+      <h4 id="notesHeader">Notes</h4>
+
+      {% block userNotes %}
+        (fill me in!)
+      {% endblock userNotes %}
+
+      </textarea>
+    </div>
+    <!--END USER NOTES-->
+
+
+        {% block bottom_H1 %}
+        <!--nope-->
+        {% endblock bottom_H1 %}
+
+</section>
+<!--END BOTTOM HALF-->
+
+
+    {% endblock bottomHalf %}
+
+
+<!--
+--
+--
+    CURSOR
+--
+--
+-->
+
+
+
+
+
+
+{% endblock subBody %}
+
+
+
+
+
+
+

@@ -1,220 +1,105 @@
 <!--Review.html-->
-{% extends 'marca_base.html' %}
+{% extends 'summary/review_base.html' %}
 
-<!--HEAD-->
+
+
 {% block title %}
-    Review
+    {% if textID == 0 %}
+        Test Review
+    {% else %}
+        Review
+    {% endif %}
 {% endblock title %}
 
-        {{ url_for('static', filename='????.css') }}
 
-{% block headPlus %}
-    <link rel="stylesheet" href="
-        {{ url_for('static', filename= 'header_style.css') }}
-        ">
-    <link rel="stylesheet" href="
-        {{ url_for('static', filename= 'docTitle.css')}}
-        ">
-    <link rel="stylesheet" href="
-        {{ url_for('static', filename= 'paraSummy.css')}}
-        ">
-    <link rel="stylesheet" href="
-        {{ url_for('static', filename= 'docNav.css')}}
-        ">
-    <link rel="stylesheet" href="
-        {{ url_for('static', filename= 'midDiv.css')}}
-        ">
-    <link rel="stylesheet" href="
-        {{ url_for('static', filename= 'userNotes.css')}}
-        ">
-    <link rel="stylesheet" href="
-        {{ url_for('static', filename= 'rating.css')}}
-        ">
-    <style>
-    /* TODO delete this :) */
-    .TODO {background-color: red; max-width: 50px; display: none}
-    </style>
-{% endblock headPlus %}
-<!--END HEAD-->
+
+{% block docTitle %}
+    {% if textID == 0 %}
+    Document Title
+    {% else %}
+  {{text['title']}}
+    {% endif %}
+{% endblock docTitle %}
+
+
+<!--START SUMMARY SECTION-->
 
 
 
-<!--BODY-->
-{% block subBody %}
-<div class="TODO"> BODY - started</div>
-<!--==================NAV-HEADER=================-->
+{% block paragraph %}
+    {% if textID == 0 %}
+        Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+        There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on. The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query. Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.
+    {% else %}
+        TODO: text[] paragraph
+    {% endif %}
+{% endblock paragraph %}
 
 
 
-<!--==============================TOP HALF===================================-->
 
-    {% block topHalf %}
-    <div class="TODO"> topHalf - started </div>
+<!--START DOCUMENT NAVIGATION-->
 
-  <!--START TOP HALF-->
-    <section id="topHalf" class="main-border-sides">
-
-        <!--START DOCUMENT TITLE-->
-        <section id="topHalf-Title" class="flex">
-          <div id="documentTitle" >
-            Document Title
-          </div>
-        </section> <!--topHalf-Title-->
-        <!--END DOCUMENT TITLE-->
-
-
-    <!--START SUMMARY SECTION-->
-    <div id="top-summary-container" class="flex">
-
-          {% block topLeft %}
-            <div class="TODO"> topLeft - started </div>
-
-                  {% block topLeft_H1 %}
-                  {% endblock topLeft_H1 %}
+{% block navLinks %}
+    {% if textID == 0 %}
+        <!--jinja: each href will send the id of the <a> tag to marcaBP.loadParagraph via GET-->
+        <a id="12" href="#" class="nav-links pseudolink">Section...</a>
+        <a id="12" href="#" class="nav-links pseudolink">Section...</a>
+        <a id="12" href="#" class="nav-links pseudolink">Section...</a>
+        <a id="12" href="#" class="nav-links pseudolink">There are broadly two types of extractive summarization...</a>
+    {% else %}
+        <a id="12" href="#" class="nav-links pseudolink">TODO: for each highlighted section...</a>
+    {% endif %}
+{% endblock navLinks %}
 
 
-                  <!--START PARAGRAPH SUMMARY-->
-                <section id="paragraph-summary">
-                  Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-                  There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on. The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query. Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.
-                </section>
-                <!--END PARAGRAPH SUMMARY-->
-
-          {% endblock topLeft %}
 
 
-          {% block topRight %}
-            <div class="TODO"> topRight - started </div>
-
-                <!--START DOCUMENT NAVIGATION-->
-                <section id="document-navigation">
-                  <h4>Navigate</h4>
-
-                  <div id="doc-nav-links" class="flex">
-                    <!--jinja: each href will send the id of the <a> tag to marcaBP.loadParagraph via GET-->
-                    <a id="12" href="#" class="nav-links pseudolink">Section...</a>
-                    <a id="12" href="#" class="nav-links pseudolink">Section...</a>
-                    <a id="12" href="#" class="nav-links pseudolink">Section...</a>
-                    <a id="12" href="#" class="nav-links pseudolink">There are broadly two types of extractive summarization...</a>
-                  </div>
-
-                </section>
-                <!--END DOCUMENT NAVIGATION-->
-
-          {% endblock topRight %}
-
-    </div><!--top-summary-container-->
-    <!--END SUMMARY SECTION-->
-
-  </section> <!--topHalf-->
-    {% endblock topHalf %}
-
-
-  <!--====================================-->
 
   <!--START MIDDLE-->
-  <section id="midDivide" class="flex main-border-sides">
-    <span id="active-highlight">
-      Text of Active Highlighted Section Goes Here
-      and if it's really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...nothing special happens
-    </span>
-  </section>
-  <!--END MIDDLE-->
-
-  <!--====================================-->
-
+{% block activeHighlight %}
+    {% if textID == 0 %}
+        Text of Active Highlighted Section Goes Here
+        and if it's really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...nothing special happens
+    {% else %}
+        Hightlighted section of text {{text['FullText_ID']}}-{{text['title']}} goes here
+    {% endif %}
+{% endblock activeHighlight %}
 
 
-<!--=============================BOTTOM HALF=================================-->
-    {% block bottomHalf %}
-<div class="TODO"> bottomHalf - oops </div>
 
-  <!--START BOTTOM HALF-->
-  <section id="bottomHalf" class="flex main-border-sides">
 
-        {% block bottomDivID %}
-        <div class="TODO"> bottomDivID </div>
-        {% endblock bottomDivID %}
-
+{% block ratingScript %}
     <!--TODO - save the rating upon selection-->
-      <script>
-        function setRating(selectedRating) {
-          alert("TODO: handle how to collect the selected rating: "+selectedRating);
-        }
-      </script>
-    <!--START RATING BUTTONS-->
-    <div id="userRatings">
-      <h5 id="ratingHeader">Rate This Auto-Selection</h5>
-      <!--<form id="rate-select-form" name="rate-select" class="flex" method="post" action="TODO">-->
-      <div id="rate-select-containter" class="flex">
-            <span>
-              <input type="radio" id="rate1" name="userRating" value="1"
-                onclick="setRating(this.value)"/>
-              <label for="1">1</label>
-            </span>
-            <span>
-              <input type="radio" id="rate1" name="userRating" value="2"
-                onclick="setRating(this.value)"/>
-              <label for="2">2</label>
-            </span>
-            <span>
-              <input type="radio" id="rate1" name="userRating" value="3"
-                onclick="setRating(this.value)"/>
-              <label for="3">3</label>
-            </span>
-            <span>
-              <input type="radio" id="rate1" name="userRating" value="4"
-                onclick="setRating(this.value)"/>
-              <label for="4">4</label>
-            </span>
-        </div>
-      <!--</form>-->
-
-    </div>
-    <!--END RATING BUTTONS-->
+    {% if textID == 0 %}
+        <script>
+          function setRating(selectedRating) {
+            alert("TODO: handle how to collect the selected rating: "+selectedRating);
+          }
+        </script>
+    {% else %}
+        <script>
+          function setRating(selectedRating) {
+            alert("TODO: handle how to collect the selected rating: "+selectedRating);
+          }
+        </script>
+    {% endif %}
+{% endblock ratingScript %}
 
 
+
+
+
+
+{% block userNotes %}
     <!--TODO  save the userNotes on keyup (or save button)-->
-    <!--START USER NOTES-->
-    <div id="userNotes-container">
-      <h4 id="notesHeader">Notes</h4>
-
-      <textarea id="userNotes">
-
-      </textarea>
-    </div>
-    <!--END USER NOTES-->
-
-
-        {% block bottom_H1 %}
-        <!--nope-->
-        {% endblock bottom_H1 %}
-
-</section>
-<!--END BOTTOM HALF-->
-
-
-    {% endblock bottomHalf %}
-
-
-<!--
---
---
-    CURSOR
---
---
--->
-
-
-
-
-
-
-{% endblock subBody %}
-
-
-
-
-
-
+    {% if textID == 0 %}
+        <textarea id="userNotes">Notes will be loaded here</textarea>
+        <input type="submit" value="TODO: do we want a submit button?">
+    {% else %}
+        <textarea id="userNotes">Notes on {{text['FullText_ID']}}-{{text['title']}} text will be loaded here
+        </textarea>
+        <input type="submit" value="TODO: do we want a submit button?">
+    {% endif %}
+{% endblock userNotes %}
 
