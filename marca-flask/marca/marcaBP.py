@@ -52,6 +52,10 @@ http_forbidden = 403
 
 @bp.route('/dev/db', methods=(GET, POST))
 def devDB():
+
+    if g.user['userID'] != 29: #then the user isn't me and shouldn't see this page
+        return redirect(url_for('index'))
+
     log.info('Starting def devDB()')
     db = get_db().connect()
     cur = db.cursor()
@@ -65,7 +69,6 @@ def devDB():
         return render_template('dev/db.html',query=query, DBexec=DBexec, DBresult=DBresult)
 
     log.info('Finished def devDB()')
-    #return redirect(url_for('index'))
     return render_template('dev/db.html')
 
 
@@ -95,8 +98,8 @@ def index():
 @login_required
 def dashboard():
     # TODO
-    #: get user id
-    userID = g.user['userID']
+    #: get userAccountsID from g.user
+    userAccountsID = g.user['userID']
     error = None
 
 
@@ -111,39 +114,30 @@ def dashboard():
     if request.method == POST:
         # Get the text form submitted
         fullText = request.form['newFullText']
+        title = request.form['textTitle']
+        if title == "":
+            title = "Untitled"
 
         #: tokenize the text
         from marca.text_tools.my_tokenize import word_tokenize
-        #tokenizedText = str(word_tokenize(fullText))
         tokenizedText = word_tokenize(fullText)
-
-        # query to call the MySQL proc call
-        # like: CALL `pthompsoDB`.`insert_FullText`(<{IN tokenizedText TEXT}>, <{OUT output INT}>);
-        #insertTextQuery = f'''CALL `pthompsoDB`.`insert_FullText` ("{tokenizedText}", );'''
 
         db = get_db().connect()
         cur = db.cursor()
         result = ""
 
-        tokenizedTexta = "this is a test"
-        #insertTextQuery = f'''CALL `pthompsoDB`.`insert_FullText` ("{tokenizedText}", );'''
-        #>>> args = (5, 6, 0) # 0 is to hold value of the OUT parameter pProd
-        #args = (tokenizedTexta, 0)
-        #>>> cursor.callproc('multiply', args)
-        #result, tokenizedTextID = cur.callproc('insert_FullText', args)
-
-
-        #: submit to DB, get return value (tokenizedTextID)
-        query = f'''INSERT INTO `FullText` (full_text) VALUES ("{tokenizedText}");'''
+        #: submit text to DB
+        query = f'''INSERT INTO `FullText` (title, text_tokenized, full_text)
+        VALUES ("{title}","{tokenizedText}","{fullText}");'''
         result = cur.execute(query)
         db.commit()
+
+        #: get return value of new text insert (tokenizedTextID)
         q1 = '''SELECT FullText_ID from pthompsoDB.FullText ORDER BY FullText_ID DESC LIMIT 1;'''
         cur.execute(q1)
         tokenizedTextRow =  cur.fetchone()
         tokenizedTextID = tokenizedTextRow['FullText_ID']
 
-        #: get userAccountsID from g.user
-        userAccountsID = userID
 
         # insert statement for text/user association
         fullText_UserAccount_assoc_Query = f'''INSERT INTO `pthompsoDB`.`user_FullText_assoc`
@@ -158,10 +152,10 @@ def dashboard():
         log.info('Finished submitText() in marcaBP.py')
 
 
-# Submit text and userID to DB (make sure they are associated)
+# Submit text and userAccountsID to DB (make sure they are associated)
 
         flash('Document Uploaded Successfully')
-        if userID == 29: # (then it's me testing)
+        if userAccountsID == 29: # (then it's me testing)
             flash(f'got (first 20): {fullText[:20]}')
             flash(f'''and tokenized (first 1)= {tokenizedText[:1]}''')
             flash(f'''and userAccountsID= {userAccountsID}''')
@@ -171,11 +165,24 @@ def dashboard():
 
     # continues if POST, jumps here if GET
     #: select texts from DB that match user
-    userTexts = ['TODO', 'get','fromDB']
+    userTexts = getTextAssociatedWithUserID(userAccountsID)
 
 
     #: render the dashboard template, send the user Texts also
     return render_template('summary/dashboard.html', userTexts=userTexts)
+
+'''===========Dashboard helpers==========='''
+
+def getTextAssociatedWithUserID(userAccountsID):
+    #TODO
+    response = [{'email': 'me', 'FullText_ID': 42, 'title': 'Untitled', 'text_tokenized': "['New', 'Document', 'duh']", 'full_text': 'New Document duh'},
+                {'email': 'me', 'FullText_ID': 43, 'title': '5 CONCLUSION', 'text_tokenized': "['The', 'media', 'landscape', 'has', 'experienced', 'a', 'massive', 'change', 'with', 'the', 'arrival', 'of', 'internet', 'and', 'the', 'recent', 'advent', 'of', 'Web', '3.0', 'and', 'has', 'influenced', ',', 'in', 'fact', ',', 'completely', 'changed', 'the', 'ways', 'in', 'which', 'information', 'communication', 'takes', 'place.', 'The', 'information', 'explosion', 'on', 'social', 'media', 'platforms', 'has', 'made', 'them', 'a', 'lot', 'more', 'engaging', 'than', 'stand', 'alone', 'communication', 'platforms', '[', '89', ']', '.', 'Social', 'media', 'platforms', 'are', 'utilized', 'for', 'discussions', 'surrounding', 'various', 'domains', 'including', 'healthcare', '[', '90', ']', ',', 'internet', 'of', 'things', '[', '91', ']', ',', 'politics', '[', '92', ']', ',', 'amongst', 'others.', 'In', 'the', 'current', 'scenario', ',', 'the', 'majority', 'of', 'people', 'get', 'to', 'know', 'about', 'recent', 'happenings', 'around', 'the', 'globe', 'through', 'social', 'media', 'platforms.', 'However', ',', 'the', 'content', 'being', 'shared', 'may', 'not', 'always', 'be', 'from', 'the', 'right', 'source', 'or', 'may', 'not', 'share', 'the', 'correct', 'information.', 'This', 'makes', 'these', 'platforms', 'vulnerable', 'to', 'propagation', 'of', 'misinformation.', 'Thus', ',', 'these', 'platforms', 'often', 'make', 'the', 'source', 'of', 'several', 'rumors', 'and', 'false', 'content.']", 'full_text': '\r\nThe media landscape has experienced a massive change with the arrival of internet and the recent advent of Web 3.0 and has influenced, in fact, completely changed the ways in which information communication takes place. The information explosion on social media platforms has made them a lot more engaging than stand alone communication platforms [89]. Social media platforms are utilized for discussions surrounding various domains including healthcare [90], internet of things [91], politics [92], amongst others. In the current scenario, the majority of people get to know about recent happenings around the globe through social media platforms. However, the content being shared may not always be from the right source or may not share the correct information. This makes these platforms vulnerable to propagation of misinformation. Thus, these platforms often make the source of several rumors and false content.'}
+                ]
+    return response
+    return [{'email': 'me',
+             'FullText_ID': userAccountsID,
+             'full_text': "New Document duh"
+             }]
 
 
 '''============================== REVIEW VIEW============================='''
