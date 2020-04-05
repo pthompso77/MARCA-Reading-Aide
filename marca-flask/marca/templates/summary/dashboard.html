@@ -1,0 +1,202 @@
+<!--Dashboard.html-->
+{% extends 'marca_base.html' %}
+
+
+This is how we will iterate through user Texts
+{% for text in userTexts %}
+<!--display each one-->
+{% endfor %}
+
+
+
+<!--HEAD-->
+{% block title %}
+Dashboard
+{% endblock title %}
+
+
+{% block headPlus %}
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'header_style.css') }}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'docTitle.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'paraSummy.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'docNav.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'midDiv.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'userNotes.css')}}
+        ">
+    <link rel="stylesheet" href="
+        {{ url_for('static', filename= 'rating.css')}}
+        ">
+
+    <style>
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        /*     justify-content: space-between; */
+        }
+
+        .dashboard-container > *{
+        /*     display: none; */
+        /*     align-self: space-around; */
+        /*     flex-basis: 70%; */
+            text-align: center;
+        }
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #newFullText {
+            min-height: 200px;
+        }
+
+        #uploadTextForm *{
+            width: 60%;
+            align-self: center;
+        }
+
+        .documentPreview {
+        /*     border: 3px dotted green; */
+            margin: 2px 15%;
+            padding: 0 2%;
+            border: 1px solid #a5a5a5;
+        }
+        .documentPreview:hover {
+            border: 2px solid #a5a5a5;
+            margin: 1px 15%;
+        }
+
+        .documentPreview > *{
+        /*     border: .1px dotted green; */
+            text-align: left;
+        }
+        .docTitle {
+            font: 20px Georgia, serif ;
+            color: #585858
+        }
+    </style>
+{% endblock headPlus %}
+<!--END HEAD-->
+
+{% block subBody %}
+
+
+
+<!--==================NAV-HEADER=================-->
+<!--(should be inherited)-->
+
+
+
+<!--==============================TOP HALF===================================-->
+
+<!--<section class="flex-column dashboard-container">  -->
+
+
+    {% block topHalf %}
+
+        {% block topLeft %}
+        <!--(override)-->
+            {% block topLeft_H1 %}
+            <!--(override)-->
+            {% endblock topLeft_H1 %}
+        {% endblock topLeft %}
+
+
+        {% block topRight %}
+                <!--(override)-->
+        {% endblock topRight %}
+
+
+
+
+<!--HIDDEN FORM TO SUBMIT (testing only?)-->
+<form action="/review" method="POST">
+    <input type="text" name="fullTextID" placeholder="(should be hidden)">
+    <input type="submit" value="Go">
+</form>
+{% if g.user['userID']==29 %}
+<!--ME is logged in-->
+<form action="{{url_for('marcaBP.devDB')}}" method="GET">
+    <input type="submit" value="Go dev">
+</form>
+{% endif %}
+<!------>
+<!------>
+<!---- CURRENT WORK-->
+<!------>
+<!------>
+<section class="dashboard-container">
+    <h2>Your Saved Documents</h2>
+    <h4>select a text to review</h4>
+    {% for text in userTexts %}
+        <div id="{{text['FullText_ID']}}" class="documentPreview flex-column"
+        onclick="location.href='{{text['FullText_ID']}}/review';">
+            <span class="docTitle" style="min-height: 1em">
+                {{text['title']}}
+            </span>
+            <span class="docTextPreview" style="max-height: 2.3em; overflow-y: hidden;">
+            {{text['full_text']}}
+            </span>
+        </div>
+    {% endfor %}
+</section>
+
+<script>
+    function sendToReview(obj) {
+        alert(obj.id)
+        //TODO send to review!
+    }
+</script>
+
+    {% endblock topHalf %}
+<!------>
+<!------>
+<!---- CURRENT WORK-->
+<!------>
+<!------>
+
+
+
+<!--</section>-->
+
+
+<!--=============================BOTTOM HALF=================================-->
+
+
+
+
+
+    {% block bottomHalf %}
+
+
+
+
+<section class="dashboard-container">
+        {% block bottom_H1 %}
+            <h2>Load New Document</h2>
+        {% endblock bottom_H1 %}
+            <div id="uploadText" class="flex-column">
+                <form id="uploadTextForm"  class="flex-column" action="/dashboard" method="POST">
+                    <input type="text" name="textTitle" placeholder="Title (optional)">
+                    <textarea id="newFullText" name="newFullText"></textarea>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+</section>
+
+    {% endblock bottomHalf %}
+
+
+
+{% endblock subBody %}

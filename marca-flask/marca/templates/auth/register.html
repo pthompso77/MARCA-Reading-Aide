@@ -1,0 +1,16 @@
+{% extends 'auth/login.html' %}
+<!--% extends 'marca_base.html' %-->
+
+
+{% block title %}
+    {% block submitValue %}
+        Register
+    {% endblock submitValue %}
+{% endblock title%}
+
+
+{% block formAction %}
+    "/auth/register"
+{% endblock formAction %}
+
+

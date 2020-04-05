@@ -1,0 +1,187 @@
+a {
+    text-decoration: none;
+}
+
+body {
+    max-width: 960px;
+    margin: auto;
+}
+
+footer {
+    min-height: 200px;
+    margin: 0 30px 30px 30px;
+}
+
+* {
+    box-sizing: border-box;
+    background-color: #f1f1f1;
+}
+/*
+justify-content		align the flex items horizontal (side to side in container)
+                                                (default: flex-start)
+align-items			Vertically aligns the flex items when the items do not use all available
+                                        space on the cross-axis
+                                                (default: stretch) stretches the space
+align-content		Modifies the behavior of the flex-wrap property. It is similar to align-
+                                        items, but instead of aligning flex items, it aligns flex lines
+                                                (default: stretch) stretches items
+*/
+
+.flex-container {
+    min-height: 500px;
+    display: flex;
+    /*	flex-direction: row;*/
+    /*	flex-wrap: wrap;*/
+    flex-flow: row wrap;
+    /*	justify-content: space-between;*/
+    /*	align-items: center;*/
+    align-content: center;
+}
+
+/*
+The flex item properties are:
+order
+flex-grow
+flex-shrink
+flex-basis
+flex
+align-self
+*/
+/* #input-section { */
+#topLeft-section {
+    /*	order: 2;*/
+    flex-grow: 2;/* default is 0
+/*	flex-shrink: 0; default is 1*/
+    flex-basis: 320px;
+    /*	align-self: center; (overrides anything defined in the flex container) */
+}
+
+/*		this is a flex item*/
+.flex-container > section {
+    background-color: #f1f1f1;
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
+    /*  min-width: 300px;*/
+    flex: 1 0 300px;
+}
+#test-text {
+    margin: 15px;
+}
+#test-text section { /*row*/
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+#test-text article { /*column*/
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1 0 400px;
+}
+#test-text p{
+    font-size: 12px;
+}
+
+.flash {
+  margin: 1em 0;
+  padding: 1em;
+  background: #cae6f6;
+  border: 1px solid #377ba8;
+}
+
+h1{
+    font-family: "PT Sans";
+    font-size: 32px;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
+    color: #000;
+    /*    background-color: initial;*/
+    line-height: 42px;
+    letter-spacing: normal;
+    text-shadow: none;
+}
+h2 {
+    font-family: "PT Sans";
+    font-size: 32px;
+    font-weight: 400;
+    font-style: italic;
+    color: #808080;
+    line-height: 62px;
+}
+h3 {
+    font-family: "PT Sans";
+    font-size: 26px;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
+    color: #000;
+    background-color: initial;
+    line-height: 33px;
+    letter-spacing: normal;
+    text-shadow: none;
+    padding-top: 0;
+    text-indent: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    text-align: left;
+}
+p, p *{
+    font-family: Lato;
+    font-size: 20px;
+
+}
+
+/*		FOR LEFT SIDE: TEXT CONTAINER*/
+
+#text-container, .container {
+    min-width: 200px;
+    min-height: 100px;
+    display: flex;
+    /*			flex-direction: row;*/
+    flex-flow: row wrap;
+    /*			justify-content: flex-end;*/
+    align-content: space-between;
+}
+#text-input {
+    /*
+                            flex-basis: 400px;
+                            flex-basis: 100%;
+    */
+    flex: 1 0 100%;
+    min-height: 200px;
+}
+#submit-text {
+    flex: 0 0 100px;
+    align-self: flex-end;
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 20px;
+
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #52646f;
+    border-radius: 24px;
+    background-color: #82939e;
+}
+
+
+.arg {
+    /*			todo*/
+    /*			align-self: flex-start;*/
+}
+
+/* nav-bar section */
+/* #nav-bar {
+    display:flex;
+    padding:20px;
+} */
+
+.login_register {
+    padding: 20px;
+}

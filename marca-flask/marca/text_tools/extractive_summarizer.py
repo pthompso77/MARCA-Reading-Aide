@@ -20,12 +20,12 @@ verbose_ON = False
 
 import sys, os
 try:
-	from my_tokenize import sent_tokenize, word_tokenize
-	if (verbose_success):
-		print("\nYES2 got my sent_tokenize, word_tokenize")
+    from my_tokenize import sent_tokenize, word_tokenize
+    if (verbose_success):
+        print("\nYES2 got my sent_tokenize, word_tokenize")
 except Exception as e:
-	print("\nNO2 error from extractive.py:  from my_tokenize import word_tokenize \ne=", e)
-	
+    print("\nNO2 error from extractive.py:  from my_tokenize import word_tokenize \ne=", e)
+
 # END ===== region imports
 
 
@@ -35,16 +35,16 @@ except Exception as e:
 
 # set environment to include nltk_data
 try:
-	os.environ["NLTK_DATA"] = "/home/pthompso/nltk_data"
-	sys.path.append("/home/pthompso/nltk_data")
-	if (verbose_success):
-		print("\nYES0 set vars")
+    os.environ["NLTK_DATA"] = "/home/pthompso/nltk_data"
+    sys.path.append("/home/pthompso/nltk_data")
+    if (verbose_success):
+        print("\nYES0 set vars")
 except Exception as e:
-	print('\nno0 e:',e)
+    print('\nno0 e:',e)
 
 """defines the list of stopwords (words that will be overlooked during evaluation)"""
 stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
-	
+
 # END ===== region environment and local variables
 
 
@@ -68,49 +68,49 @@ For example, an LDA model might have topics that can be classified as CAT_relate
 # ===== region Creating Dictionary Table ==================================================
 
 def create_frequency_table(article) -> dict:
-	"""Creates a table that shows the frequency of each word's occurence.
-	
-	Counts the number of times each word occurs in the text.
-	
-	Args:
-		article: full text to summarize
-		
-	Returns:
-		A dict with each unique word as the key,
-		the value is the number of times that word occurs in the text.
-		For example:
-		
-		{'lonely': 1,
-		 'and': 35,
-		 'trouble': 2}	
-	"""
-	
-	# 1. Tokenize the text into one-word tokens
-	words = word_tokenize(article)
+    """Creates a table that shows the frequency of each word's occurence.
+
+    Counts the number of times each word occurs in the text.
+
+    Args:
+    	article: full text to summarize
+
+    Returns:
+    	A dict with each unique word as the key,
+    	the value is the number of times that word occurs in the text.
+    	For example:
+
+    	{'lonely': 1,
+    	 'and': 35,
+    	 'trouble': 2}
+    """
+
+    # 1. Tokenize the text into one-word tokens
+    words = word_tokenize(article)
 
 
-	# 2. Stemming: reduce words to their root form
-		# Stemming is the process of producing morphological variants of a root/base word.
-	# stemmer = PorterStemmer() # removed 1719...not sure why...
-	# TODO come back to this. Let's get PorterStemmer working!
-	
+    # 2. Stemming: reduce words to their root form
+        # Stemming is the process of producing morphological variants of a root/base word.
+    # stemmer = PorterStemmer() # removed 1719...not sure why...
+    # TODO come back to this. Let's get PorterStemmer working!
 
-	# 3. Create dictionary for the word frequency table
-	freq_tab = dict() #this is the return value
-	
-	# 4. Remove stop words
-	stopWords = stopwords	
-	for word in words:
-		# word = stemmer.stem(word) # removed 1719
-		word = word.lower() # (I think stemmer does this...)
-		if word in stopWords:
-			continue # this is a stopword, we don't need it
-		if word in freq_tab: #if we already have it
-			freq_tab[word] += 1
-		else:
-			freq_tab[word] = 1
 
-	return freq_tab
+    # 3. Create dictionary for the word frequency table
+    freq_tab = dict() #this is the return value
+
+    # 4. Remove stop words
+    stopWords = stopwords
+    for word in words:
+        # word = stemmer.stem(word) # removed 1719
+        word = word.lower() # (I think stemmer does this...)
+        if word in stopWords:
+            continue # this is a stopword, we don't need it
+        if word in freq_tab: #if we already have it
+            freq_tab[word] += 1
+        else:
+            freq_tab[word] = 1
+
+    return freq_tab
 
 # create a frequency table from the article we received
 freq_table = create_frequency_table(article)
@@ -124,11 +124,11 @@ freq_table = create_frequency_table(article)
 
 # Tokenize the sentences using my copy of NLTK's `sent_tokenize`
 try:
-	sentences = sent_tokenize(article)
-	if (verbose_success):
-		print('\nYES tokenized the sentences!',sentences)
+    sentences = sent_tokenize(article)
+    if (verbose_success):
+        print('\nYES tokenized the sentences!',sentences)
 except Exception as e:
-	print('\nNO error with sentences/sent_tokenize. error=',e)
+    print('\nNO error with sentences/sent_tokenize. error=',e)
 # END ===== region Tokenize the sentences
 
 
@@ -142,42 +142,42 @@ except Exception as e:
 
 # Algorithm for scoring a sentence by its words
 def find_weighted_frequencies(sentencesThatAre, inFrequencyTable) -> dict:
-	"""Calculates the weight of a sentence. This is done by using the frequency table
-	   that was filled in create_frequency_table() 
-	   
-	Arguments:
-	   sentencesThatAre: a list of tokenized sentences
-	   inFrequencyTable: a frequency table (dict) indicating the occurence count for unique words in the article
-	   
-	Returns:
-	   dict with the sentence as the key and it's calculated weight as the value
-	"""
+    """Calculates the weight of a sentence. This is done by using the frequency table
+       that was filled in create_frequency_table()
 
-	sentenceWeights = dict()  # return variable
-	if (verbose_ON):
-		print('\nSENTENCESTHATARE:',sentencesThatAre)
-	# TODO optimize this
-	for sentence in sentencesThatAre:
-		sentenceLength_withoutStops = 0
-		# TODO, simply reverse the lookup/iteration?		
-		for wordFreq in inFrequencyTable:
-			if wordFreq in sentence.lower(): #lowercase
-				sentenceLength_withoutStops += 1 # counting the word only if it isn't a stopword
-				if sentence in sentenceWeights: # if it already exists
-					sentenceWeights[sentence] += inFrequencyTable[wordFreq] # count it up
-				else:
-					sentenceWeights[sentence] = inFrequencyTable[wordFreq]
-		# normalize the sentenceWeights
-		if (sentenceLength_withoutStops == 0):
-			sentenceWeights[sentence] = 0
-		else:
-			# sets the sentence weight to the average score of the whole-document frequency of words that appear in this sentence
-			sentenceWeights[sentence] = (sentenceWeights[sentence] / sentenceLength_withoutStops)
-		
-	return sentenceWeights
+    Arguments:
+       sentencesThatAre: a list of tokenized sentences
+       inFrequencyTable: a frequency table (dict) indicating the occurence count for unique words in the article
+
+    Returns:
+       dict with the sentence as the key and it's calculated weight as the value
+    """
+
+    sentenceWeights = dict()  # return variable
+    if (verbose_ON):
+        print('\nSENTENCESTHATARE:',sentencesThatAre)
+    # TODO optimize this
+    for sentence in sentencesThatAre:
+        sentenceLength_withoutStops = 0
+        # TODO, simply reverse the lookup/iteration?
+        for wordFreq in inFrequencyTable:
+            if wordFreq in sentence.lower(): #lowercase
+                sentenceLength_withoutStops += 1 # counting the word only if it isn't a stopword
+                if sentence in sentenceWeights: # if it already exists
+                    sentenceWeights[sentence] += inFrequencyTable[wordFreq] # count it up
+                else:
+                    sentenceWeights[sentence] = inFrequencyTable[wordFreq]
+        # normalize the sentenceWeights
+        if (sentenceLength_withoutStops == 0):
+            sentenceWeights[sentence] = 0
+        else:
+            # sets the sentence weight to the average score of the whole-document frequency of words that appear in this sentence
+            sentenceWeights[sentence] = (sentenceWeights[sentence] / sentenceLength_withoutStops)
+
+    return sentenceWeights
 
 
-# 
+#
 sentence_scores = find_weighted_frequencies(sentences, freq_table)
 
 # END ===== region Find weighted frequencies
@@ -192,12 +192,12 @@ sentence_scores = find_weighted_frequencies(sentences, freq_table)
 
 # Getting the threshold
 def getThresholdUsingSentenceWeights(sentence_weights) -> int:
-	valueSum = 0
-	#TODO find better more robust ways to calculate this
-	for key in sentence_weights:
-		valueSum += sentence_weights[key]
-	#TODO calculate this with a higher threshold (or a custom one)
-	return (valueSum / len(sentence_weights))
+    valueSum = 0
+    #TODO find better more robust ways to calculate this
+    for key in sentence_weights:
+        valueSum += sentence_weights[key]
+    #TODO calculate this with a higher threshold (or a custom one)
+    return (valueSum / len(sentence_weights))
 
 # threshold = _calculate_average_score(sentence_scores)
 threshold = getThresholdUsingSentenceWeights(sentence_scores)
@@ -214,15 +214,15 @@ threshold = getThresholdUsingSentenceWeights(sentence_scores)
 
 # Assembling the summary
 def assembleSummary(sentences, sentence_weight, threshold):
-	sentence_counter = 0
-	article_summary = ''
+    sentence_counter = 0
+    article_summary = ''
 
-	for sentence in sentences:
-		if (sentence in sentence_weight) and (sentence_weight[sentence] >= (threshold)):
-			article_summary += sentence + "<br>"
-			sentence_counter += 1
+    for sentence in sentences:
+        if (sentence in sentence_weight) and (sentence_weight[sentence] >= (threshold)):
+            article_summary += sentence + "<br>"
+            sentence_counter += 1
 
-	return article_summary
+    return article_summary
 
 # assembleSummary(sentences, sentence_scores, 1.5 * threshold)
 
@@ -238,34 +238,34 @@ Natural Language Processing with Python provides a practical introduction to pro
 # # and now all together
 def doArticleSummary(article):
 
-	#creating a dictionary for the word frequency table
-	try:
-		freq_table = create_frequency_table(article)
-	except:
-		print('''cannot set freq_table
+    #creating a dictionary for the word frequency table
+    try:
+        freq_table = create_frequency_table(article)
+    except:
+        print('''cannot set freq_table
 			article is:''',article)
 
-	#tokenizing the sentences
-	sentences = sent_tokenize(article, keepOriginalPunctuation=True)
-	
-	sentence_scores = find_weighted_frequencies(sentences, freq_table)
+    #tokenizing the sentences
+    sentences = sent_tokenize(article, keepOriginalPunctuation=True)
 
-	#getting the threshold
-	threshold = getThresholdUsingSentenceWeights(sentence_scores)
+    sentence_scores = find_weighted_frequencies(sentences, freq_table)
 
-	#producing the summary
-	article_summary = assembleSummary(sentences, sentence_scores, 1.0 * threshold)
-	if (verbose_ON):
-		print('\nextractive article summary:',article_summary,'\n[end summary]')
-		
-	return article_summary
+    #getting the threshold
+    threshold = getThresholdUsingSentenceWeights(sentence_scores)
 
-# END ===== region Get the Summary! 
+    #producing the summary
+    article_summary = assembleSummary(sentences, sentence_scores, 1.0 * threshold)
+    if (verbose_ON):
+        print('\nextractive article summary:',article_summary,'\n[end summary]')
+
+    return article_summary
+
+# END ===== region Get the Summary!
 
 
 
 
 
 if __name__ == "__main__":
-	if (verbose_ON):
-		print("\n\n__name__ == __main__")
+    if (verbose_ON):
+        print("\n\n__name__ == __main__")

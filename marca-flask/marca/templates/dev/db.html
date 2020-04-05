@@ -1,0 +1,67 @@
+<!--/dev/db.html-->
+
+{% extends 'marca_base.html' %}
+
+<!--HEAD-->
+{% block title %}
+Dev
+{% endblock title %}
+
+
+<!--END HEAD-->
+
+
+{% block subBody %}
+                <form action="/dev/db" method="POST"
+                style="display: flex; flex-direction: column">
+                    <input type="text" name="query">
+                    <input type="submit" value="Submit Query">
+                </form>
+
+    {% block topHalf %}
+        {% block topLeft %}
+        <h3 style="border-bottom: 1px solid gray">Execute response: ({{DBexec}})</h3>
+        <div id="DBresult">
+            Query: {{query}}
+<hr>
+            {% for result in DBresult %}
+                <div>{{result}}</div>
+            {% endfor %}
+        </div>
+
+                {% block topLeft_H1 %}
+                {% endblock topLeft_H1 %}
+
+        {% endblock topLeft %}
+    {% endblock topHalf %}
+{% endblock subBody %}
+<!--==============================TOP HALF===================================-->
+
+
+
+        {% block topRight %}
+
+        {% endblock topRight %}
+
+
+<!--=============================BOTTOM HALF=================================-->
+
+
+    {% block bottomHalf %}
+
+        {% block bottomDivID %}
+        {% endblock bottomDivID %}
+
+        {% block bottom_H1 %}
+        {% endblock bottom_H1 %}
+
+
+
+    {% endblock bottomHalf %}
+
+
+
+
+
+
+

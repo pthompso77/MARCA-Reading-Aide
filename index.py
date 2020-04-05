@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-'''
-set the name of the results file to be used for processing the summary
-(entered as the action in form with id="text-form")
-'''
+'''set the name of the results file to be used for processing the summary
+(entered as the action in form with id="text-form")'''
 results_file = "results.py"
+
+'''set the name of the login/register file to be used for user login or registration
+(entered as the href in anchor with id="user-login")'''
+login_filename = 'login-register.py'
 
 
 
@@ -14,7 +16,7 @@ print('Content-type: text/html\r\n\r\n')
 print ('''<!doctype html>
 <head>
 	<title>Summarize!</title>
-	<script src="js/xhr.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<meta charset="utf-8">
   <meta name="description" content="Summarize any length of text">
   <meta name="keywords" content="Summary, Abstract, NLP, Computer science, artificial intelligence">
@@ -180,14 +182,34 @@ align-self
 /*			align-self: flex-start;*/
 		}
 
+		/* nav-bar section */
+	    #nav-bar {
+		display:flex;
+		padding:20px;
+	    }
+
+	    .login_register {
+		padding: 20px;
+	    }
+
 
 </style>
-</head>
+</head>''')
 
+print('''<body>
 <!--A Flexible Layout must have a parent element with the display property set to flex. Direct child elements(s) of the flexible container automatically becomes flexible items.-->
+       ''')
 
-<body>
-	<div class="flex-container">
+print('''<!--Navigation Bar-->
+	<div id="nav-bar">'''
+            +'<section id="login-button" class="login_register">'
+                +'<a id="user-login" href="'+login_filename+'">Log In</a>'
+            +'</section>'
+	+'''</div>
+	<!--end Navigation Bar-->
+        ''')
+
+print('''<div class="flex-container">
 
 		<section id="input-section">
 			<a href="index.py">
@@ -195,13 +217,11 @@ align-self
 				</a>
 			<div id="text-container">
 				<textarea id="text-input" name="userInput" form="text-form" required></textarea>
-			</div>'''+
-			'''<form id="text-form" action="''')
-print(results_file,sep='') 
-print('''" method="post">
-			<input type="submit" id="submit-text" value="Summarize"/>
-				</form>'''+
-			'''</section>
+			</div>''')
+print('<form id="text-form" action="',results_file,'" method="post">')
+print('''<input type="submit" id="submit-text" value="Summarize"/>
+				</form>'''
+      +'''</section>
 <!--		end of input-section-->
 
 		<section id="summary-section">
@@ -227,8 +247,8 @@ print('''" method="post">
 		</section>
 <!--		end of summary-section-->
 
-	</div>
-	<div id="test-text">
+	</div>'''
+	+'''<div id="test-text">
 			<h1>Sample Text</h1>
 		<section>
 			<article>
@@ -261,6 +281,6 @@ Image collection summarization is another application example of automatic summa
 At a very high level, summarization algorithms try to find subsets of objects (like set of sentences, or a set of images), which cover information of the entire set. This is also called the core-set. These algorithms model notions like diversity, coverage, information and representativeness of the summary. Query based summarization techniques, additionally model for relevance of the summary with the query. Some techniques and algorithms which naturally model summarization problems are TextRank and PageRank, Submodular set function, Determinantal point process, maximal marginal relevance (MMR) etc.
 		</article>
 			</section>
-	</div>
-</body>
-''')
+	</div>''')
+
+print('''</body>''')

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<!--TODO copy this into review.html (with Jinja)-->
+<html>
+
+  <head>
+
+    <title>Home - MARCA</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="marca_style.css">
+    <link rel="stylesheet" href="header_style.css">
+    <link rel="stylesheet" href="docTitle.css">
+    <link rel="stylesheet" href="paraSummy.css">
+    <link rel="stylesheet" href="docNav.css">
+    <link rel="stylesheet" href="midDiv.css">
+    <link rel="stylesheet" href="userNotes.css">
+    <link rel="stylesheet" href="rating.css">
+
+
+    <meta charset="utf-8">
+    <meta name="description" content="Summarize any length of text">
+    <meta name="keywords" content="Summary, Abstract, NLP, Computer science, artificial intelligence">
+    <meta name="author" content="Peter T">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  </head>
+
+
+  <!--START NAV-->
+  <section id="nav-bar" class="flex main-border-top">
+    <!--<nav>-->
+    <div id="nav-left">
+      <h1>
+        <a href="/">MARCA</a>
+      </h1>
+    </div>
+    <div id="nav-right">
+      <ul id="nav-ul">
+        <!--g is automatically available in templates-->
+
+        <li>
+          <a id="user-login" href="/auth/login">
+            Log In
+          </a>
+        </li>
+        <li>
+          <a id="user-register" href="/auth/register">
+            Register
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!--</nav>-->
+
+  </section>
+  <!--END NAV-->
+
+  <!--================================================================-->
+
+  <!--START TOP HALF-->
+  <section id="topHalf" class="main-border-sides">
+
+
+    <!--START DOCUMENT TITLE-->
+    <section id="topHalf-Title" class="flex">
+      <div id="documentTitle" >
+        Document Title
+      </div>
+    </section>
+    <!--END DOCUMENT TITLE-->
+
+
+    <!--START SUMMARY SECTION-->
+    <div id="top-summary-container" class="flex">
+
+
+      <!--START PARAGRAPH SUMMARY-->
+      <section id="paragraph-summary">
+        Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+        There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on. The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query. Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.
+      </section>
+      <!--END PARAGRAPH SUMMARY-->
+
+      <!--      <div id="buffer">
+      TODO is this necessary?
+        </div>-->
+
+
+
+      <!--START DOCUMENT NAVIGATION-->
+      <section id="document-navigation">
+        <h4>Navigate</h4>
+
+        <div id="doc-nav-links" class="flex">
+          <!--jinja: each href will send the id of the <a> tag to marcaBP.loadParagraph via GET-->
+          <a id="12" href="#" class="nav-links pseudolink">Section...</a>
+          <a id="12" href="#" class="nav-links pseudolink">Section...</a>
+          <a id="12" href="#" class="nav-links pseudolink">Section...</a>
+          <a id="12" href="#" class="nav-links pseudolink">There are broadly two types of extractive summarization...</a>
+        </div>
+
+      </section>
+      <!--START DOCUMENT NAVIGATION-->
+
+
+
+    </div>
+    <!--END SUMMARY SECTION-->
+
+
+  </section>
+  <!--END TOP HALF-->
+
+
+
+  <!--START MIDDLE-->
+  <section id="midDivide" class="flex main-border-sides">
+    <span id="active-highlight">
+      Text of Active Highlighted Section Goes Here
+      and if it's really long...really long...really long...really long...really long...really long...really long...really long...
+    </span>
+  </section>
+  <!--END MIDDLE-->
+
+
+  <!--================================================================-->
+
+
+  <!--START BOTTOM HALF-->
+  <section id="bottomHalf" class="flex main-border-sides">
+
+
+    <!--TODO - save the rating upon selection-->
+    <!--START RATING BUTTONS-->
+    <div id="userRatings">
+      <h5 id="ratingHeader">Rate This Auto-Selection</h5>
+      <div id="rate-select-containter" class="flex">
+        <span>
+          <input type="radio" id="rate1" name="userRating" value="1"/>
+          <label for="1">1</label>
+        </span>
+        <span>
+          <input type="radio" id="rate1" name="userRating" value="2"/>
+          <label for="2">2</label>
+        </span>
+        <span>
+          <input type="radio" id="rate1" name="userRating" value="3"/>
+          <label for="3">3</label>
+        </span>
+        <span>
+          <input type="radio" id="rate1" name="userRating" value="4"/>
+          <label for="4">4</label>
+        </span>
+      </div>
+    </div>
+    <!--END RATING BUTTONS-->
+
+
+<!--    TODO
+  save the userNotes on keyup (or save button)-->
+<!--START USER NOTES-->
+<div id="userNotes-container">
+  <h4 id="notesHeader">Notes</h4>
+
+  <textarea id="userNotes">
+
+  </textarea>
+</div>
+<!--END USER NOTES-->
+
+
+</section>
+<!--END BOTTOM HALF-->
+
+
+
+<!--START FOOTER-->
+<footer class="main-border-bottom">
+  <!--TODO:footer-->
+</footer>
+<!--END FOOTER-->
+
+</html>
+
