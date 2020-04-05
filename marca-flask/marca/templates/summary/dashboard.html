@@ -125,6 +125,13 @@ Dashboard
     <input type="text" name="fullTextID" placeholder="(should be hidden)">
     <input type="submit" value="Go">
 </form>
+{% if g.user['userID']==29 %}
+<!--ME is logged in-->
+<form action="{{url_for('marcaBP.devDB')}}" method="POST">
+    <input type="text" name="DBquery" placeholder="(DB)">
+    <input type="submit" value="Go dev">
+</form>
+{% endif %}
 <!------>
 <!------>
 <!---- CURRENT WORK-->
