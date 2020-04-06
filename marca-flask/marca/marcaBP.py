@@ -26,7 +26,7 @@ abort(Response('Hello World'))
 log.info('Starting importing auth.login_required and db.get_db in marcaBP.py')
 try:
     from auth import login_required
-    from db import get_db
+    from db import get_db, escape
 except:
     try:
         from marca.auth import login_required
@@ -62,6 +62,7 @@ def devDB():
 
     if request.method==POST:
         query = request.form['query']
+        query = db.escape(query)
         DBexec = cur.execute(query)
         db.commit()
         DBresult = cur.fetchall()
@@ -129,12 +130,14 @@ def dashboard():
         #: submit text to DB
         query = f'''INSERT INTO `FullText` (title, text_tokenized, full_text)
         VALUES ("{title}","{tokenizedText}","{fullText}");'''
+        query = db.escape(query)
         result = cur.execute(query)
         db.commit()
 
         #: get return value of new text insert (tokenizedTextID)
         q1 = '''SELECT FullText_ID from pthompsoDB.FullText ORDER BY FullText_ID DESC LIMIT 1;'''
-        cur.execute(q1)
+        query = db.escape(q1)
+        cur.execute(query)
         tokenizedTextRow =  cur.fetchone()
         tokenizedTextID = tokenizedTextRow['FullText_ID']
 
@@ -147,7 +150,8 @@ def dashboard():
                 ({userAccountsID},
                 {tokenizedTextID});
             '''
-        cur.execute(fullText_UserAccount_assoc_Query)
+        query = db.escape(fullText_UserAccount_assoc_Query)
+        cur.execute(query)
         db.commit()
         log.info('Finished submitText() in marcaBP.py')
 
@@ -188,6 +192,7 @@ def getTextAssociatedWithUserID(userAccountsID):
     ON ft.FullText_ID = fta.FullTextID
     WHERE fta.userID = {userAccountsID} AND fta.userID = u.userID;
     '''
+    query = db.escape(query)
     cur.execute(query)
     response = cur.fetchall()
     return response
@@ -220,6 +225,7 @@ def getTextByTextID(textID):
     cur = db.cursor()
 
     query = f'''SELECT * FROM pthompsoDB.FullText WHERE FullText_ID = {textID};'''
+    query = db.escape(query)
     cur.execute(query)
     response = cur.fetchone()
     return response
