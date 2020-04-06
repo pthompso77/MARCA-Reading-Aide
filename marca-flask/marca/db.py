@@ -113,6 +113,7 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 
-# delete me
-#db = get_db()
+def escape(query):
+    #TODO better escapes
+    return query.replace("'","''")
 
