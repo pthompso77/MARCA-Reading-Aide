@@ -20,7 +20,7 @@
 
 #nav-bar, #documentTitle, #paragraph-summary {
     /*TODO undo this after testing*/
-    /*visibility: hidden;*/ 
+    /*visibility: hidden;*/
 }
 body * {
     /*TODO undo this after testing*/
@@ -47,9 +47,9 @@ body * {
 
 }
 
-.pseudolink { 
+.pseudolink {
     color: inherit;
-    /*text-decoration:underline;*/ 
+    /*text-decoration:underline;*/
     cursor: default;
 }
 
@@ -59,6 +59,9 @@ body * {
     padding: 4px 0;
     white-space: nowrap;
     overflow-x: hidden; /*this isn't doing anything*/
+}
+.nav-links:hover {
+    background-color: lightgray;
 }
 
 
