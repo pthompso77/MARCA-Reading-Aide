@@ -115,5 +115,6 @@ def init_app(app):
 
 def escape(query):
     #TODO better escapes
-    return query.replace("'","''")
+    return query
+    #return query.replace("'","''")
 
