@@ -247,39 +247,25 @@ def submitText():
     log.info('Starting submitText() in marcaBP.py')
     '''takes submitted text
         returns a summary
-        form id="text-form"
+        name = userInput
     '''
+    originalText = 'hey'
+    originalText = request.form['userInput']
 
-    # TODO - FINISH AND TEST THIS
+    #from marca.text_tools.extractive_summarizer import doArticleSummary
+    summary = 'shorter...'
+    #summary = doArticleSummary(originalText)
 
-    #: get text from request (POST)
-    rawText = "TODO"
 
-    #: tokenize the text
-    tokenizedText = "TODO"
+    '''Now for my_tokenize paragraph summary'''
+    from marca.text_tools.my_tokenize import paragraph_tokenize
+    summary = 'paragraphs...'
+    summary = paragraph_tokenize(originalText)
 
-    # query to call the MySQL proc call
-    # like: CALL `pthompsoDB`.`insert_FullText`(<{IN tokenizedText TEXT}>, <{OUT output INT}>);
-    insertTextQuery = f'''CALL `pthompsoDB`.`insert_FullText` ({tokenizedText}, );'''
 
-    #: submit to DB, get return value (tokenizedTextID)
-    tokenizedTextID = "TODO"
-
-    #: get userAccountsID from g.user
-    userAccountsID = "TODO"
-
-    # insert statement for text/user association
-    fullText_UserAccount_assoc_Query = f'''INSERT INTO `pthompsoDB`.`user_FullText_assoc`
-            (`userID`,
-            `FullTextID`)
-        VALUES
-            ({userAccountsID},
-            {tokenizedTextID});
-        '''
-    log.info('Finished submitText() in marcaBP.py')
-
+    ts = len(summary)
     #: return redirect(?) to dashboard
-    return('TODO')
+    return render_template('dev/db.html', summary=summary)
 
 
 

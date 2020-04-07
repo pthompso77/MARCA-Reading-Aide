@@ -34,6 +34,17 @@ Dev
 
         {% endblock topLeft %}
     {% endblock topHalf %}
+
+    {% if summary %}
+    {% for para in summary %}
+    <p>
+    {{para}}
+    </p>
+    <br>
+    <hr>
+    {% endfor %}
+{% endif %}
+
 {% endblock subBody %}
 <!--==============================TOP HALF===================================-->
 
@@ -54,6 +65,7 @@ Dev
 
         {% block bottom_H1 %}
         {% endblock bottom_H1 %}
+
 
 
 
