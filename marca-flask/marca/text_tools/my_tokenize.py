@@ -41,10 +41,12 @@ def sent_tokenize(strs, newLineEndings=False, keepOriginalPunctuation=True):
     return strs2.split('|')
 
 
-def paragraph_tokenize(strs, keepOriginalPunctuation=True):
+def paragraph_tokenize(stringInput, keepOriginalPunctuation=True):
     # TODO!
-    print('returning sent_tokenize right now...')
-    return sent_tokenize(strs)
+    from nltk.tokenize.texttiling import TextTilingTokenizer
+    tt = TextTilingTokenizer()
+    return tt.tokenize(stringInput)
+
 
 
 # ===== region Word Tokenize ==================================================
