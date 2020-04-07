@@ -76,6 +76,7 @@ def logAppDetails(appp):
 
 
 def create_app(test_config=None):
+    path = os.path
     #: create and configure the app
     app1 = Flask(__name__)
 
@@ -179,5 +180,6 @@ def create_app(test_config=None):
     return app
 
 if __name__ == '__main__':
-    stopHere=True
+    app = create_app()
+    #stopHere=True
 
