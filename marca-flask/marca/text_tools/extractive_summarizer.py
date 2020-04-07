@@ -20,7 +20,7 @@ verbose_ON = False
 
 import sys, os
 try:
-    from my_tokenize import sent_tokenize, word_tokenize
+    from marca.text_tools.my_tokenize import  sent_tokenize, word_tokenize
     if (verbose_success):
         print("\nYES2 got my sent_tokenize, word_tokenize")
 except Exception as e:
