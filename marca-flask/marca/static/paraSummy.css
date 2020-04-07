@@ -20,7 +20,7 @@
 
 #nav-bar, #documentTitle{
     /*TODO undo this after testing*/
-     /*visibility: hidden;*/ 
+     /*visibility: hidden;*/
 }
 body * {
     /*TODO undo this after testing*/
@@ -47,6 +47,8 @@ body * {
     max-height: 400px;
 }
 
+
+
 /*PARAGRAPH SUMMARY*/
 #paragraph-summary {
     flex-grow: 2;
@@ -56,9 +58,19 @@ body * {
     min-width: 350px;
 }
 
+.highlighted {
+    background-color: #f8fe70;
+}
+.highlighted:hover {
+    cursor: pointer;
+}
+
+
 /*#buffer {TODO is this necessary?
     flex-grow: 1;
     flex-basis: 5%;
 }*/
+
+
 
 

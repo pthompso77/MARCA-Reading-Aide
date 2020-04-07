@@ -20,6 +20,20 @@
     text-decoration: none;
 }
 
+#nav-bar h1 {
+    font-size: 60px;
+}
+#nav-bar li a {
+    font: 24px sans-serif;
+}
+#nav-bar a:visited, #nav-bar a {
+    color: #151515;
+}
+
+#nav-bar a:hover{
+    color: gray;
+}
+
 #nav-ul {
     display: flex;
     justify-content: flex-end;
@@ -27,7 +41,6 @@
 }
 
 #nav-ul li {
-/*nav-bar li {*/
     text-align: right;
 }
 
