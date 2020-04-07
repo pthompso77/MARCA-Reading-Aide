@@ -29,7 +29,15 @@
 {% block paragraph %}
     {% if textID == 0 %}
         Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-        There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on. The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query. Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.
+        <span class="highlighted" onclick="refreshSelection(this)">There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.</span>
+        The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query.
+        <span class="highlighted" onclick="refreshSelection(this)">Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.</span>
+        <script>
+            function refreshSelection(item) {
+                // TODO populate Review page for this highlighted section
+                alert("Selected this highlighted section")
+            }
+        </script>
     {% else %}
         TODO: text[] paragraph
     {% endif %}
@@ -44,9 +52,10 @@
     {% if textID == 0 %}
         <!--jinja: each href will send the id of the <a> tag to marcaBP.loadParagraph via GET-->
         <a id="12" href="#" class="nav-links pseudolink">Section...</a>
-        <a id="12" href="#" class="nav-links pseudolink">Section...</a>
-        <a id="12" href="#" class="nav-links pseudolink">Section...</a>
-        <a id="12" href="#" class="nav-links pseudolink">There are broadly two types of extractive summarization...</a>
+        <a id="13" href="#" class="nav-links pseudolink">Section...</a>
+        <a id="14" href="#" class="nav-links pseudolink">Section...</a>
+        <a id="15" href="#" class="nav-links pseudolink">There are broadly two types of extractive summarization...</a>
+        <a id="16" href="#" class="nav-links pseudolink">Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.</a>
     {% else %}
         <a id="12" href="#" class="nav-links pseudolink">TODO: for each highlighted section...</a>
     {% endif %}
@@ -59,8 +68,7 @@
   <!--START MIDDLE-->
 {% block activeHighlight %}
     {% if textID == 0 %}
-        Text of Active Highlighted Section Goes Here
-        and if it's really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...really long...nothing special happens
+        There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.
     {% else %}
         Hightlighted section of text {{text['FullText_ID']}}-{{text['title']}} goes here
     {% endif %}
