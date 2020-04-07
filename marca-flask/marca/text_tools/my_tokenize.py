@@ -55,6 +55,7 @@ _re_word_start = r"[^\(\"\`{\[:;&\#\*@\)}\]\/\-,]" # added forward slash
 """Characters that cannot appear within words"""
 #_re_non_word_chars = r"(?:[?!)\";}\]\*:@\'\({\[])"
 _re_non_word_chars = r"(?:[?!)\";}\]\/\*:@\'\({\[])" # added forward slash
+_re_non_word_chars = r"(?:[?!)\";}\]\/\*:@\({\[])" # added forward slash, removed apostrophe
 """Hyphen and ellipsis are multi-character punctuation"""
 _re_multi_char_punct = r"(?:\-{2,}|\.{2,}|(?:\.\s){2,}\.)"
 
@@ -95,7 +96,8 @@ if __name__ == '__main__':
     5 CONCLUSION
     The media landscape has experienced a massive change with the arrival of internet and the recent advent of Web 3.0 and has influenced, in fact, completely changed the ways in which information communication takes place. The information explosion on social media platforms has made them a lot more engaging than stand alone communication platforms [89]. Social media platforms are utilized for discussions surrounding various domains including healthcare [90], internet of things [91], politics [92], amongst others. In the current scenario, the majority of people get to know about recent happenings around the globe through social media platforms. However, the content being shared may not always be from the right source or may not share the correct information. This makes these platforms vulnerable to propagation of misinformation. Thus, these platforms often make the source of several rumors and false content.
     '''
-
+    t = '''been the industry's standard'''
+    print(word_tokenize(t))
     print(paragraph_tokenize(txt))
     pause = True
 
