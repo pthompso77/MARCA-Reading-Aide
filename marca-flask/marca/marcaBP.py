@@ -62,7 +62,7 @@ def devDB():
 
     if request.method==POST:
         query = request.form['query']
-        query = db.escape(query)
+        #query = db.escape(query)
         DBexec = cur.execute(query)
         db.commit()
         DBresult = cur.fetchall()
@@ -115,29 +115,36 @@ def dashboard():
     if request.method == POST:
         # Get the text form submitted
         fullText = request.form['newFullText']
+        fullText = request.form['newFullText'].replace("'","`")
         title = request.form['textTitle']
         if title == "":
             title = "Untitled"
 
         #: tokenize the text
         from marca.text_tools.my_tokenize import word_tokenize
+
         tokenizedText = word_tokenize(fullText)
+        tokenizedText = str(tokenizedText).replace('"','""')
 
         db = get_db().connect()
         cur = db.cursor()
         result = ""
 
         #: submit text to DB
+        print("fullText before: ",fullText,end="\n\n")
+        fullText = fullText.replace('"','\\"')
+        print("fullText after: ",fullText,end="\n\n")
         query = f'''INSERT INTO `FullText` (title, text_tokenized, full_text)
-        VALUES ("{title}","{tokenizedText}","{fullText}");'''
-        query = db.escape(query)
+        VALUES ("%s","%s","%s");''' % (title, tokenizedText, fullText)
+        print('\n',query)
+        #query = db.escape(query)
         result = cur.execute(query)
         db.commit()
 
         #: get return value of new text insert (tokenizedTextID)
         q1 = '''SELECT FullText_ID from pthompsoDB.FullText ORDER BY FullText_ID DESC LIMIT 1;'''
-        query = db.escape(q1)
-        cur.execute(query)
+        #q1 = db.escape(q1)
+        cur.execute(q1)
         tokenizedTextRow =  cur.fetchone()
         tokenizedTextID = tokenizedTextRow['FullText_ID']
 
@@ -150,8 +157,8 @@ def dashboard():
                 ({userAccountsID},
                 {tokenizedTextID});
             '''
-        query = db.escape(fullText_UserAccount_assoc_Query)
-        cur.execute(query)
+        #fullText_UserAccount_assoc_Query = db.escape(fullText_UserAccount_assoc_Query)
+        cur.execute(fullText_UserAccount_assoc_Query)
         db.commit()
         log.info('Finished submitText() in marcaBP.py')
 
@@ -192,7 +199,7 @@ def getTextAssociatedWithUserID(userAccountsID):
     ON ft.FullText_ID = fta.FullTextID
     WHERE fta.userID = {userAccountsID} AND fta.userID = u.userID;
     '''
-    query = db.escape(query)
+    #query = db.escape(query)
     cur.execute(query)
     response = cur.fetchall()
     return response
@@ -225,7 +232,7 @@ def getTextByTextID(textID):
     cur = db.cursor()
 
     query = f'''SELECT * FROM pthompsoDB.FullText WHERE FullText_ID = {textID};'''
-    query = db.escape(query)
+    #query = db.escape(query)
     cur.execute(query)
     response = cur.fetchone()
     return response
