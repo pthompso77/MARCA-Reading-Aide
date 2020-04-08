@@ -34,11 +34,22 @@ def normalizeEndingPunctuation(str, newLineEndings=False, keepOriginalPunctuatio
         normalizingCharacter = '|'
     return str2
 
+
 def sent_tokenize(strs, newLineEndings=False, keepOriginalPunctuation=True):
     strs2 = normalizeEndingPunctuation(strs, newLineEndings, keepOriginalPunctuation)
     strs2 = strs2.replace('.\s*','.')
     # split the sentences apart using the normalizing character
     return strs2.split('|')
+
+
+def sent_tokenize_withDelims(inputText, sentenceDelimSlices):
+    ''' Returns a list of sentences using the deliminating slices provided'''
+    sentenceList = []
+    for slyce in sentenceDelimSlices:
+        sentenceList.append(inputText[slyce])
+
+    return sentenceList
+
 
 
 def paragraph_tokenize(stringInput, keepOriginalPunctuation=True):
@@ -89,6 +100,16 @@ _re_word_tokenizer = re.compile(
 def word_tokenize(strs):
     """Tokenize a string to split off punctuation other than periods"""
     return _re_word_tokenizer.findall(strs)
+
+
+def word_tokenize_withDelims(inputText, wordDelimSlices):
+    ''' Returns a list of words using the deliminating slices provided'''
+    wordList = []
+    for slyce in wordDelimSlices:
+        wordList.append(inputText[slyce])
+
+    return wordList
+
 
 # END ===== region Word Tokenize
 

@@ -36,14 +36,51 @@ Dev
     {% endblock topHalf %}
 
     {% if summary %}
-    {% for para in summary %}
-    <p>
-    {{para}}
-    </p>
-    <br>
-    <hr>
-    {% endfor %}
-{% endif %}
+    {% else %}
+        {% for para in summary %}
+        <p>
+        {{para}}
+        </p>
+        <br>
+        <hr>
+        {% endfor %}
+    {% endif %}
+
+
+
+    {% if sentence_scores %}
+    {% else %}
+        {% for a,b in sentence_scores.items() %}
+            <h3>{{b}}</h3>
+            <p>
+            {{a}}
+            </p>
+            <br>
+            <hr>
+        {% endfor %}
+    {% endif %}
+
+    {% if ft %}
+    {% else %}
+        {% for a,b in ft.items() %}
+            <h3>{{b}}</h3>
+            <p>
+            {{a}}
+            </p>
+            <br>
+            <hr>
+        {% endfor %}
+    {% endif %}
+
+    {% if sentences %}
+        {% for sentence in sentences %}
+            <p>
+            {{sentence}}
+            </p>
+            <br>
+            <hr>
+        {% endfor %}
+    {% endif %}
 
 {% endblock subBody %}
 <!--==============================TOP HALF===================================-->
