@@ -70,59 +70,6 @@ class FullText():
 
 
 
-def getFullText_fromRawText(inputText):
-    ''' This is the main function for processing new texts
-
-        Actions:
-            Create FullText object
-                identify paragraph sections (new line or sentence max)
-                  store as a list of integer tuples, where the integers correspond to the index of the words that start and end the section, with exclusive upper bound.
-                    e.g. the first paragraph is identified as [0, 100) and contains 100 words; the second paragraph as [100,200), which  begins with the 101st word in the text
-                Tokenize sentence sections
-                Tokenize words by sentence
-                  store as list of integers (as above)
-
-            Summarize/Highlight
-                (words are compared as stemmed and lowercase, original text is not modified)
-                for each section selected for highlighting, store the range as integer tuple with exclusive upper bound: [0:12)
-                Store in tables
-                    FullText
-                    Paragraph_Delims
-                    Sentence_Delims
-                    Highlight_Delims
-            ?(after insert into database, get textID and store in FullText object)
-
-        Returns:
-            FullText object (with functions for retrieving many aspects of the text)
-    '''
-
-    '''Process the text'''
-    # identify paragraph sections
-    paragraphList = getParagraphList(inputText)
-    #store as a list of integer tuples, where the integers correspond to the index of the words that start and end the section, with exclusive upper bound.
-        #e.g. the first paragraph is identified as [0, 100) and contains 100 words; the second paragraph as [100,200), which  begins with the 101st word in the text
-    paragraphDelims = getDelims_Paragraph(paragraphList)
-    # (currently, paragraph tokens start at the beginning of new lines, and sentences append whitepace to the end of tokens)
-
-    #Tokenize sentence sections
-    sentenceDelims = getDelims_Sentence(inputText)
-    #from marca.text_tools.my_tokenize import sent_tokenize_withDelims
-    #sentenceList = sent_tokenize_withDelims(inputText, sentenceDelims)
-
-    #Tokenize words by sentence
-      #store as list of integers (as above)
-    wordDelims = getDelims_Words(inputText)
-
-    '''Create FullText object'''
-    textID=0
-    '''TODO finish putting/getting text from DB'''
-    fullTextObject = FullText(textID, inputText, paragraphDelims, sentenceDelims, wordDelims)
-
-
-    return fullTextObject
-
-
-
 def getDelims_Words(inputText):
     '''
         Returns:
@@ -216,9 +163,9 @@ def do_testing():
             demotext1 = f.readlines()
         demotext = ''.join(demotext1)
         print(testLen(demotext, demotext1))
-        pText = getFullText_fromRawText(demotext)
-        print(pText)
-        print(getDelims_Paragraph(pText))
+
+        ft = FullText(demotext)
+
         True
 
 
