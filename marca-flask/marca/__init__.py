@@ -1,24 +1,4 @@
 import os
-
-from flask import Flask
-#from flask_mysqldb import MySQL
-from flaskext.mysql import MySQL
-from pymysql.cursors import DictCursor
-# DB credentials
-try:
-    print('trying: `from marca.myDBConnect import host, user, pw, schema`')
-    from marca.myDBConnect import host, user, pw, schema
-    print('success __init__.py 1')
-except Exception as e:
-    print(f'''{e}
-        error in `from marca.myDBConnect import host, user, pw, schema`
-        trying: from myDBConnect import host, user, pw, schema''')
-    try:
-        from myDBConnect import host, user, pw, schema
-        print('success __init__.py 2')
-    except Exception as e:
-        print(f'''Nope, still... {e}''')
-
 import logging as log
 log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
 log.info('''
@@ -32,6 +12,24 @@ log.info('''
 
 Starting __init__.py
 ''')
+from flask import Flask
+#from flask_mysqldb import MySQL
+from flaskext.mysql import MySQL
+from pymysql.cursors import DictCursor
+# DB credentials
+try:
+    from marca.myDBConnect import host, user, pw, schema
+except Exception as e:
+    log.info(f'''{e}
+        error in `from marca.myDBConnect import host, user, pw, schema`
+        trying: from myDBConnect import host, user, pw, schema''')
+    try:
+        from myDBConnect import host, user, pw, schema
+        log.info('success __init__.py 2')
+    except Exception as e:
+        log.info(f'''Nope, still... {e}''')
+
+
 
 
 def logAppDetails(appp):
@@ -103,7 +101,7 @@ def create_app(test_config=None):
     #app = testApp
 
     #: set some default configuration that the app will use
-    print('trying to     app.config.from_mapping')
+    log.info('trying to     app.config.from_mapping')
     app.config.from_mapping(
         SECRET_KEY='dev', #TODO set to a random value when deploying
         MYSQL_HOST = host,
@@ -123,7 +121,7 @@ def create_app(test_config=None):
     #mysql = MySQL(app)
     mysql = MySQL(app, cursorclass=DictCursor)
     app.config.from_mapping(DATABASE = mysql) # yep
-    print('success in __init__.py:create_app()')
+    log.info('success in __init__.py:create_app()')
 
     if test_config is None: # overrides the default configuration
         #: load the instance config, if it exists, when not testing

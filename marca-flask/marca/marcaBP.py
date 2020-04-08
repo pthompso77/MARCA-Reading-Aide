@@ -252,20 +252,20 @@ def submitText():
     originalText = 'hey'
     originalText = request.form['userInput']
 
-    #from marca.text_tools.extractive_summarizer import doArticleSummary
+    from marca.text_tools.extractive_summarizer import doArticleSummary
     summary = 'shorter...'
-    #summary = doArticleSummary(originalText)
+    summary, freq_table, sentences, sentence_scores, threshold = doArticleSummary(originalText, test_mode=True)
 
 
     '''Now for my_tokenize paragraph summary'''
     from marca.text_tools.my_tokenize import paragraph_tokenize
-    summary = 'paragraphs...'
-    summary = paragraph_tokenize(originalText)
+    #summary = 'paragraphs...'
+    #summary = paragraph_tokenize(originalText)
 
 
     ts = len(summary)
     #: return redirect(?) to dashboard
-    return render_template('dev/db.html', summary=summary)
+    return render_template('dev/db.html', summary=summary, sentences=sentences, sentence_scores=sentence_scores, ft = freq_table)
 
 
 

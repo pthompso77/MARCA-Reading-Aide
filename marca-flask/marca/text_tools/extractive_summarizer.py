@@ -34,13 +34,13 @@ except Exception as e:
 # ===== region environment and local variables ==================================================
 
 # set environment to include nltk_data
-try:
-    os.environ["NLTK_DATA"] = "/home/pthompso/nltk_data"
-    sys.path.append("/home/pthompso/nltk_data")
-    if (verbose_success):
-        print("\nYES0 set vars")
-except Exception as e:
-    print('\nno0 e:',e)
+#try:
+    #os.environ["NLTK_DATA"] = "/home/pthompso/nltk_data"
+    #sys.path.append("/home/pthompso/nltk_data")
+    #if (verbose_success):
+        #print("\nYES0 set vars")
+#except Exception as e:
+    #print('\nno0 e:',e)
 
 """defines the list of stopwords (words that will be overlooked during evaluation)"""
 stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
@@ -54,11 +54,11 @@ stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you',
 # ===== region load text ==================================================
 
 # article is set to a default value at first
-article = """
-In LDA, each document may be viewed as a mixture of various topics where each document is considered to have a set of topics that are assigned to it via LDA. This is identical to probabilistic latent semantic analysis (pLSA), except that in LDA the topic distribution is assumed to have a sparse Dirichlet prior. The sparse Dirichlet priors encode the intuition that documents cover only a small set of topics and that topics use only a small set of words frequently. In practice, this results in a better disambiguation of words and a more precise assignment of documents to topics. LDA is a generalization of the pLSA model, which is equivalent to LDA under a uniform Dirichlet prior distribution.[5]
+#article = """
+#In LDA, each document may be viewed as a mixture of various topics where each document is considered to have a set of topics that are assigned to it via LDA. This is identical to probabilistic latent semantic analysis (pLSA), except that in LDA the topic distribution is assumed to have a sparse Dirichlet prior. The sparse Dirichlet priors encode the intuition that documents cover only a small set of topics and that topics use only a small set of words frequently. In practice, this results in a better disambiguation of words and a more precise assignment of documents to topics. LDA is a generalization of the pLSA model, which is equivalent to LDA under a uniform Dirichlet prior distribution.[5]
 
-For example, an LDA model might have topics that can be classified as CAT_related and DOG_related. A topic has probabilities of generating various words, such as milk, meow, and kitten, which can be classified and interpreted by the viewer as "CAT_related". Naturally, the word cat itself will have high probability given this topic. The DOG_related topic likewise has probabilities of generating each word: puppy, bark, and bone might have high probability. Words without special relevance, such as "the" (see function word), will have roughly even probability between classes (or can be placed into a separate category). A topic is neither semantically nor epistemologically strongly defined. It is identified on the basis of automatic detection of the likelihood of term co-occurrence. A lexical word may occur in several topics with a different probability, however, with a different typical set of neighboring words in each topic.
-"""
+#For example, an LDA model might have topics that can be classified as CAT_related and DOG_related. A topic has probabilities of generating various words, such as milk, meow, and kitten, which can be classified and interpreted by the viewer as "CAT_related". Naturally, the word cat itself will have high probability given this topic. The DOG_related topic likewise has probabilities of generating each word: puppy, bark, and bone might have high probability. Words without special relevance, such as "the" (see function word), will have roughly even probability between classes (or can be placed into a separate category). A topic is neither semantically nor epistemologically strongly defined. It is identified on the basis of automatic detection of the likelihood of term co-occurrence. A lexical word may occur in several topics with a different probability, however, with a different typical set of neighboring words in each topic.
+#"""
 
 # END ===== region load text
 
@@ -67,7 +67,7 @@ For example, an LDA model might have topics that can be classified as CAT_relate
 
 # ===== region Creating Dictionary Table ==================================================
 
-def create_frequency_table(article) -> dict:
+def create_frequency_table(article, wordList=None) -> dict:
     """Creates a table that shows the frequency of each word's occurence.
 
     Counts the number of times each word occurs in the text.
@@ -85,8 +85,11 @@ def create_frequency_table(article) -> dict:
     	 'trouble': 2}
     """
 
-    # 1. Tokenize the text into one-word tokens
-    words = word_tokenize(article)
+    if wordList is None:
+        # 1. Tokenize the text into one-word tokens
+        words = word_tokenize(article)
+    else:
+        words = wordList
 
 
     # 2. Stemming: reduce words to their root form
@@ -113,7 +116,7 @@ def create_frequency_table(article) -> dict:
     return freq_tab
 
 # create a frequency table from the article we received
-freq_table = create_frequency_table(article)
+#freq_table = create_frequency_table(article)
 
 # END ===== region Creating Dictionary Table
 
@@ -123,12 +126,12 @@ freq_table = create_frequency_table(article)
 # ===== region Tokenize the sentences ==================================================
 
 # Tokenize the sentences using my copy of NLTK's `sent_tokenize`
-try:
-    sentences = sent_tokenize(article)
-    if (verbose_success):
-        print('\nYES tokenized the sentences!',sentences)
-except Exception as e:
-    print('\nNO error with sentences/sent_tokenize. error=',e)
+#try:
+    #sentences = sent_tokenize(article)
+    #if (verbose_success):
+        #print('\nYES tokenized the sentences!',sentences)
+#except Exception as e:
+    #print('\nNO error with sentences/sent_tokenize. error=',e)
 # END ===== region Tokenize the sentences
 
 
@@ -178,7 +181,7 @@ def find_weighted_frequencies(sentencesThatAre, inFrequencyTable) -> dict:
 
 
 #
-sentence_scores = find_weighted_frequencies(sentences, freq_table)
+#sentence_scores = find_weighted_frequencies(sentences, freq_table)
 
 # END ===== region Find weighted frequencies
 
@@ -200,7 +203,7 @@ def getThresholdUsingSentenceWeights(sentence_weights) -> int:
     return (valueSum / len(sentence_weights))
 
 # threshold = _calculate_average_score(sentence_scores)
-threshold = getThresholdUsingSentenceWeights(sentence_scores)
+# threshold = getThresholdUsingSentenceWeights(sentence_scores)
 
 # END ===== region Get a threshold
 
@@ -212,15 +215,37 @@ threshold = getThresholdUsingSentenceWeights(sentence_scores)
 # now that we have a threshold weight...
 # ## Get the Summary!
 
-# Assembling the summary
-def assembleSummary(sentences, sentence_weight, threshold):
-    sentence_counter = 0
-    article_summary = ''
+def assembleSummary_withDelims(sentences, sentence_delims, sentence_scores, threshold):
+    articleSummaryDelims = []
+    for sentence, delims in zip(sentences, sentence_delims):
+        if (sentence in sentence_scores) and (sentence_scores[sentence] >= threshold):
+            articleSummaryDelims.append(delims)
+            print(sentence, delims, sep="\n",end='\n=====\n')
 
-    for sentence in sentences:
-        if (sentence in sentence_weight) and (sentence_weight[sentence] >= (threshold)):
-            article_summary += sentence + "<br>"
-            sentence_counter += 1
+    return articleSummaryDelims
+
+
+# Assembling the summary
+def assembleSummary(sentences, sentence_weight, threshold, sep='<br>', return_delims=False):
+    sentence_counter = 0
+
+    if return_delims:
+        article_summary = []
+        cursor = 0
+        for sentence in sentences:
+            cursor += len(sentence)
+            #TODO come back here!
+            '''TODO get the deliminators, not the sentences'''
+            if (sentence in sentence_weight) and (sentence_weight[sentence] >= (threshold)):
+                article_summary += sentence + "<br>"
+                sentence_counter += 1
+
+    else: #return a string with sentences separated by sep (default is '<br>')
+        article_summary = ''
+        for sentence in sentences:
+            if (sentence in sentence_weight) and (sentence_weight[sentence] >= (threshold)):
+                article_summary += sentence + sep
+                sentence_counter += 1
 
     return article_summary
 
@@ -236,7 +261,7 @@ Natural Language Processing with Python provides a practical introduction to pro
 
 
 # # and now all together
-def doArticleSummary(article):
+def doArticleSummary(article, test_mode=False):
 
     #creating a dictionary for the word frequency table
     try:
@@ -258,7 +283,10 @@ def doArticleSummary(article):
     if (verbose_ON):
         print('\nextractive article summary:',article_summary,'\n[end summary]')
 
-    return article_summary
+    if test_mode:
+        return article_summary, freq_table, sentences, sentence_scores, threshold
+    else:
+        return article_summary
 
 # END ===== region Get the Summary!
 
