@@ -6,6 +6,7 @@ import logging as log
 log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
 log.info('Starting marcaBP.py')
 
+from marca.text_tools.FullText import FullText
 
 log.info('Starting imports in marcaBP.py')
 from flask import (
@@ -110,7 +111,6 @@ def dashboard():
 
     request form name = newFullText
     '''
-    #TODO
     #if method is POST
     if request.method == POST:
         # Get the text form submitted
@@ -121,58 +121,13 @@ def dashboard():
         if title == "":
             title = "Untitled"
 
-        #: tokenize the text
-        from marca.text_tools.my_tokenize import word_tokenize
 
-        tokenizedText = word_tokenize(fullText)
-        tokenizedText = str(tokenizedText).replace('"','""')
-
-        db = get_db().connect()
-        cur = db.cursor()
-        result = ""
-
-        #: submit text to DB
-        print("fullText before: ",fullText,end="\n\n")
-        fullText = fullText.replace('"','\\"')
-        print("fullText after: ",fullText,end="\n\n")
-        query = f'''INSERT INTO `FullText` (title, text_tokenized, full_text)
-        VALUES ("%s","%s","%s");''' % (title, tokenizedText, fullText)
-        print('\n',query)
-        #query = db.escape(query)
-        result = cur.execute(query)
-        db.commit()
-
-        #: get return value of new text insert (tokenizedTextID)
-        q1 = '''SELECT FullText_ID from pthompsoDB.FullText ORDER BY FullText_ID DESC LIMIT 1;'''
-        #q1 = db.escape(q1)
-        cur.execute(q1)
-        tokenizedTextRow =  cur.fetchone()
-        tokenizedTextID = tokenizedTextRow['FullText_ID']
-
-
-        # insert statement for text/user association
-        fullText_UserAccount_assoc_Query = f'''INSERT INTO `pthompsoDB`.`user_FullText_assoc`
-                (`userID`,
-                `FullTextID`)
-            VALUES
-                ({userAccountsID},
-                {tokenizedTextID});
-            '''
-        #fullText_UserAccount_assoc_Query = db.escape(fullText_UserAccount_assoc_Query)
-        cur.execute(fullText_UserAccount_assoc_Query)
-        db.commit()
-        log.info('Finished submitText() in marcaBP.py')
-
-
-# Submit text and userAccountsID to DB (make sure they are associated)
+        textobject = FullText(fullText, title=title)
+        FullText.submitToDB(textobject, userAccountsID)
 
         flash('Document Uploaded Successfully')
         if userAccountsID == 29: # (then it's me testing)
-            flash(f'got (first 20): {fullText[:20]}')
-            flash(f'''and tokenized (first 1)= {tokenizedText[:1]}''')
-            flash(f'''and userAccountsID= {userAccountsID}''')
-            flash(f'''and result= {result}''')
-            flash(f'''and tokenizedTextID= {tokenizedTextID}''')
+            flash('Got Text:',textobject)
 
 
     # continues if POST, jumps here if GET
@@ -257,20 +212,35 @@ def submitText():
     originalText = 'hey'
     originalText = request.form['userInput']
 
+
+    # NEW: using FulLText object
+
+    fullText = FullText(originalText)
+    # put text in the database
+    if g.user:
+        userAccountsID = g.user['userID']
+    else:
+        userAccountsID = 29
+    FullText_ID = FullText.submitToDB(fullText, userAccountsID)
+    flash(FullText_ID)
+    flash(fullText.db_ID)
+
+
+    # OLD
+
     from marca.text_tools.extractive_summarizer import doArticleSummary
     summary = 'shorter...'
     summary, freq_table, sentences, sentence_scores, threshold = doArticleSummary(originalText, test_mode=True)
 
 
     '''Now for my_tokenize paragraph summary'''
-    from marca.text_tools.my_tokenize import paragraph_tokenize
-    #summary = 'paragraphs...'
-    #summary = paragraph_tokenize(originalText)
 
 
     ts = len(summary)
     #: return redirect(?) to dashboard
-    return render_template('dev/db.html', summary=summary, sentences=sentences, sentence_scores=sentence_scores, ft = freq_table)
+    return render_template('dev/db.html', summary=summary, \
+                           sentences=fullText.getSentences(), \
+                           sentence_scores=sentence_scores, ft = freq_table)
 
 
 

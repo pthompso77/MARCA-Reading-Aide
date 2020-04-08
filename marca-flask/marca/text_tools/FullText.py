@@ -36,8 +36,11 @@ class FullText():
     with the original formatting and punctuation
 
     '''
-    def __init__(self, inputText, FulLText_ID=None):
+    def __init__(self, inputText, title='Untitled', FullText_ID=None):
         self.text = inputText
+        self.title = title
+        self.db_ID = FullText_ID
+        self.owner = None
         self.paragraphList = getParagraphList(inputText)
         #store as a list of integer tuples, where the integers correspond to the index of the words that start and end the section, with exclusive upper bound.
             #e.g. the first paragraph is identified as [0, 100) and contains 100 words; the second paragraph as [100,200), which  begins with the 101st word in the text
@@ -67,6 +70,70 @@ class FullText():
 
         return highlightDelims
 
+
+    def getSentences(self):
+        from marca.text_tools import my_tokenize as tokenizer
+        return tokenizer.sent_tokenize_withDelims(self.text, self.sentenceDelims)
+
+
+    def updateHighlightRating(highlightStart, rating):
+        '''TODO'''
+        return False
+
+
+    def updateHighlightNotes(highlightStart, notes):
+        '''TODO'''
+        return False
+
+
+    def submitToDB(fulltextObj, userAccountsID):
+        if fulltextObj.owner is None:
+            fulltextObj.owner = userAccountsID
+        FullText_ID = -1 #get from DB after insert
+        fullText = fulltextObj.text
+        from marca.db import get_db
+        db = get_db().connect()
+        cur = db.cursor()
+        result = ""
+
+        #: submit text to DB
+        fullText = fullText.replace('"','\\"')
+        query = f'''INSERT INTO `FullText` (title, text_tokenized, full_text)
+        VALUES ("%s","%s","%s");''' % (fulltextObj.title, fulltextObj.paragraphList, fullText)
+        print('\n',query)
+        result = cur.execute(query)
+        db.commit()
+
+        #: get return value of new text insert (fulltextObj.db_ID)
+        q1 = '''SELECT FullText_ID from pthompsoDB.FullText ORDER BY FullText_ID DESC LIMIT 1;'''
+        cur.execute(q1)
+        tokenizedTextRow =  cur.fetchone()
+        fulltextObj.db_ID = tokenizedTextRow['FullText_ID']
+
+        # insert statement for text/user association
+        fullText_UserAccount_assoc_Query = f'''INSERT INTO `pthompsoDB`.`user_FullText_assoc`
+                (`userID`,
+                `FullTextID`)
+            VALUES
+                ({userAccountsID},
+                {fulltextObj.db_ID});
+            '''
+        cur.execute(fullText_UserAccount_assoc_Query)
+        db.commit()
+
+
+
+        FullText_ID = fulltextObj.db_ID
+        return FullText_ID
+
+
+    def __str__(self):
+        textlen = len(self.text)
+        return f'''FullText object:\n
+        my ID: {self.db_ID}
+        Title:"{self.title}", with text of {textlen} characters
+        Belongs to user with ID={self.owner}
+        '''
 
 
 def getDelims_Words(inputText):
@@ -140,7 +207,12 @@ def getDelims_Paragraph(paragraphList):
 def getParagraphList(inputText):
     from nltk.tokenize.texttiling import TextTilingTokenizer
     tiling_tokenizer = TextTilingTokenizer(demo_mode=False)
-    paragraphList = tiling_tokenizer.tokenize(inputText)
+    try:
+        paragraphList = tiling_tokenizer.tokenize(inputText)
+    except ValueError: # maybe the input was too short or didn't have a newline ending
+        inputText += '\n\n'
+        paragraphList = tiling_tokenizer.tokenize(inputText)
+
     return paragraphList
 
 
