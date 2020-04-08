@@ -25,7 +25,6 @@ Summarize/Highlight
         Sentence_Delims
         Highlight_Delims
 after insert into database, get textID and store in FullText object
-UH OH — COOKIE? SESSIONID?
 
 """
 

@@ -115,6 +115,7 @@ def dashboard():
     if request.method == POST:
         # Get the text form submitted
         fullText = request.form['newFullText']
+        #: remove apostrophe
         fullText = request.form['newFullText'].replace("'","`")
         title = request.form['textTitle']
         if title == "":
@@ -185,6 +186,9 @@ def dashboard():
 
 '''===========Dashboard helpers==========='''
 
+
+
+
 def getTextAssociatedWithUserID(userAccountsID):
     # test response
     response = [{'email': 'me', 'FullText_ID': 42, 'title': 'Untitled', 'text_tokenized': "['New', 'Document', 'duh']", 'full_text': 'New Document duh'},
@@ -211,11 +215,12 @@ def getTextAssociatedWithUserID(userAccountsID):
 @login_required
 def review(textID):
 
-    # it should only be POST (probably)
     if request.method == POST:
         fullTextID = request.form['fullTextID']
 
         #TODO finish this
+
+        # TODO: get more than just the text from DB, etc... (make a FullText object?)
 
     text = getTextByTextID(textID)
     return render_template('summary/review.html',textID=textID, text=text)
@@ -225,7 +230,7 @@ def review(textID):
 '''===========Review helpers==========='''
 
 def getTextByTextID(textID):
-    # test response
+    # a test response
     response = {'FullText_ID': 40, 'title': 'Untitled', 'text_tokenized': "['Your', 'Saved', 'Documents', 'Your', 'Saved', 'Documents', 'Your', 'Saved', 'Documents']", 'full_text': 'Your Saved Documents Your Saved Documents Your Saved Documents'}
 
     db = get_db().connect()
