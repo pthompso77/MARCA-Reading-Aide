@@ -48,7 +48,7 @@ Dev
 
 
 
-    {% if sentence_scores %}
+    {% if not sentence_scores %}
     {% else %}
         {% for a,b in sentence_scores.items() %}
             <h3>{{b}}</h3>
@@ -60,7 +60,7 @@ Dev
         {% endfor %}
     {% endif %}
 
-    {% if ft %}
+    {% if not ft %}
     {% else %}
         {% for a,b in ft.items() %}
             <h3>{{b}}</h3>

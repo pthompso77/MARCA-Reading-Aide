@@ -44,14 +44,24 @@ class FullText():
         self.paragraphList = getParagraphList(inputText)
         #store as a list of integer tuples, where the integers correspond to the index of the words that start and end the section, with exclusive upper bound.
             #e.g. the first paragraph is identified as [0, 100) and contains 100 words; the second paragraph as [100,200), which  begins with the 101st word in the text
-        self.paragraphDelims = getDelims_Paragraph(self.paragraphList)
-        # (currently, paragraph tokens start at the beginning of new lines, and sentences append whitepace to the end of tokens)
-        #Tokenize sentence sections
-        self.sentenceDelims = getDelims_Sentence(inputText)
-        #Tokenize words by sentence
-          #store as list of integers (as above)
-        self.wordDelims = getDelims_Words(inputText)
-        self.highlightDelims = self._getHightlightDelims()
+        if FullText_ID is None:
+            self.paragraphDelims = getDelims_Paragraph(self.paragraphList)
+            # (currently, paragraph tokens start at the beginning of new lines, and sentences append whitepace to the end of tokens)
+            #Tokenize sentence sections
+            self.sentenceDelims = getDelims_Sentence(inputText)
+            #Tokenize words by sentence
+              #store as list of integers (as above)
+            self.wordDelims = getDelims_Words(inputText)
+            self.highlightDelims = self._getHightlightDelims()
+        else:
+            '''TODO?'''
+            # retrieve delims from DB
+            #like this?
+            try:
+                self = getFullText_fromDB(FullText_ID)
+            except Exception as e:
+                print('uh oh: ',e)
+
 
     def _getHightlightDelims(self):
         from marca.text_tools import extractive_summarizer as summr
@@ -84,6 +94,32 @@ class FullText():
     def updateHighlightNotes(highlightStart, notes):
         '''TODO'''
         return False
+
+
+    def getFullText_fromDB(FullText_ID):
+        '''TODO'''
+        from marca.db import get_db
+        db = get_db().connect()
+        cur = db.cursor()
+
+        # create an obj
+        textobject = FullText("inputText")
+
+        # get things from DB
+        query = f'''SELECT * FROM FullTextObject WHERE  FullText_ID = {FullText_ID}'''
+        cur.execute(query)
+        GET_FROM_DB = cur.fetchone()
+        textobject.text = GET_FROM_DB['full_text']
+        textobject.title = GET_FROM_DB['title']
+        textobject.owner = GET_FROM_DB['userID']
+        textobject.paragraphDelims = slice(GET_FROM_DB['ParagraphDelimStart'], GET_FROM_DB['ParagraphDelimEnd'])
+        textobject.sentenceDelims = slice(GET_FROM_DB['SentenceDelimStart'], GET_FROM_DB['SentenceDelimEnd'])
+        textobject.highlightDelims = slice(GET_FROM_DB['HighlightDelimStart'], GET_FROM_DB['HighlightDelimEnd'])
+        textobject.paragraphList = getParagraphList(self.text)
+        textobject.wordDelims = getDelims_Words(self.text)
+
+        #return the obj
+        return textobject
 
 
     def submitToDB(fulltextObj, userAccountsID):
@@ -121,10 +157,44 @@ class FullText():
         cur.execute(fullText_UserAccount_assoc_Query)
         db.commit()
 
+        ## NEW
+        # put the object attributes in DB
+
+        delimQuery = f'''INSERT INTO Delims
+        (
+            fulltext_ID,
+            paragraph_delims,
+            sentence_delims,
+            highlight_delims,
+            word_delims
+        )
+        VALUES
+        (
+            {fulltextObj.db_ID},
+            "{fulltextObj.paragraphDelims}",
+            "{fulltextObj.sentenceDelims}",
+            "{fulltextObj.highlightDelims}",
+            "{fulltextObj.wordDelims}"
+        );'''
+        cur.execute(delimQuery)
+        db.commit()
 
 
-        FullText_ID = fulltextObj.db_ID
-        return FullText_ID
+        #cur.execute(query)
+        #GET_FROM_DB = cur.fetchone()
+        #fulltextObj.text = GET_FROM_DB['full_text']
+        #fulltextObj.title = GET_FROM_DB['title']
+        #fulltextObj.owner = GET_FROM_DB['userID']
+        #fulltextObj.paragraphDelims = slice(GET_FROM_DB['ParagraphDelimStart'], GET_FROM_DB['ParagraphDelimEnd'])
+        #fulltextObj.sentenceDelims = slice(GET_FROM_DB['SentenceDelimStart'], GET_FROM_DB['SentenceDelimEnd'])
+        #fulltextObj.highlightDelims = slice(GET_FROM_DB['HighlightDelimStart'], GET_FROM_DB['HighlightDelimEnd'])
+        #fulltextObj.paragraphList = getParagraphList(self.text)
+        #fulltextObj.wordDelims = getDelims_Words(self.text)
+
+
+        ## back to orig
+
+        return fulltextObj.db_ID
 
 
     def __str__(self):
