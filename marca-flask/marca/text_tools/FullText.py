@@ -130,21 +130,20 @@ class FullText():
         from marca.db import get_db
         db = get_db().connect()
         cur = db.cursor()
-        result = ""
 
-        #: submit text to DB
+        # submit text to DB
         fullText = fullText.replace('"','\\"')
         query = f'''INSERT INTO `FullText` (title, text_tokenized, full_text)
         VALUES ("%s","%s","%s");''' % (fulltextObj.title, fulltextObj.paragraphList, fullText)
         print('\n',query)
-        result = cur.execute(query)
+        cur.execute(query)
         db.commit()
 
-        #: get return value of new text insert (fulltextObj.db_ID)
+        # get return value of new text insert (fulltextObj.db_ID)
         q1 = '''SELECT FullText_ID from pthompsoDB.FullText ORDER BY FullText_ID DESC LIMIT 1;'''
         cur.execute(q1)
-        tokenizedTextRow =  cur.fetchone()
-        fulltextObj.db_ID = tokenizedTextRow['FullText_ID']
+        tokenizedTextRetrieved =  cur.fetchone()
+        fulltextObj.db_ID = tokenizedTextRetrieved['FullText_ID']
 
         # insert statement for text/user association
         fullText_UserAccount_assoc_Query = f'''INSERT INTO `pthompsoDB`.`user_FullText_assoc`
@@ -157,8 +156,7 @@ class FullText():
         cur.execute(fullText_UserAccount_assoc_Query)
         db.commit()
 
-        # put the object attributes in DB
-
+        # put the object attributes (delimeters) in DB
         delimQuery = f'''INSERT INTO Delims
         (
             fulltext_ID,
