@@ -169,6 +169,9 @@ def getTextAssociatedWithUserID(userAccountsID):
 @bp.route('/<int:textID>/review', methods=(GET, ))
 @login_required
 def review(textID):
+    if textID ==0: #then i'm testing
+        return render_template('summary/review.html',textID=textID)
+
     ''' Displays selected text for review:
     - Retrieves a FullText object from the database
     - sends the text object to the review template to fill:
