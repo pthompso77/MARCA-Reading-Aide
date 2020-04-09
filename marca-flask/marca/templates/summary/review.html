@@ -53,11 +53,12 @@
 {% block navLinks %}
     {% if textID == 0 %}
         <!--jinja: each href will send the id of the <a> tag to marcaBP.loadParagraph via GET-->
+        <a id="15" href="#" class="nav-links pseudolink">There are broadly two types of extractive summarization...</a>
+        <a id="16" href="#" class="nav-links pseudolink">Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.</a>
+        <hr>
         <a id="12" href="#" class="nav-links pseudolink">Section...</a>
         <a id="13" href="#" class="nav-links pseudolink">Section...</a>
         <a id="14" href="#" class="nav-links pseudolink">Section...</a>
-        <a id="15" href="#" class="nav-links pseudolink">There are broadly two types of extractive summarization...</a>
-        <a id="16" href="#" class="nav-links pseudolink">Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.</a>
     {% else %}
         <a id="12" href="#" class="nav-links pseudolink">TODO: for each highlighted section...</a>
     {% endif %}
