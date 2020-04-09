@@ -63,6 +63,11 @@ class FullText():
                 print('uh oh: ',e)
 
 
+    def getWordsDict(self):
+        wordDelims, wordsDict = getDelims_Words(self.text, returnListAlso=True)
+        return wordsDict
+
+
     def _getHightlightDelims(self):
         from marca.text_tools import extractive_summarizer as summr
         from marca.text_tools import my_tokenize as tokenizer
@@ -206,7 +211,7 @@ def stringToList(stringIn, replaceStr="), ", replaceWith=")|", splitOn="|"):
     return listOut
 
 
-def getDelims_Words(inputText):
+def getDelims_Words(inputText, returnListAlso=False):
     '''
         Returns:
         a list of integer tuples, where the integers correspond to the index of
@@ -216,18 +221,26 @@ def getDelims_Words(inputText):
     from nltk.tokenize import TreebankWordTokenizer
     word_tokenizer = TreebankWordTokenizer()
     wordDelims = []
-    #previous_start = 0
+    wordsDict = {}
+    previous_start = -1
     for this_start, this_end in word_tokenizer.span_tokenize(inputText):
         #delims = slice(previous_start, this_start)
         delims = slice(this_start, this_end)
         wordDelims.append(delims)
-        #previous_start = this_start
+        word = inputText[previous_start:this_start]
+        wordsDict[previous_start] = word  #wordsDict[this_start] = word
+        previous_start = this_start
 
     #: add the last slice (ending at the end of the inputText)
-    #wordDelims.append(slice(previous_start, len(inputText)))
+    lastSlice = slice(previous_start, len(inputText))
+    word = inputText[lastSlice]
+    wordsDict[previous_start] = word
     #: remove the first slice [0:0]
-    #wordDelims.pop(0)
+    wordDelims.pop(0)
+    wordsDict.pop(-1)
 
+    if returnListAlso:
+        return wordDelims, wordsDict
     return wordDelims
 
 
@@ -259,7 +272,7 @@ def getDelims_Sentence(inputText):
 def getDelims_Paragraph(paragraphList):
     '''
         Returns:
-        a list of integer tuples, where the integers correspond to the index of
+        a list of slices, where the integers correspond to the index of
         the words that start and end each paragraph, with exclusive upper bound.
         [start, end)
     '''
@@ -286,6 +299,9 @@ def getParagraphList(inputText):
     return paragraphList
 
 
+
+
+
 def testLen(textStr, textList):
     ''' just testing - compares length of original text and paragraph tokens
     '''
@@ -294,6 +310,46 @@ def testLen(textStr, textList):
     for t in textList:
         b += len(t)
     return a, b
+
+
+
+
+
+class Highlight():
+    ''' a highlight object has attributes that refer to its relation to a
+    FullText object
+    '''
+
+    def __init__(self, textobject, highlightDelims):
+        self.textobject = textobject
+        self.delims = highlightDelims
+        self.start, self.end = highlightDelims.start, highlightDelims.stop
+        self.text = self.__getText()
+        self.id = self.start
+        self.paragraphParent = self.__getParagraphParent()
+
+
+    def __getText(self):
+        return self.textobject.text[self.delims]
+
+
+    def __getParagraphParent(self):
+        '''returns the start delim of the parent paragraph'''
+        pDelims = self.textobject.paragraphDelims
+        #pText = self.textobject.text
+        parent = pDelims[0]
+        for pSlice in pDelims:
+            if pSlice.start < self.start:
+                parent = pSlice
+
+        return parent.start
+
+
+    def __str__(self):
+        return self.text
+
+
+
 
 
 

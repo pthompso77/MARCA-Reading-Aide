@@ -58,7 +58,7 @@ body * {
     min-width: 350px;
 }
 
-.highlighted {
+.highlighted *{
     background-color: #f8fe70;
 }
 .highlighted:hover {
