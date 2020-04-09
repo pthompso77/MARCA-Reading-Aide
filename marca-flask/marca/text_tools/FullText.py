@@ -157,7 +157,6 @@ class FullText():
         cur.execute(fullText_UserAccount_assoc_Query)
         db.commit()
 
-        ## NEW
         # put the object attributes in DB
 
         delimQuery = f'''INSERT INTO Delims
@@ -178,22 +177,7 @@ class FullText():
         );'''
         cur.execute(delimQuery)
         db.commit()
-
-
-        #cur.execute(query)
-        #GET_FROM_DB = cur.fetchone()
-        #fulltextObj.text = GET_FROM_DB['full_text']
-        #fulltextObj.title = GET_FROM_DB['title']
-        #fulltextObj.owner = GET_FROM_DB['userID']
-        #fulltextObj.paragraphDelims = slice(GET_FROM_DB['ParagraphDelimStart'], GET_FROM_DB['ParagraphDelimEnd'])
-        #fulltextObj.sentenceDelims = slice(GET_FROM_DB['SentenceDelimStart'], GET_FROM_DB['SentenceDelimEnd'])
-        #fulltextObj.highlightDelims = slice(GET_FROM_DB['HighlightDelimStart'], GET_FROM_DB['HighlightDelimEnd'])
-        #fulltextObj.paragraphList = getParagraphList(self.text)
-        #fulltextObj.wordDelims = getDelims_Words(self.text)
-
-
-        ## back to orig
-
+        # if this is -1, something went wrong
         return fulltextObj.db_ID
 
 
