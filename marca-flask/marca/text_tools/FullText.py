@@ -28,7 +28,7 @@ after insert into database, get textID and store in FullText object
 
 """
 
-
+from flask import flash
 
 # full text reference (tokenized)
 class FullText():
@@ -103,20 +103,25 @@ class FullText():
         cur = db.cursor()
 
         # create an obj
-        textobject = FullText("inputText")
+        textobject = FullText('''Social media platforms, specifically Twitter, experience several evidences of misinformation and disinformation in the form of rumors, conspiracies, and works of fiction in the current scenario. These stories have created substantial social and political unrest in recent times, which makes it pertinent to address them through policy-level interventions. These platforms are even flooded with memes citing fake stories and crime statistics designed to feed rightist conspiracy theories. Studies also explore the impact of non-verified information on critical events, like the outcome of the 2016 U.S. Presidential election [7]. Another popular event surrounding the Parkland shooting generated a host of hoax and disinformation theories. Several families of the victims were falsely accused and had to face social ostracism. Some doctored tweets even raised questions surrounding racism that led to social unrest.
+        Academic literature also highlights several instances of misinformation propagation on Twitter in the form of rumors, digital vigilantes, and false flags, amongst which was a popular case of rumors that emerged from Twitter after the 2013 Boston Marathon Bombing [8, 9]. The results from these studies reported that about 29% of the most viral posts turned out to be rumors and misinformation propagated surrounding the crisis. There have been similar instances in the domain of healthcare, politics, and natural disasters. The outbreak of Ebola was another event that triggered a series of false information trails [10]. The findings reported that about 59% of the content was misinformation and amongst that, the most common discussions stated that Ebola could have been cured by the plant Ewedu or by blood transfusion.
+        ''')
 
         # get things from DB
         query = f'''SELECT * FROM FullTextObject WHERE  FullText_ID = {FullText_ID}'''
         cur.execute(query)
         GET_FROM_DB = cur.fetchone()
+        flash(f'query is {query}')
+        #flash(f'Got GET_FROM_DB: {GET_FROM_DB}')
         textobject.text = GET_FROM_DB['full_text']
         textobject.title = GET_FROM_DB['title']
         textobject.owner = GET_FROM_DB['userID']
-        textobject.paragraphDelims = slice(GET_FROM_DB['ParagraphDelimStart'], GET_FROM_DB['ParagraphDelimEnd'])
-        textobject.sentenceDelims = slice(GET_FROM_DB['SentenceDelimStart'], GET_FROM_DB['SentenceDelimEnd'])
-        textobject.highlightDelims = slice(GET_FROM_DB['HighlightDelimStart'], GET_FROM_DB['HighlightDelimEnd'])
-        textobject.paragraphList = getParagraphList(self.text)
-        textobject.wordDelims = getDelims_Words(self.text)
+        textobject.paragraphDelims = stringToList(GET_FROM_DB['paragraph_delims'])
+        textobject.sentenceDelims = stringToList(GET_FROM_DB['sentence_delims'])
+        textobject.highlightDelims = stringToList(GET_FROM_DB['highlight_delims'])
+        textobject.wordDelims = stringToList(GET_FROM_DB['word_delims'])
+
+        flash(textobject)
 
         #return the obj
         return textobject
@@ -186,6 +191,19 @@ class FullText():
         Title:"{self.title}", with text of {textlen} characters
         Belongs to user with ID={self.owner}
         '''
+
+
+def stringToList(stringIn, replaceStr="), ", replaceWith=")|", splitOn="|"):
+    listOut = []
+    #: get rid of opening and closing brackets
+    stringIn = stringIn[1:-1]
+    #: listify the string
+    #tempList = stringIn.replace('[','').replace(']','').replace(replaceStr,replaceWith).split("|")
+    tempList = stringIn.replace(replaceStr,replaceWith).split(splitOn)
+    #: evaluate each item in the list
+    for thing in tempList:
+        listOut.append(eval(thing))
+    return listOut
 
 
 def getDelims_Words(inputText):

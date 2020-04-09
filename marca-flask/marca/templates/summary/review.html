@@ -39,7 +39,9 @@
             }
         </script>
     {% else %}
-        TODO: text[] paragraph
+        {% if textobject %}
+            {{textobject}}
+        {% endif %}
     {% endif %}
 {% endblock paragraph %}
 

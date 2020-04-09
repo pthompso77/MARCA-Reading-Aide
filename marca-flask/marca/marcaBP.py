@@ -166,19 +166,40 @@ def getTextAssociatedWithUserID(userAccountsID):
 
 '''============================== REVIEW VIEW============================='''
 
-@bp.route('/<int:textID>/review', methods=(GET, POST))
+@bp.route('/<int:textID>/review', methods=(GET, ))
 @login_required
 def review(textID):
+    ''' Displays selected text for review:
+    - Retrieves a FullText object from the database
+    - sends the text object to the review template to fill:
+        + First paragraph
+            - with highlights highlighted
+        + all other highlights in Navigation panel
+            - with paragraph separators
+        + First Highlight selected:
+            - active-highlight span filled
+            - notes filled (from DB)
+            - rating filled (from DB)
+    '''
 
-    if request.method == POST:
-        fullTextID = request.form['fullTextID']
+    #- Retrieve a FullText object from the database
+    textobject = FullText.getFullText_fromDB(textID)
+    print("\n\n   GOT TEXTOBJECT:",textobject)
+    #- send the text object to the review template to fill:
+        #+ First paragraph
+            #- with highlights highlighted
+        #+ all other highlights in Navigation panel
+            #- with paragraph separators
+        #+ First Highlight selected:
+            #- active-highlight span filled
+            #- notes filled (from DB)
+            #- rating filled (from DB)
 
         #TODO finish this
 
         # TODO: get more than just the text from DB, etc... (make a FullText object?)
 
-    text = getTextByTextID(textID)
-    return render_template('summary/review.html',textID=textID, text=text)
+    return render_template('summary/review.html',textID=textID, text=textobject.text, textobject=textobject)
     # (or return a redirect?)
 
 
