@@ -6,7 +6,7 @@ import logging as log
 log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
 log.info('Starting marcaBP.py')
 
-from marca.text_tools.FullText import FullText
+from marca.text_tools.FullText import FullText, Highlight
 
 log.info('Starting imports in marcaBP.py')
 from flask import (
@@ -192,6 +192,11 @@ def review(textID):
         #+ First paragraph
             #- with highlights highlighted
         #+ all other highlights in Navigation panel
+    highlightedSections = getHighlightedSections(textobject)
+
+    #flash('indexing:'+str(highlightedSections[428]))
+        #flash(f'<a id="{highlight.id}" href="#{highlight.paragraphParent}" class="nav-links pseudolink"> {highlight.text} </a>')
+    currentParagraph = prepareParagraphForDisplay(textobject, 0)
             #- with paragraph separators
         #+ First Highlight selected:
             #- active-highlight span filled
@@ -202,11 +207,62 @@ def review(textID):
 
         # TODO: get more than just the text from DB, etc... (make a FullText object?)
 
-    return render_template('summary/review.html',textID=textID, text=textobject.text, textobject=textobject)
+    return render_template('summary/review.html',textID=textID,
+                           text=textobject.text, textobject=textobject,
+                           highlights = highlightedSections,
+                           currentParagraph=currentParagraph)
     # (or return a redirect?)
 
 
 '''===========Review helpers==========='''
+
+def prepareParagraphForDisplay(textobject, paragraphIndex):
+    '''adds span around highlighted sections'''
+    paragraphDelims = textobject.paragraphDelims[paragraphIndex]
+    paragraphForDisplay = ''
+    wordsDict = textobject.getWordsDict()
+    start = paragraphDelims.start
+    stop = paragraphDelims.stop
+
+    for index, word in wordsDict.items():
+        if index < start or index > stop:
+            break
+        newWord = f'<span id="{str(index)}" class="word">{word}</span>'
+        wordsDict[index] = newWord
+
+    hDelims = textobject.highlightDelims
+    for delim in hDelims:
+        if delim.start < start or delim.stop > stop:
+            break
+        startWord = f'''<span id="H{delim.start}"class=highlighted onclick="refreshSelection(this)">
+        {wordsDict[delim.start]}'''
+        wordsDict[delim.start] = startWord
+        wordsDict[delim.stop] =  '</span>' + wordsDict[delim.stop]
+        flash(wordsDict[delim.start])
+        flash(wordsDict[delim.stop])
+
+    for index, word in wordsDict.items():
+        if index < start or index > stop:
+            break
+        paragraphForDisplay += word
+
+    #paragraphForDisplay = 'The results from these studies reported that about 29% of the \
+    # <span class=highlighted onclick="refreshSelection(this)">
+    # most viral posts</span> turned out to be rumors a'
+    return paragraphForDisplay + '<br>'+str(textobject.highlightDelims)
+
+
+def getHighlightedSections(textobject):
+    '''returns a list of Highlight objects'''
+    #textList = []
+    textDict = {}
+    for delims in textobject.highlightDelims:
+        hlight = Highlight(textobject, delims)
+        #textList.append(hlight)
+        textDict[delims.start] = hlight
+        #flash(f'got highlight:{delims.start}, {hlight}')
+    return textDict
+
 
 def getTextByTextID(textID):
     # a test response
