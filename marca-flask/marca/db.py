@@ -24,14 +24,14 @@ def get_db():
     if 'db' not in g: #yeah
         #: Establish a connection to the file pointed at by the DATABASE configuration key
         try:
-            print('''trying: `g.db = current_app.config['DATABASE']`''')
+            #print('''trying: `g.db = current_app.config['DATABASE']`''')
 #            g.db = connect
             #g.db = MySQL(current_app)
             g.db = current_app.config['DATABASE']
                 #current_app.config['DATABASE'],
 #                detect_types=sqlite3.PARSE_DECLTYPES
 #            )
-            print(f'''success with connector?\n\tg.db = {g.db}''')
+            #print(f'''success with connector?\n\tg.db = {g.db}''')
         except Exception as e:
             print('mysql connector failed... E=',e)
             print('''--------

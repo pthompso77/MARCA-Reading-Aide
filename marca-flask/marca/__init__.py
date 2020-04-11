@@ -12,11 +12,16 @@ log.info('''
 
 Starting __init__.py
 ''')
-from flask import Flask
+from flask import Flask, request, session, g, abort, render_template
 #from flask_mysqldb import MySQL
 from flaskext.mysql import MySQL
-from pymysql.cursors import DictCursor
+import flask_sijax
+import hmac
+from hashlib import sha1
+from werkzeug.security import safe_str_cmp
+from marca.SijaxHandler import SijaxHandler
 # DB credentials
+from pymysql.cursors import DictCursor
 try:
     from marca.myDBConnect import host, user, pw, schema
 except Exception as e:
@@ -111,7 +116,7 @@ def create_app(test_config=None):
         MYSQL_CURSORCLASS = 'DictCursor'
     )
     app.config.from_mapping(
-        SECRET_KEY='dev', #TODO set to a random value when deploying
+        SECRET_KEY= os.urandom(128),#'dev',
         MYSQL_DATABASE_HOST = host,
         MYSQL_DATABASE_USER = user,
         MYSQL_DATABASE_PASSWORD = pw,
@@ -122,6 +127,14 @@ def create_app(test_config=None):
     mysql = MySQL(app, cursorclass=DictCursor)
     app.config.from_mapping(DATABASE = mysql) # yep
     log.info('success in __init__.py:create_app()')
+
+    # Sijax
+    flask_sijax.Sijax(app)
+    #app.config["SIJAX_STATIC_PATH"] = os.path.join('.', os.path.dirname(__file__), 'static/js/sijax/')
+    #app.config["SIJAX_STATIC_PATH"] = 'home/pthompso/public_html/MARCA-Reading-Aide/marca-flask/marca/static/js/sijax/'
+    app.config["SIJAX_STATIC_PATH"] = os.path.join('.', os.path.dirname(__file__), 'static/js/sijax/')
+    app.config["SIJAX_JSON_URI"] = os.path.join('.', os.path.dirname(__file__), '/static/js/sijax/json2.js')
+    #print(f'app.config["SIJAX_STATIC_PATH"]{app.config["SIJAX_STATIC_PATH"]}')
 
     if test_config is None: # overrides the default configuration
         #: load the instance config, if it exists, when not testing
@@ -136,10 +149,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page to say Helloooo!
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+
+    #@flask_sijax.route(app, "/hello")
+    ##@app.route('/hello')
+    #def hello():
+        #if g.sijax.is_sijax_request:
+            #g.sijax.register_object(SijaxHandler)
+            #return g.sijax.process_request()
+
+        #return render_template('chat.html')
+        ##return 'Hello, World!'
 
     from . import db
     db.init_app(app)
@@ -153,6 +172,8 @@ def create_app(test_config=None):
     '''Blueprint imported and registered from auth.py using
     app.register_blueprint().
     '''
+    from . import jax
+    app.register_blueprint(jax.bp)
 
     #from . import blog
     #app.register_blueprint(blog.bp)
@@ -175,9 +196,52 @@ def create_app(test_config=None):
     log.info(app.config)
     logAppDetails(app)
 
+
+    @app.template_global('csrf_token')
+    def csrf_token():
+        """
+        Generate a token string from bytes arrays. The token in the session is user
+        specific.
+        """
+        if "_csrf_token" not in session:
+            session["_csrf_token"] = os.urandom(128)
+        return hmac.new(app.secret_key, session["_csrf_token"],
+                digestmod=sha1).hexdigest()
+
+
+    '''TODO address this'''
+    #@app.before_request
+    def check_csrf_token():
+        """Checks that token is correct, aborting if not"""
+        if request.method in ("GET",): # not exhaustive list
+            return
+        token = request.form.get("csrf_token")
+        if token is None:
+            app.logger.warning("Expected CSRF Token: not present")
+            abort(400)
+        if not safe_str_cmp(token, csrf_token()):
+            app.logger.warning("CSRF Token incorrect")
+            abort(400)
+
+
     return app
 
-if __name__ == '__main__':
+
+def get_db(app):
+    return MySQL(app, cursorclass=DictCursor)
+
+
+def runAndGetApp():
+    from wsgiref.handlers import CGIHandler
     app = create_app()
+    app = create_app()
+    app.config['DEBUG']=True
+    app.config['TESTING']=True
+    CGIHandler().run(app)
+    return app
+
+
+if __name__ == '__main__':
+    app = runAndGetApp()
     #stopHere=True
 

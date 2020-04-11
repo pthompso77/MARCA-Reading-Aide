@@ -6,7 +6,7 @@ import logging as log
 log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
 log.info('Starting marcaBP.py')
 
-from marca.text_tools.FullText import FullText, Highlight
+from marca.text_tools.FullText import FullText, Highlight, TEST_TEXT
 
 log.info('Starting imports in marcaBP.py')
 from flask import (
@@ -19,6 +19,8 @@ from flask import (
     url_for
 )
 from werkzeug.exceptions import abort
+import flask_sijax
+from marca.SijaxHandler import SijaxHandler
 '''example:
 abort(404)  # 404 Not Found
 abort(Response('Hello World'))
@@ -120,18 +122,13 @@ def dashboard():
         title = request.form['textTitle']
         if title == "":
             title = "Untitled"
-
-
         textobject = FullText(fullText, title=title)
         FullText.submitToDB(textobject, userAccountsID)
-
         flash('Document Uploaded Successfully')
         if userAccountsID == 29: # (then it's me testing)
-            flash('Got Text:',textobject)
-
-
+            # flash('Got Text:',textobject)
+            pass
     # continues if POST, jumps here if GET
-
     #: select texts from DB that match user
     userTexts = getTextAssociatedWithUserID(userAccountsID)
 
@@ -187,16 +184,15 @@ def review(textID):
 
     #- Retrieve a FullText object from the database
     textobject = FullText.getFullText_fromDB(textID)
-    print("\n\n   GOT TEXTOBJECT:",textobject)
     #- send the text object to the review template to fill:
         #+ First paragraph
             #- with highlights highlighted
         #+ all other highlights in Navigation panel
-    highlightedSections = getHighlightedSections(textobject)
+    highlightedSections = getHighlightedSections(textobject) #dictionary of {index:Highlight}
 
     #flash('indexing:'+str(highlightedSections[428]))
         #flash(f'<a id="{highlight.id}" href="#{highlight.paragraphParent}" class="nav-links pseudolink"> {highlight.text} </a>')
-    currentParagraph = prepareParagraphForDisplay(textobject, 0)
+    currentParagraph = prepareParagraphForDisplay(textobject, paragraphIndex=0)
             #- with paragraph separators
         #+ First Highlight selected:
             #- active-highlight span filled
@@ -206,6 +202,9 @@ def review(textID):
         #TODO finish this
 
         # TODO: get more than just the text from DB, etc... (make a FullText object?)
+
+    g.user['Highlights'] = highlightedSections
+    g.user['activeHighlight'] = next(iter(highlightedSections.values()))
 
     return render_template('summary/review.html',textID=textID,
                            text=textobject.text, textobject=textobject,
@@ -234,12 +233,12 @@ def prepareParagraphForDisplay(textobject, paragraphIndex):
     for delim in hDelims:
         if delim.start < start or delim.stop > stop:
             break
-        startWord = f'''<span id="H{delim.start}"class=highlighted onclick="refreshSelection(this)">
+        startWord = f'''<span id="H{delim.start}"class=highlighted onclick="refresh_active_highlight(this)">
         {wordsDict[delim.start]}'''
         wordsDict[delim.start] = startWord
         wordsDict[delim.stop] =  '</span>' + wordsDict[delim.stop]
-        flash(wordsDict[delim.start])
-        flash(wordsDict[delim.stop])
+        #flash(wordsDict[delim.start])
+        #flash(wordsDict[delim.stop])
 
     for index, word in wordsDict.items():
         if index < start or index > stop:
@@ -253,11 +252,11 @@ def prepareParagraphForDisplay(textobject, paragraphIndex):
 
 
 def getHighlightedSections(textobject):
-    '''returns a list of Highlight objects'''
+    '''returns a dictionary of Highlight objects'''
     #textList = []
     textDict = {}
     for delims in textobject.highlightDelims:
-        hlight = Highlight(textobject, delims)
+        hlight = Highlight(textobject, startChar=delims.start, endChar=delims.stop) #hlight = Highlight(textobject, delims)
         #textList.append(hlight)
         textDict[delims.start] = hlight
         #flash(f'got highlight:{delims.start}, {hlight}')
@@ -302,8 +301,8 @@ def submitText():
     else:
         userAccountsID = 29
     FullText_ID = FullText.submitToDB(fullText, userAccountsID)
-    flash(FullText_ID)
-    flash(fullText.db_ID)
+    #flash(FullText_ID)
+    #flash(fullText.db_ID)
 
 
     # OLD

@@ -17,7 +17,7 @@
     {% if textID == 0 %}
     Document Title
     {% else %}
-  {{text['title']}}
+  {{textobject['title']}}
     {% endif %}
 {% endblock docTitle %}
 
@@ -29,7 +29,7 @@
 {% block paragraph %}
     {% if textID == 0 %}
         Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-        <span class="highlighted" onclick="refreshSelection(this)">There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.</span>
+        <span class="highlighted" onclick="try2(this)">There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.</span>
         The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query.
         <span class="highlighted" onclick="refreshSelection(this)">Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.</span>
         <script>
@@ -43,21 +43,12 @@
         {% if textobject %}
             {{currentParagraph|safe}}
         {% endif %}
-        <script>
-            function refreshSelection(obj) {
-                // TODO populate Review page for this highlighted section
-                alert("alert:"+obj)
-            }
-        </script>
+<span id="H2" class="highlighted" onclick="try2(this)">There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.</span>
+
+
     {% endif %}
 
 {% endblock paragraph %}
-
-<!--============================================================================-->
-<!--============================================================================-->
-<!-- ====================================== CURRENT WORK ===================-->
-<!--============================================================================-->
-<!--============================================================================-->
 
 <!--START DOCUMENT NAVIGATION-->
 
@@ -78,20 +69,14 @@
 {% endblock navLinks %}
 
 
-<!--============================================================================-->
-<!--============================================================================-->
-<!-- ====================================== CURRENT WORK ===================-->
-<!--============================================================================-->
-<!--============================================================================-->
-
-
 
   <!--START MIDDLE-->
 {% block activeHighlight %}
     {% if textID == 0 %}
         There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.
     {% else %}
-        Hightlighted section of text {{text['FullText_ID']}}-{{text['title']}} goes here
+        {{g.user['activeHighlight'].text}}
+        <!--Active Hightlighted section of text {{textobject['FullText_ID']}}-{{textobject['title']}} goes here-->
     {% endif %}
 {% endblock activeHighlight %}
 
@@ -119,8 +104,72 @@
 
 
 
-
 {% block userNotes %}
+
+<!--============================================================================-->
+<!--============================================================================-->
+<!-- ====================================== CURRENT WORK ===================-->
+<!--============================================================================-->
+<!--============================================================================-->
+
+
+
+
+<div id="div1">
+{% for i, h in g.user['Highlights'].items() %}
+hightlight: | {{i}} | {{h.paragraphParent}} | rating: {{h.userRating}}  | "{{userNotes}}"
+<br>
+{% endfor %}
+</div>
+
+<button>Get External Content</button>
+<button id="jbutton">jbutton</button>
+
+        <script>
+        refreshSelection = function()
+        {
+            //selectedRating = obj.id;
+            Sijax.request(
+                'jaxy',
+                arg,
+                {
+                    data:
+                    {
+                        csrf_token: "{{ csrf_token() }}"
+                    }
+                }
+            );
+        }
+
+        plainajax = function()
+            {
+                $.ajax(
+                    {
+                        url: "{{ url_for('jax.jax') }}",
+                        data: 101,
+                        success: function(result)
+                            {
+                              $("#paragraph-summary").html(result);
+                            }
+                    }
+                );
+            }
+
+
+        $(document).ready(function()
+            {
+                $("buttons").click(plainajax);
+                $("#jbutton_no").bind('click', try2)
+            }
+        );
+        </script>
+
+<!--============================================================================-->
+<!--============================================================================-->
+<!-- ====================================== CURRENT WORK ===================-->
+<!--============================================================================-->
+<!--============================================================================-->
+
     <!--TODO  save the userNotes on keyup (or save button)-->
     {% if textID == 0 %}
         <textarea id="userNotes">Notes will be loaded here</textarea>
@@ -130,5 +179,43 @@
         </textarea>
         <input type="submit" value="TODO: do we want a submit button?">
     {% endif %}
+
+
+
+
+    <form id="messageForm" name="messageForm">
+        Message: <input type="text" id="message" style="width: 400px">
+        <input type="submit" value="Send">
+        <button id="btnClear">Clear messages</button>
+    </form>
+
+
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#messageForm').bind('submit', function() {
+            Sijax.request('getText', [$('#message').attr('value')],
+                { data: { csrf_token: "{{ csrf_token() }}" } });
+            //Prevent the form from being submitted
+            return false;
+        });
+
+        $('#message').focus();
+
+        $('#btnClear').bind('click', function() {
+            Sijax.request('clear_messages', [], { data: { csrf_token: "{{ csrf_token() }}" } });
+
+            return false;
+        });
+    });
+    </script>
+
+
+
+
+
+
 {% endblock userNotes %}
+
 
