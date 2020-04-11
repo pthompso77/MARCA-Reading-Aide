@@ -6,6 +6,15 @@
       - MARCA
     </title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="
+        {{ url_for('static', filename='js/sijax/sijax.js' )}}
+    "></script>
+    <script type="text/javascript" src="
+        {{ url_for('static', filename='js/main.js' )}}
+    "></script>
+    <script type="text/javascript">
+        {{ g.sijax.get_js()|safe }}
+    </script>
     <link rel="stylesheet" href="
         {{ url_for('static', filename='marca_style.css') }}
     ">
