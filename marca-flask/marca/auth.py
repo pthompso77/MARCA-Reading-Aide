@@ -5,6 +5,10 @@ Like the application object, the blueprint needs to know where it’s defined,
 The url_prefix will be prepended to all the URLs associated with the blueprint.
 """
 
+import logging as log
+log.basicConfig(filename='auth.log', level=log.DEBUG, format='%(asctime)s %(message)s')
+
+
 import functools # Tools for working with functions and callable objects
 from flask import g
 '''Whenever something is bound to g.user / g.request the proxy objects
@@ -27,16 +31,16 @@ from werkzeug.security import (
 try:
     from marca.db import get_db
 except Exception as e:
-    print("Exception: ",e)
+    log.info("Exception: ",e)
     try:
         from db import get_db
     except Exception as e:
-        print("Exception in auth.py:", e)
+        log.info("Exception in auth.py:", e)
 
 
 '''Log File'''
 import logging as log
-log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
+log.basicConfig(filename='auth.log', level=log.DEBUG, format='%(asctime)s %(message)s')
 log.info('Starting auth.py')
 
 
@@ -144,8 +148,13 @@ def register():
 
             #: set the session
             session.clear()
+            #from flask import make_response
+            #resp = make_response(render_template(...))
+            #resp.set_cookie('username', 'the username')            
             try:
+                flash(f'''looked for user {user}''')
                 session['user_id'] = user['userID']
+                flash(f'''now session['user_id'] is {session['user_id']}''')
             except Exception as e:
                 log.info(f'''(failed in /register: Exception={e}) trying session['user_id'] = user['userID']''')
                 session['user_id'] = user['userID']
@@ -166,7 +175,8 @@ def register():
 def login():
     log.info('Starting login()')
     onSuccess_redirectTo = 'marcaBP.dashboard'
-
+    
+    flash(f'''request method in login is: {request.method}''')
     if request.method == POST:
         log.info(f'''   GOT POST request:
             {request}
@@ -182,6 +192,7 @@ def login():
         db = get_db().connect()
         cur = db.cursor()
         q = f'''SELECT * FROM {userTable} WHERE email = "{username}"'''
+        flash(f'''query in auth: {q}''')
         cur.execute(q)
         user = cur.fetchone()
 
@@ -232,8 +243,9 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
+            flash('Sorry, you need to be logged in.')
             return redirect(url_for('auth.login'))
-
+        
         return view(**kwargs)
 
     return wrapped_view
@@ -266,7 +278,7 @@ def load_logged_in_user():
         )
         db.commit()
         g.user = cur.fetchone()
-        print(f'''
+        log.info(f'''
 
         ==================
         GOT USER
@@ -278,15 +290,8 @@ def load_logged_in_user():
         ==================
         ''')
 
-        return
+        flash(f'''auth got g.user from db {g.user}''')
+    return
 
-        #orig
-        g.user = get_db().connect().cursor().execute(
-            f'SELECT * FROM {userTable} WHERE userID = ?', (user_id,)
-        ).fetchone()
-        # again...
-        db = get_db()
-        cur = db.cursor().execute(
-            f'SELECT * FROM {userTable} WHERE userID = {user_id}'
-        )
-        #g.user = get_db().connect().
+
+

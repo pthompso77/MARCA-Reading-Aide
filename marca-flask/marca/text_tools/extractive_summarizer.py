@@ -24,7 +24,8 @@ try:
     if (verbose_success):
         print("\nYES2 got my sent_tokenize, word_tokenize")
 except Exception as e:
-    print("\nNO2 error from extractive.py:  from my_tokenize import word_tokenize \ne=", e)
+    pass
+    #print("\nNO2 error from extractive.py:  from my_tokenize import word_tokenize \ne=", e)
 
 # END ===== region imports
 
@@ -73,16 +74,16 @@ def create_frequency_table(article, wordList=None) -> dict:
     Counts the number of times each word occurs in the text.
 
     Args:
-    	article: full text to summarize
+        article: full text to summarize
 
     Returns:
-    	A dict with each unique word as the key,
-    	the value is the number of times that word occurs in the text.
-    	For example:
+        A dict with each unique word as the key,
+        the value is the number of times that word occurs in the text.
+        For example:
 
-    	{'lonely': 1,
-    	 'and': 35,
-    	 'trouble': 2}
+        {'lonely': 1,
+         'and': 35,
+         'trouble': 2}
     """
 
     if wordList is None:
@@ -220,7 +221,7 @@ def assembleSummary_withDelims(sentences, sentence_delims, sentence_scores, thre
     for sentence, delims in zip(sentences, sentence_delims):
         if (sentence in sentence_scores) and (sentence_scores[sentence] >= threshold):
             articleSummaryDelims.append(delims)
-            print(sentence, delims, sep="\n",end='\n=====\n')
+            #print(sentence, delims, sep="\n",end='\n=====\n')
 
     return articleSummaryDelims
 
@@ -267,8 +268,10 @@ def doArticleSummary(article, test_mode=False):
     try:
         freq_table = create_frequency_table(article)
     except:
-        print('''cannot set freq_table
-			article is:''',article)
+        goof="oops"
+    pass
+        #print('''cannot set freq_table
+            #article is:''',article)
 
     #tokenizing the sentences
     sentences = sent_tokenize(article, keepOriginalPunctuation=True)

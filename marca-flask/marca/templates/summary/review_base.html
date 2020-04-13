@@ -41,7 +41,8 @@
 <!--BODY-->
 {% block subBody %}
 
-
+{% block hiddenInputs %}
+{% endblock hiddenInputs %}
 
 <!--==============================TOP HALF===================================-->
 
@@ -144,17 +145,17 @@
               <label for="1">1</label>
             </span>
             <span>
-              <input type="radio" id="rate1" name="userRating" value="2"
+              <input type="radio" id="rate2" name="userRating" value="2"
                 onclick="setRating(this.value)"/>
               <label for="2">2</label>
             </span>
             <span>
-              <input type="radio" id="rate1" name="userRating" value="3"
+              <input type="radio" id="rate3" name="userRating" value="3"
                 onclick="setRating(this.value)"/>
               <label for="3">3</label>
             </span>
             <span>
-              <input type="radio" id="rate1" name="userRating" value="4"
+              <input type="radio" id="rate4" name="userRating" value="4"
                 onclick="setRating(this.value)"/>
               <label for="4">4</label>
             </span>

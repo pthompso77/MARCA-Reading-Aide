@@ -27,8 +27,35 @@ Summarize/Highlight
 after insert into database, get textID and store in FullText object
 
 """
+import logging as log
+log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
 
 from flask import flash
+log.info(f'''
+now starting FulLText.py
+''')
+from marca.db import get_db
+
+
+def escape(dirtyString):
+    log.info('''starting FullText.escape()''')
+    dirtyString = dirtyString.replace('\\','\\\\')	#A backslash (\) character
+    dirtyString = dirtyString.replace("'","\\'")	#A single quote (') character
+    dirtyString = dirtyString.replace('"','\\"')	#A double quote (") character
+    dirtyString = dirtyString.replace('%','\%')	#A % character
+    dirtyString = dirtyString.replace('_','\_')	#A _ character
+    dirtyString = dirtyString.replace('@','\@')	#A @ character
+    cleanString = dirtyString.replace('\t','\\t')	#A tab character
+    '''Not Replaced
+    #\0	An ASCII NUL (X'00') character
+    # \b	#A backspace character
+    # \n	#A newline (linefeed) character
+    # \r	#A carriage return character
+    # \Z	#ASCII 26 (Control+Z); see note following the table
+    #'''
+    log.info('''finishing FullText.escape()''')
+    return cleanString
+
 
 # full text reference (tokenized)
 class FullText(dict):
@@ -119,6 +146,19 @@ class FullText(dict):
     def updateHighlightNotes(highlightStart, notes):
         '''TODO'''
         return False
+
+
+
+    def getTextFromParagraphStart(self, pDelimStart, returnSliceOnly=False):
+        for pSlice in self.paragraphDelims:
+            pStart = pSlice.start
+            if pStart == pDelimStart:
+                print(f'returning pSlice text at {pSlice}')
+                if returnSliceOnly:
+                    return pSlice
+                else:
+                    return self.text[pSlice]
+
 
     @staticmethod
     def getFullText_fromDB(FullText_ID):
@@ -423,6 +463,23 @@ class Highlight(dict):
         #print(f'return parent.start  {parent.start}')
         return parent.start
 
+
+    def saveNotes(self, newNotes):
+        newNotes = escape(newNotes)
+        updateQuery = f'''UPDATE `pthompsoDB`.`text_highlights_assoc`
+            SET
+            `userNotes` = '{newNotes}'
+            WHERE FullTextID = {self.textobject.db_ID}
+            AND highlight_start = {self.id};'''
+        print(f'''
+        Query is {updateQuery}''')
+        db = get_db().connect()
+        cur = db.cursor()
+        cur.execute(updateQuery)
+        db.commit()
+
+
+
     @staticmethod
     def getHighlightFromDB(textobject, highlight_start):
         selectQuery = f'''SELECT `text_highlights_assoc`.`text_highlights_ID`,
@@ -440,6 +497,7 @@ class Highlight(dict):
         cur = db.cursor()
         cur.execute(selectQuery)
         result = cur.fetchone()
+        #return selectQuery #(only when testing)
 
 
         highlight = Highlight(
@@ -480,6 +538,17 @@ class Highlight(dict):
         cur.execute(insertQuery)
         db.commit()
 
+
+    @staticmethod
+    def submitAllHighlightsFromText_toDB(textobject, submitToDB=True):
+        textDict = {}
+        for delims in textobject.highlightDelims:
+            hlight = Highlight(textobject, startChar=delims.start, endChar=delims.stop) #hlight = Highlight(textobject, delims)
+            #textList.append(hlight)
+            textDict[delims.start] = hlight
+            if submitToDB:
+                hlight.submitHighlightToDB()
+        return textDict
 
 
 
@@ -542,3 +611,9 @@ if __name__ == '__main__':
     #do_testing()
     #testWithApp()
     testHighlights()
+
+
+log.info(f'''
+finished FulLText.py
+''')
+

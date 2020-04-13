@@ -3,7 +3,7 @@ Main page for Marca app (index)
 """
 
 import logging as log
-log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
+log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format=f'{__name__}%(asctime)s %(message)s')
 log.info('Starting marcaBP.py')
 
 from marca.text_tools.FullText import FullText, Highlight, TEST_TEXT
@@ -41,6 +41,12 @@ except:
 #: Initialize Blueprint
 log.info('Initializing Blueprint in marcaBP.py')
 bp = Blueprint('marcaBP', __name__)
+
+log.info(f'''
+Blueprint is : {bp.url_prefix}
+{bp.root_path}
+{bp.subdomain}
+''')
 
 
 '''=======================Variables======================='''
@@ -124,6 +130,10 @@ def dashboard():
             title = "Untitled"
         textobject = FullText(fullText, title=title)
         FullText.submitToDB(textobject, userAccountsID)
+
+        #now submit all the highlighted sections too
+        Highlight.submitAllHighlightsFromText_toDB(textobject)
+
         flash('Document Uploaded Successfully')
         if userAccountsID == 29: # (then it's me testing)
             # flash('Got Text:',textobject)
@@ -215,43 +225,62 @@ def review(textID):
 
 '''===========Review helpers==========='''
 
-def prepareParagraphForDisplay(textobject, paragraphIndex):
+def prepareParagraphForDisplay(textobject, paragraphIndex=0, paragraphStartDelim=None):
     '''adds span around highlighted sections'''
-    paragraphDelims = textobject.paragraphDelims[paragraphIndex]
+    if paragraphStartDelim is None:
+        paragraphDelims = textobject.paragraphDelims[paragraphIndex]
+    else:
+        paragraphDelims = textobject.getTextFromParagraphStart(paragraphStartDelim, returnSliceOnly=True)
     paragraphForDisplay = ''
     wordsDict = textobject.getWordsDict()
     start = paragraphDelims.start
     stop = paragraphDelims.stop
 
     for index, word in wordsDict.items():
-        if index < start or index > stop:
+        #if index < start or index > stop:
+        #if index < stop and index > start:
+        if index > stop:
             break
-        newWord = f'<span id="{str(index)}" class="word">{word}</span>'
-        wordsDict[index] = newWord
+        if index >= start:
+            newWord = f'<span id="{str(index)}" class="word">{word}</span>'
+            wordsDict[index] = newWord
 
     hDelims = textobject.highlightDelims
+    previousPointer = -1
     for delim in hDelims:
-        if delim.start < start or delim.stop > stop:
+        #if delim.start < start or delim.start > stop:
+        #    break
+        if delim.start < start:
+            continue
+        if delim.start >= stop:
             break
-        startWord = f'''<span id="H{delim.start}"class=highlighted onclick="refresh_active_highlight(this)">
+        startWord = f'''&nbsp;<span id="H{delim.start}"class=highlighted onclick="refresh_active_highlight(this)">
         {wordsDict[delim.start]}'''
         wordsDict[delim.start] = startWord
-        wordsDict[delim.stop] =  '</span>' + wordsDict[delim.stop]
+        if previousPointer >= 0:
+            wordsDict[previousPointer] =  '</span>' + wordsDict[previousPointer]
+        #wordsDict[delim.stop] =  '</span>' + wordsDict[delim.stop]
+        previousPointer = delim.stop
+        print(f'''
+        wordsDict[delim.stop] is {wordsDict[delim.stop]} where stop is {delim.stop}
+        ''')
         #flash(wordsDict[delim.start])
         #flash(wordsDict[delim.stop])
+    # finish up
+    wordsDict[previousPointer] =  '</span>' + wordsDict[previousPointer]
 
     for index, word in wordsDict.items():
-        if index < start or index > stop:
+        if index < start:
+            continue
+        if index > stop:
             break
         paragraphForDisplay += word
 
-    #paragraphForDisplay = 'The results from these studies reported that about 29% of the \
-    # <span class=highlighted onclick="refreshSelection(this)">
-    # most viral posts</span> turned out to be rumors a'
-    return paragraphForDisplay + '<br>'+str(textobject.highlightDelims)
+    return paragraphForDisplay #+ '<br>'+str(textobject.highlightDelims)
 
 
 def getHighlightedSections(textobject):
+    return Highlight.submitAllHighlightsFromText_toDB(textobject, submitToDB=False)
     '''returns a dictionary of Highlight objects'''
     #textList = []
     textDict = {}

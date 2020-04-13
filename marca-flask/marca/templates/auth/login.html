@@ -18,6 +18,9 @@ input[type=submit] {
     border-bottom: 1px solid lightgray;
 }
 </style>
+<script>
+        $('#username').focus();
+</script>
 {% endblock headPlus %}
 
 
@@ -29,10 +32,10 @@ input[type=submit] {
             <h1>{% block title %}Log In{% endblock %}</h1>
             <form method="post" action =
                     {% block formAction %}
-                        "/auth/login"
+                        {{url_for('auth.login')}}
                     {% endblock formAction %}
             >
-                <label for="username">Username</label>
+	    <label for="username">Username {{g.user['userID']}} (or not)</label>
                     <input name="username" id="username" required>
                 <label for="password">Password</label>
                     <input type="password" name="password" id="password" required>
