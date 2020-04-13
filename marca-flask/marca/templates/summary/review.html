@@ -22,6 +22,13 @@
 {% endblock docTitle %}
 
 
+
+{% block hiddenInputs %}
+<input id="textobjectID" style="display:none" value="{{ textobject.db_ID }}">
+<input id="highlightID" style="display:none">
+{% endblock hiddenInputs %}
+
+
 <!--START SUMMARY SECTION-->
 
 
@@ -43,7 +50,7 @@
         {% if textobject %}
             {{currentParagraph|safe}}
         {% endif %}
-<span id="H2" class="highlighted" onclick="try2(this)">There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.</span>
+<!--<span id="H2" class="highlighted" onclick="try2(this)">There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.</span>-->
 
 
     {% endif %}
@@ -63,7 +70,7 @@
         <a id="14" href="#" class="nav-links pseudolink">Section...</a>
     {% else %}
         {% for index, highlight in highlights.items() %}
-        <a id="{{highlight.id}}" href="#{{highlight.paragraphParent}}" class="nav-links pseudolink"> {{highlight.text}} </a>
+        <a id="Nav{{highlight.id}}" onclick="refresh_active_highlight(this)" class="nav-links pseudolink"> {{highlight.text}} </a>
         {% endfor %}
     {% endif %}
 {% endblock navLinks %}
@@ -78,6 +85,7 @@
         {{g.user['activeHighlight'].text}}
         <!--Active Hightlighted section of text {{textobject['FullText_ID']}}-{{textobject['title']}} goes here-->
     {% endif %}
+
 {% endblock activeHighlight %}
 
 
@@ -92,11 +100,6 @@
           }
         </script>
     {% else %}
-        <script>
-          function setRating(selectedRating) {
-            alert("TODO: handle how to collect the selected rating: "+selectedRating);
-          }
-        </script>
     {% endif %}
 {% endblock ratingScript %}
 
@@ -114,16 +117,6 @@
 
 
 
-
-<div id="div1">
-{% for i, h in g.user['Highlights'].items() %}
-hightlight: | {{i}} | {{h.paragraphParent}} | rating: {{h.userRating}}  | "{{userNotes}}"
-<br>
-{% endfor %}
-</div>
-
-<button>Get External Content</button>
-<button id="jbutton">jbutton</button>
 
         <script>
         refreshSelection = function()
@@ -175,43 +168,9 @@ hightlight: | {{i}} | {{h.paragraphParent}} | rating: {{h.userRating}}  | "{{use
         <textarea id="userNotes">Notes will be loaded here</textarea>
         <input type="submit" value="TODO: do we want a submit button?">
     {% else %}
-        <textarea id="userNotes">Notes on {{text['FullText_ID']}}-{{text['title']}} text will be loaded here
-        </textarea>
-        <input type="submit" value="TODO: do we want a submit button?">
+        <textarea id="userNotes"></textarea>
+        <input type="submit" onclick="saveNotes()" value="Save Notes">
     {% endif %}
-
-
-
-
-    <form id="messageForm" name="messageForm">
-        Message: <input type="text" id="message" style="width: 400px">
-        <input type="submit" value="Send">
-        <button id="btnClear">Clear messages</button>
-    </form>
-
-
-
-
-<script type="text/javascript">
-    $(function() {
-        $('#messageForm').bind('submit', function() {
-            Sijax.request('getText', [$('#message').attr('value')],
-                { data: { csrf_token: "{{ csrf_token() }}" } });
-            //Prevent the form from being submitted
-            return false;
-        });
-
-        $('#message').focus();
-
-        $('#btnClear').bind('click', function() {
-            Sijax.request('clear_messages', [], { data: { csrf_token: "{{ csrf_token() }}" } });
-
-            return false;
-        });
-    });
-    </script>
-
-
 
 
 

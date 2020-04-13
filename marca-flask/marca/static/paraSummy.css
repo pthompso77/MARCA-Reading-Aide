@@ -65,6 +65,10 @@ body * {
     cursor: pointer;
 }
 
+.active, .active > span {
+    background-color: #87f1ff;
+}
+
 
 /*#buffer {TODO is this necessary?
     flex-grow: 1;
