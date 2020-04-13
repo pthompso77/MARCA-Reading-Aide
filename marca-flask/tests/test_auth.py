@@ -21,8 +21,9 @@ def test_register(client, app):
     assert response.headers['Location'] == correctLoginURL
 
     with app.app_context():
-        assert get_db().execute(
-            f"select * from user where username = '{dummyUsername}'",
+        cur = get_db().connect().cursor()
+        assert cur.execute(
+            f"select * from userAccounts where email = '{dummyUsername}'",
         ).fetchone() is not None
         
         
