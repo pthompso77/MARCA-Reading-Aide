@@ -1,5 +1,5 @@
-# MARCA
-## Memory and Reading Comprehension Aide  
+# Memory and Reading Comprehension Aide
+## Using Humans to Teach Machines Our Language  
 
 #### In the context of schoolwork and research, students and academics often deal with information in the form of text; and this text tends to be lengthy. A summary of the text, or sections of the text, can aid in the comprehension of the material and provide a useful reference for future review. This kind of reduction of large text can also serve the common task of searching. The process of creating a program to successfully search large bodies of text involves matching the content of the text to the provided query. Having a summary of key words, phrases, and ideas can help the search process to be successful and more efficient.
 #### The Memory and Reading Comprehension Aide uses natural language processing techniques to examine large amounts of data to create a summary or digest of the content. 
