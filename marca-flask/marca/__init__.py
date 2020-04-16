@@ -119,14 +119,14 @@ def create_app(test_config=None):
 
     #: set some default configuration that the app will use
     log.info('trying to     app.config.from_mapping')
-    app.config.from_mapping(
-        SECRET_KEY='dev', #TODO set to a random value when deploying
-        MYSQL_HOST = host,
-        MYSQL_USER = user,
-        MYSQL_PASSWORD = pw,
-        MYSQL_DB = schema,
-        MYSQL_CURSORCLASS = 'DictCursor'
-    )
+    #app.config.from_mapping(
+        #SECRET_KEY='dev', #TODO set to a random value when deploying
+        #MYSQL_HOST = host,
+        #MYSQL_USER = user,
+        #MYSQL_PASSWORD = pw,
+        #MYSQL_DB = schema,
+        #MYSQL_CURSORCLASS = 'DictCursor'
+    #)
     app.config.from_mapping(
         SECRET_KEY= os.urandom(128),#'dev',
         MYSQL_DATABASE_HOST = host,
