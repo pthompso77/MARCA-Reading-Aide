@@ -235,10 +235,9 @@ def assembleSummary(sentences, sentence_weight, threshold, sep='<br>', return_de
         cursor = 0
         for sentence in sentences:
             cursor += len(sentence)
-            #TODO come back here!
-            '''TODO get the deliminators, not the sentences'''
+            '''2020-04-12: I think I just want the sentences as a list instead'''
             if (sentence in sentence_weight) and (sentence_weight[sentence] >= (threshold)):
-                article_summary += sentence + "<br>"
+                article_summary.append(sentence)
                 sentence_counter += 1
 
     else: #return a string with sentences separated by sep (default is '<br>')
@@ -262,7 +261,8 @@ Natural Language Processing with Python provides a practical introduction to pro
 
 
 # # and now all together
-def doArticleSummary(article, test_mode=False):
+def doArticleSummary(article, threshold_factor=1.0, test_mode=False, summary_as_list=False):
+    threshold_factor = threshold_factor * 1.0 #ensure it's a float
 
     #creating a dictionary for the word frequency table
     try:
@@ -280,9 +280,13 @@ def doArticleSummary(article, test_mode=False):
 
     #getting the threshold
     threshold = getThresholdUsingSentenceWeights(sentence_scores)
-
+    threshold = threshold/threshold_factor
     #producing the summary
-    article_summary = assembleSummary(sentences, sentence_scores, 1.0 * threshold)
+
+    '''replaced 2020-04-12 to return a list (return_delims=summary_as_list=True)'''
+    #article_summary = assembleSummary(sentences, sentence_scores, 1.0 * threshold)
+    article_summary = assembleSummary(sentences, sentence_scores, threshold, return_delims=summary_as_list)
+
     if (verbose_ON):
         print('\nextractive article summary:',article_summary,'\n[end summary]')
 
