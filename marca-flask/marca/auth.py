@@ -192,7 +192,7 @@ def login():
         db = get_db().connect()
         cur = db.cursor()
         q = f'''SELECT * FROM {userTable} WHERE email = "{username}"'''
-        flash(f'''query in auth: {q}''')
+
         cur.execute(q)
         user = cur.fetchone()
 
@@ -291,7 +291,6 @@ def load_logged_in_user():
         ==================
         ''')
 
-        flash(f'''auth got g.user from db {g.user}''')
     return
 
 
