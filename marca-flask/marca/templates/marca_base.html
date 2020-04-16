@@ -130,13 +130,12 @@
 
               <h1>
               {% block topLeft_H1 %}
-              Insert Text to Summarize Below
+              Insert Text to Summarize
               {% endblock topLeft_H1 %}
               </h1>
 
               <div id="text-container">
-                  <textarea id="text-input" name="userInput" form="text-form" required>
-                  </textarea>
+                  <textarea id="text-input" name="userInput" form="text-form" required ></textarea>
               </div>
 
               <form id="text-form" action="{{ url_for('marcaBP.submitText') }}" method="post">
@@ -151,12 +150,15 @@
     <!--TOP RIGHT-->
     {% block topRight %}
     <section id="summary-section">
-        <h2>Summary</h2>
+        <h2>  
+            {% block summaryH2 %}  {% endblock summaryH2 %}
+        </h2>
         <div id="summary-container" class="generated">
             <article id="keywords">
                 <p class="container">
-                    <span class="arg">Text must be full for processing.</span>
-                    <span class="arg">Emptiness means nothing.</span>
+        {% block keywords %}
+                    <span class="arg"></span>
+        {% endblock keywords %}
                 </p>
             </article>
         </div>

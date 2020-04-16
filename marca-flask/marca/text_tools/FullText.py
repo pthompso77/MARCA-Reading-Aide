@@ -116,6 +116,10 @@ class FullText(dict):
 
 
     def _getHightlightDelims(self):
+
+        '''2020-04-12 this will shorten the overall summary length'''
+        threshold_factor = 0.75
+
         from marca.text_tools import extractive_summarizer as summr
         from marca.text_tools import my_tokenize as tokenizer
         wordList = tokenizer.word_tokenize_withDelims(self.text, self.wordDelims)
@@ -127,8 +131,10 @@ class FullText(dict):
         sentence_scores = summr.find_weighted_frequencies(sentences, freq_table)
         #: getting the threshold
         threshold = summr.getThresholdUsingSentenceWeights(sentence_scores)
+        threshold = (threshold/threshold_factor)
         #: summarize and return the highlighted section delimeters
-        highlightDelims = summr.assembleSummary_withDelims(sentences, self.sentenceDelims, sentence_scores, 1.0 * threshold)
+        highlightDelims = summr.assembleSummary_withDelims(
+            sentences, self.sentenceDelims, sentence_scores, threshold)
 
         return highlightDelims
 
@@ -153,7 +159,6 @@ class FullText(dict):
         for pSlice in self.paragraphDelims:
             pStart = pSlice.start
             if pStart == pDelimStart:
-                print(f'returning pSlice text at {pSlice}')
                 if returnSliceOnly:
                     return pSlice
                 else:
@@ -471,8 +476,8 @@ class Highlight(dict):
             `userNotes` = '{newNotes}'
             WHERE FullTextID = {self.textobject.db_ID}
             AND highlight_start = {self.id};'''
-        print(f'''
-        Query is {updateQuery}''')
+        #print(f'''
+        #Query is {updateQuery}''')
         db = get_db().connect()
         cur = db.cursor()
         cur.execute(updateQuery)

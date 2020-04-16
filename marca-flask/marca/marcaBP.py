@@ -60,9 +60,10 @@ http_forbidden = 403
 
 
 @bp.route('/dev/db', methods=(GET, POST))
+@login_required
 def devDB():
 
-    if g.user['userID'] != 29: #then the user isn't me and shouldn't see this page
+    if g.user['userID'] != 29 or g.user['userID'] is None: #then the user isn't me and shouldn't see this page
         return redirect(url_for('index'))
 
     log.info('Starting def devDB()')
@@ -109,7 +110,10 @@ def index():
 def dashboard():
     # TODO
     #: get userAccountsID from g.user
-    userAccountsID = g.user['userID']
+    try:
+        userAccountsID = g.user['userID']
+    except Exception as e:
+        return f'''Nope: {e}'''
     error = None
 
 
@@ -261,9 +265,9 @@ def prepareParagraphForDisplay(textobject, paragraphIndex=0, paragraphStartDelim
             wordsDict[previousPointer] =  '</span>' + wordsDict[previousPointer]
         #wordsDict[delim.stop] =  '</span>' + wordsDict[delim.stop]
         previousPointer = delim.stop
-        print(f'''
-        wordsDict[delim.stop] is {wordsDict[delim.stop]} where stop is {delim.stop}
-        ''')
+        #print(f'''
+        #wordsDict[delim.stop] is {wordsDict[delim.stop]} where stop is {delim.stop}
+        #''')
         #flash(wordsDict[delim.start])
         #flash(wordsDict[delim.stop])
     # finish up
@@ -321,34 +325,22 @@ def submitText():
     originalText = request.form['userInput']
 
 
-    # NEW: using FulLText object
-
-    fullText = FullText(originalText)
-    # put text in the database
-    if g.user:
-        userAccountsID = g.user['userID']
-    else:
-        userAccountsID = 29
-    FullText_ID = FullText.submitToDB(fullText, userAccountsID)
-    #flash(FullText_ID)
-    #flash(fullText.db_ID)
-
-
     # OLD
 
     from marca.text_tools.extractive_summarizer import doArticleSummary
     summary = 'shorter...'
-    summary, freq_table, sentences, sentence_scores, threshold = doArticleSummary(originalText, test_mode=True)
+    summary, freq_table, sentences, sentence_scores, threshold \
+        = doArticleSummary(originalText, threshold_factor = 0.75, test_mode=True, summary_as_list=True)
 
 
-    '''Now for my_tokenize paragraph summary'''
+    percentOfOriginal = 100*(len(summary) / len(sentence_scores))
+    percentOfOriginal = f'''{percentOfOriginal:.0f}'''
 
-
-    ts = len(summary)
-    #: return redirect(?) to dashboard
-    return render_template('dev/db.html', summary=summary, \
-                           sentences=fullText.getSentences(), \
-                           sentence_scores=sentence_scores, ft = freq_table)
+    return render_template('summary/homepage_summary.html', summary=summary,
+                           percentOfOriginal=percentOfOriginal)
+    #return render_template('dev/db.html', summary=summary, \
+                           #sentences=fullText.getSentences(), \
+                           #sentence_scores=sentence_scores, ft = freq_table)
 
 
 

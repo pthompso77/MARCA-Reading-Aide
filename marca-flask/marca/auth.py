@@ -150,7 +150,7 @@ def register():
             session.clear()
             #from flask import make_response
             #resp = make_response(render_template(...))
-            #resp.set_cookie('username', 'the username')            
+            #resp.set_cookie('username', 'the username')
             try:
                 flash(f'''looked for user {user}''')
                 session['user_id'] = user['userID']
@@ -175,7 +175,7 @@ def register():
 def login():
     log.info('Starting login()')
     onSuccess_redirectTo = 'marcaBP.dashboard'
-    
+
     flash(f'''request method in login is: {request.method}''')
     if request.method == POST:
         log.info(f'''   GOT POST request:
@@ -245,7 +245,7 @@ def login_required(view):
         if g.user is None:
             flash('Sorry, you need to be logged in.')
             return redirect(url_for('auth.login'))
-        
+
         return view(**kwargs)
 
     return wrapped_view
@@ -266,6 +266,7 @@ def load_logged_in_user():
     log.info(f'''
     in load_logged_in_user: got user_id = {user_id}''')
     #user_id = 1
+    #return f'user_id in load_logged...{user_id}'
 
     if user_id is None:
         g.user = None
