@@ -176,7 +176,7 @@ def login():
     log.info('Starting login()')
     onSuccess_redirectTo = 'marcaBP.dashboard'
 
-    flash(f'''request method in login is: {request.method}''')
+
     if request.method == POST:
         log.info(f'''   GOT POST request:
             {request}
