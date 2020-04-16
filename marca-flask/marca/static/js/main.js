@@ -75,6 +75,11 @@ makeInactive = function() {
 /* This should happen any time something changes on the page! */
 
 refresh_active_highlight = function(obj) {
+    //highlightID = getHighlightID();
+    //if (highlightID != "") {
+        //saveNotes();
+        //console.log('saved notes for ' +highlightID);
+    //}
     // get the integer value of the highlight ID (after the H)
     objID = obj.id
     if (objID[0] == "N") {substringStart = 3;}
@@ -82,12 +87,12 @@ refresh_active_highlight = function(obj) {
     newHighlightIndex = parseInt(objID.substr(substringStart));
     textID = getTextID();
     setHighlightID(newHighlightIndex);
-    console.log('requesting '
-    +"\n"+ 'refresh_active_highlight'
-    +"\n"+ textID
-    +"\n"+  newHighlightIndex
-    +"\n"+ "url: '/jax'"
-    );
+    //console.log('requesting '
+    //+"\n"+ 'refresh_active_highlight'
+    //+"\n"+ textID
+    //+"\n"+  newHighlightIndex
+    //+"\n"+ "url: '/jax'"
+    //);
     Sijax.request('refresh_active_highlight',
         [textID,newHighlightIndex],
         {url: '/jax' }
@@ -97,15 +102,28 @@ refresh_active_highlight = function(obj) {
 
 
 
-setRating = function(rating) {
-    // TODO
-    alert("TODO")
+setRating = function(ratingValue) {
+    textobjectID = getTextID();
+    highlightID = getHighlightID();
+    if (highlightID == "") {
+        alert('Please select a Highlight first');
+        return;
+    }
+    console.log('requesting ' + [textobjectID,highlightID,ratingValue])
+    Sijax.request('saveUserRating',
+    [textobjectID,highlightID,ratingValue],
+    {url: '/jax' }
+    );
 }
 
 
 saveNotes = function() {
     textobjectID = getTextID();
     highlightID = getHighlightID();
+    if (highlightID == "") {
+        alert('Please select a Highlight first');
+        return;
+    }
     newNotes = $("#userNotes").val();
     Sijax.request('saveUserNotes',
         [textobjectID,highlightID,newNotes],

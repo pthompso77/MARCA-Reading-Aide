@@ -111,26 +111,6 @@ class SijaxHandler(object):
         obj_response.html('#shell',my_exec(cmd))
 
     @staticmethod
-    def refresh_active_highlight0(obj_response, newHighlightIndex):
-        # set g's active highlight
-        #g.user['activeHighlight'] =
-        flash(f"request method form keys {request.form.keys()}")
-        flash(f'Sijax has g is {g} with keys: {g.user.keys()}')
-        obj_response.alert(f'g items: {g.user.items()}')
-        return
-        previousActiveHighlight = g.user['activeHighlight']
-        newActiveHighlight = g.user['Highlights'][newHighlightIndex]
-        g.user['activeHighlight'] = newActiveHighlight
-        # return all the portions of the page that need updating:
-        #: active highlights (nav, paragraph, middle)
-        #: paragraph text
-        #: middle section
-        #: rating
-        #: notes
-        #obj_response.alert('refreshing!')
-
-
-    @staticmethod
     def refresh_active_highlight(obj_response, db_ID, newHighlightIndex):
         textobject = FullText.getFullText_fromDB(db_ID)
         newHighlight = Highlight.getHighlightFromDB(textobject, newHighlightIndex)
@@ -152,14 +132,21 @@ class SijaxHandler(object):
         # middle section
         obj_response.html("#active-highlight",f"{newHighlight.text}")
 
+        # clear all ratings
+        obj_response.script('''$('input[type=radio]').each(function() {
+            $(this).prop('checked',false);
+        });''')
+
         # rating
         rating = newHighlight.userRating
-        obj_response.script(f'''$('#rate{rating}').prop('checked',true)''')
+        ratingBetween1and4 = rating > 0 and rating < 5
+        if ratingBetween1and4:
+            obj_response.script(f'''$('#rate{rating}').prop('checked',true)''')
 
         # notes
         userNotes = newHighlight.userNotes
-        userNotes = escape(userNotes)
-        obj_response.script(f'''$("#userNotes").val('{userNotes}')''')
+        #userNotes = escape(userNotes)
+        obj_response.script(f'''$("#userNotes").val(escape('{userNotes}'))''')
 
 
 
@@ -169,5 +156,18 @@ class SijaxHandler(object):
         textobject = FullText.getFullText_fromDB(textobjectID)
         highlight = Highlight.getHighlightFromDB(textobject, highlightIndex)
         highlight.saveNotes(newNotes)
+        obj_response.script(f'''console.log('updated the user notes');''')
+
+
+    @staticmethod
+    def saveUserRating(obj_response, textobjectID, highlightIndex, ratingValue):
+        #saveNotes
+        textobject = FullText.getFullText_fromDB(textobjectID)
+        highlight = Highlight.getHighlightFromDB(textobject, highlightIndex)
+        highlight.saveRating(ratingValue)
+        obj_response.script(f'''console.log('updated the user rating');''')
+
+
+
 
 

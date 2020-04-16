@@ -484,6 +484,33 @@ class Highlight(dict):
         db.commit()
 
 
+    def saveRating(self, ratingValue):
+        # trying to prevent against bad/dangerous input
+        ratingDict = {
+            'eJwFwdtugjA':1,
+            'AANBfWfrKEg':2,
+            'ZuWEn2UBwWh':3,
+            'KJCVOSFiMDK':4
+        }
+        try:
+            newRating = ratingDict[ratingValue]
+        except Exception as e:
+            newRating = 0
+            log.info(f'''Exception is FullText.Highligh.saveRating: {e}''')
+
+        updateQuery = f'''UPDATE `pthompsoDB`.`text_highlights_assoc`
+            SET
+            `userRating` = '{newRating}'
+            WHERE FullTextID = {self.textobject.db_ID}
+            AND highlight_start = {self.id};'''
+        #print(f'''
+        #Query is {updateQuery}''')
+        db = get_db().connect()
+        cur = db.cursor()
+        cur.execute(updateQuery)
+        db.commit()
+
+
 
     @staticmethod
     def getHighlightFromDB(textobject, highlight_start):
