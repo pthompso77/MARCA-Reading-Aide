@@ -39,12 +39,7 @@
         <span class="highlighted" onclick="try2(this)">There are broadly two types of extractive summarization tasks depending on what the summarization program focuses on.</span>
         The first is generic summarization, which focuses on obtaining a generic summary or abstract of the collection (whether documents, or sets of images, or videos, news stories etc.). The second is query relevant summarization, sometimes called query-based summarization, which summarizes objects specific to a query.
         <span class="highlighted" onclick="refreshSelection(this)">Summarization systems are able to create both query relevant text summaries and generic machine-generated summaries depending on what the user needs.</span>
-        <script>
-            function refreshSelection(obj) {
-                // TODO populate Review page for this highlighted section
-                alert("Selected this highlighted section")
-            }
-        </script>
+
 
     {% else %}
         {% if textobject %}
@@ -70,7 +65,11 @@
         <a id="14" href="#" class="nav-links pseudolink">Section...</a>
     {% else %}
         {% for index, highlight in highlights.items() %}
-        <a id="Nav{{highlight.id}}" onclick="refresh_active_highlight(this)" class="nav-links pseudolink"> {{highlight.text}} </a>
+        <a id="Nav{{highlight.id}}" onclick="refresh_active_highlight(this)"
+                class="nav-links pseudolink">
+            {{highlight.text}}
+            <span class="paragraphParent" style="display:none;">{{highlight.paragraphParent}}</span>
+        </a>
         {% endfor %}
     {% endif %}
 {% endblock navLinks %}

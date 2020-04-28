@@ -105,36 +105,20 @@ def register():
     if request.method == POST:
         username = request.form[uname]
         password = request.form[pw]
-        #db = get_db()
         db = get_db().connect()
         cur = db.cursor()
-        #test
-        q=(f'''SELECT userID FROM {userTable} WHERE email = "{username}"''')
-        res = cur.execute(q)
-        log.info(f'''
-            SUCCESS in @route /register
-            with query: {q}
-            got res: {res}''')
-        #done test
         error = None
 
         if not username:
             error = uname_empty_err
         elif not password:
             error = pw_empty_err
-        #elif db.execute(
-#            f'SELECT userID FROM {userTable} WHERE email = ?', (username,)
-#        ).fetchone() is not None:
         elif cur.execute(f'''SELECT userID FROM {userTable}
             WHERE email = "{username}"'''
             ) > 0:
             error = f'User {username} is already registered.'
 
         if error is None:
-#            db.execute(
-#                f'INSERT INTO {userTable} (email, password) VALUES (?, ?)',
-#                (username, generate_password_hash(password))
-#            )
             cur.execute(
                 f'''INSERT INTO {userTable} (email, password)
                 VALUES ("{username}", "{generate_password_hash(password)}")'''
@@ -283,8 +267,6 @@ def load_logged_in_user():
 
         ==================
         GOT USER
-
-        RIGHT??
 
         user = {g.user}
 

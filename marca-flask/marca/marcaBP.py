@@ -8,7 +8,6 @@ log.info('Starting marcaBP.py')
 
 from marca.text_tools.FullText import FullText, Highlight, TEST_TEXT
 
-log.info('Starting imports in marcaBP.py')
 from flask import (
     Blueprint,
     flash,
@@ -26,7 +25,6 @@ abort(404)  # 404 Not Found
 abort(Response('Hello World'))
 '''
 
-log.info('Starting importing auth.login_required and db.get_db in marcaBP.py')
 try:
     from auth import login_required
     from db import get_db, escape
@@ -44,8 +42,8 @@ bp = Blueprint('marcaBP', __name__)
 
 log.info(f'''
 Blueprint is : {bp.url_prefix}
-{bp.root_path}
-{bp.subdomain}
+root_path: {bp.root_path}
+subdomain: {bp.subdomain}
 ''')
 
 
@@ -66,7 +64,6 @@ def devDB():
     if g.user['userID'] != 29 or g.user['userID'] is None: #then the user isn't me and shouldn't see this page
         return redirect(url_for('index'))
 
-    log.info('Starting def devDB()')
     db = get_db().connect()
     cur = db.cursor()
 
@@ -79,7 +76,6 @@ def devDB():
 
         return render_template('dev/db.html',query=query, DBexec=DBexec, DBresult=DBresult)
 
-    log.info('Finished def devDB()')
     return render_template('dev/db.html')
 
 
@@ -92,13 +88,11 @@ userTable = 'userAccounts'
 
 @bp.route('/')
 def index():
-    log.info('Starting def index()')
     #db = get_db().connect()
     #cur = db.cursor()
 
     # TODO -
 
-    log.info('Finished def index()')
     return render_template('summary/index.html')
 
 
@@ -313,10 +307,8 @@ def getTextByTextID(textID):
 '''=======================Actions======================='''
 
 
-# TODO
-@bp.route('/submitText', methods=(POST,))
+@bp.route('/submitText', methods=(POST,GET))
 def submitText():
-    log.info('Starting submitText() in marcaBP.py')
     '''takes submitted text
         returns a summary
         name = userInput

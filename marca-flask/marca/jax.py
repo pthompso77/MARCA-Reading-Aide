@@ -10,7 +10,6 @@ starting jax
 ''')
 
 from marca.text_tools.FullText import FullText, Highlight, TEST_TEXT
-log.info(f'''success in jax.py:create_app() 1''')
 
 from flask import Blueprint, flash, g, session # redirect, render_template, request, url_for
 from flask import current_app

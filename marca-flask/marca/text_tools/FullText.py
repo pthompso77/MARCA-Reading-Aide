@@ -210,6 +210,11 @@ class FullText(dict):
         return textobject
 
 
+
+
+
+
+
     def submitToDB(fulltextObj, userAccountsID):
         if fulltextObj.owner is None:
             fulltextObj.owner = userAccountsID
@@ -375,7 +380,7 @@ def getDelims_Sentence(inputText):
 
 
 
-def getDelims_Paragraph(paragraphList):
+def getDelims_Paragraph(paragraphList, asDict=False):
     '''
         Returns:
         a list of slices, where the integers correspond to the index of
@@ -383,13 +388,16 @@ def getDelims_Paragraph(paragraphList):
         [start, end)
     '''
     paragraphDelims = []
+    paraDelimsDict = {}
     startDelim = 0
     for paragraph in paragraphList:
         paragraphLength = startDelim + len(paragraph)
         delims = slice(startDelim, paragraphLength)
         paragraphDelims.append(delims)
-
+        paraDelimsDict[str(startDelim)] = delims
         startDelim = paragraphLength
+    if asDict:
+        return paraDelimsDict
     return paragraphDelims
 
 
@@ -418,7 +426,24 @@ def testLen(textStr, textList):
     return a, b
 
 
+def prev_cur_next(iterable):
+    """Make an iterator that yields an (previous, current, next) tuple per element.
 
+    Returns None if the value does not make sense (i.e. previous before
+    first and next after last).
+    source: https://gist.github.com/mortenpi/9604377
+    """
+    iterable=iter(iterable)
+    prv = None
+    cur = iterable.__next__()
+    try:
+        while True:
+            nxt = iterable.__next__()
+            yield (prv,cur,nxt)
+            prv = cur
+            cur = nxt
+    except StopIteration:
+        yield (prv,cur,None)
 
 
 class Highlight(dict):
@@ -645,7 +670,4 @@ if __name__ == '__main__':
     testHighlights()
 
 
-log.info(f'''
-finished FulLText.py
-''')
 

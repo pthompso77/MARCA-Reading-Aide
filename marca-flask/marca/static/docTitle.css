@@ -18,11 +18,6 @@
     align-self: stretch; /*(inherited) auto | flex-start | flex-end | center | baseline | stretch;*/
 }
 
-#nav-bar, #documentTitle{
-/*     visibility: hidden; */
-    /*TODO undo this after testing*/
-}
-
 /* START TOPHALF */
 #topHalf-Title {
     justify-content: space-around;
@@ -35,6 +30,8 @@
 
 #documentTitle {
     text-align:center;
+    align-self: flex-end;
     font: bold oblique 20px serif;
     padding: 10px 10px;
+    flex-grow: 2;
 }

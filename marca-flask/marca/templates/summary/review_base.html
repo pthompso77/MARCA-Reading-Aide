@@ -33,6 +33,10 @@
     /* TODO delete this :) */
     .TODO {background-color: red; max-width: 50px; display: none}
     </style>
+    <script>
+      $(window).load(initializePage());
+    </script>
+
 {% endblock headPlus %}
 <!--END HEAD-->
 
@@ -53,9 +57,21 @@
 
         <!--START DOCUMENT TITLE-->
         <section id="topHalf-Title" class="flex">
+
+        <div id="nav-arrow-container">
+            <span id="left-arrow" class="nav-arrow">
+              &#8249;
+              <!--&#x21e6;-->
+            </span>
+            <span id="right-arrow" class="nav-arrow">
+              &#8250;
+              <!--&#x21e8;-->
+            </span>
+        </div>
+
           <div id="documentTitle" >
           {% block docTitle %}
-            BLOCK
+            Untitled
           {% endblock docTitle %}
           </div>
         </section> <!--topHalf-Title-->

@@ -5,13 +5,10 @@ log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(m
 log.info('''
 
 
-
-
 =======================
 
-
-
 Starting __init__.py
+
 ''')
 from flask import Flask, request, session, g, abort, render_template
 #from flask_mysqldb import MySQL
@@ -25,8 +22,7 @@ try:
 except Exception as e:
     exc_type, exc_value, exc_traceback = sys.exc_info()
     print(f'''Exception importing marca.SijaxHandler: {e}
-    with traceback: {traceback.print_tb(exc_traceback)}''')
-log.info("and now here 102")
+          with traceback: {traceback.print_tb(exc_traceback)}''')
 # DB credentials
 from pymysql.cursors import DictCursor
 
@@ -34,13 +30,12 @@ try:
     from marca.myDBConnect import host, user, pw, schema
 except Exception as e:
     log.info(f'''{e}
-        error in `from marca.myDBConnect import host, user, pw, schema`
-        trying: from myDBConnect import host, user, pw, schema''')
+             error in `from marca.myDBConnect import host, user, pw, schema`
+             trying: from myDBConnect import host, user, pw, schema''')
     try:
         from myDBConnect import host, user, pw, schema
-        log.info('success __init__.py 2')
     except Exception as e:
-        log.info(f'''Nope, still... {e}''')
+        log.info(f'''Nope38, still... {e}''')
 
 
 
@@ -48,14 +43,14 @@ except Exception as e:
 def logAppDetails(appp):
     logmessage=(f'''
 
-    DEFAULTS : CURRENT SETTING
-        #app.import_name : {appp.import_name}
-        #app.static_url_path=None : {appp.static_url_path}
-        #app.static_folder='static' : {appp.static_folder}
-        #app.subdomain_matching=False : {appp.subdomain_matching}
-        #app.template_folder='templates' : {appp.template_folder}
-        #app.instance_path=None : {appp.instance_path}
-        #app.root_path=None : {appp.root_path}''')
+                DEFAULTS : CURRENT SETTING
+                #app.import_name : {appp.import_name}
+                #app.static_url_path=None : {appp.static_url_path}
+                #app.static_folder='static' : {appp.static_folder}
+                #app.subdomain_matching=False : {appp.subdomain_matching}
+                #app.template_folder='templates' : {appp.template_folder}
+                #app.instance_path=None : {appp.instance_path}
+                #app.root_path=None : {appp.root_path}''')
 
     try:
         deet = appp.instance_relative_config
@@ -97,28 +92,9 @@ def create_app(test_config=None):
                 template_folder="templates", instance_path=None,
                 instance_relative_config=True, root_path=None)
 
-    testApp = Flask(import_name=__name__,
-                static_url_path='/~pthompso/MARCA-Reading-Aide/marca-flask/marca/static',
-                static_folder='static',
-                static_host=None,
-                host_matching=False,
-                subdomain_matching=False,
-                #subdomain_matching=True,
-                template_folder='templates',
 
-                #instance_path=None,
-                instance_path = '/home/pthompso/public_html/MARCA-Reading-Aide/marca-flask/instance',
-                #instance_relative_config=False,
-                instance_relative_config=True,
-                root_path=None)
-    #testApp.config['SERVER_NAME'] = 'cs.unca.edu/~pthompso'
-    #testApp.config['SERVER_NAME'] = 'cs.unca.edu'
-    #testApp.config['SERVER_NAME'] = '0.0.0.0'
-
-    #app = testApp
 
     #: set some default configuration that the app will use
-    log.info('trying to     app.config.from_mapping')
     #app.config.from_mapping(
         #SECRET_KEY='dev', #TODO set to a random value when deploying
         #MYSQL_HOST = host,
@@ -133,10 +109,11 @@ def create_app(test_config=None):
         MYSQL_DATABASE_USER = user,
         MYSQL_DATABASE_PASSWORD = pw,
         MYSQL_DATABASE_DB = schema,
-        MYSQL_DATABASE_CURSORCLASS = 'DictCursor' #prob not necessary
+        MYSQL_DATABASE_CURSORCLASS = 'DictCursor'#,
+        #SESSION_COOKIE_HTTPONLY = false
     )
 
-    '''Added 2020-04-12'''
+    #'''Added 2020-04-12'''
     # .htaccess redirect to "MARCA-Reading-Aide/marca-flask/marca.cgi/$1" [L]
     #app.config.from_mapping(APPLICATION_ROOT = '/MARCA-Reading-Aide/marca-flask')
 
@@ -145,8 +122,6 @@ def create_app(test_config=None):
     mysql = MySQL(app, cursorclass=DictCursor)
     app.config.from_mapping(DATABASE = mysql) # yep
 
-    log.info(f'success in __init__.py:create_app() 1  and os.path.basename(os.getcwd()) \
-    {os.path.basename(os.getcwd())}')
 
     # Sijax
     flask_sijax.Sijax(app)
@@ -154,10 +129,10 @@ def create_app(test_config=None):
     app.config["SIJAX_JSON_URI"] = os.path.join('.', os.path.dirname(__file__), '/static/js/sijax/json2.js')
     #print(f'app.config["SIJAX_STATIC_PATH"]{app.config["SIJAX_STATIC_PATH"]}')
 
-    log.info(f'success in __init__.py:create_app() 2')
     if test_config is None: # overrides the default configuration
+        pass
         #: load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
+        #app.config.from_pyfile('config.py', silent=True)
     else: #tests can be configured independently of any development values
         #: load the test config if supplied above
         app.config.from_mapping(test_config)
@@ -169,7 +144,6 @@ def create_app(test_config=None):
         pass
 
 
-    log.info('success in __init__.py:create_app() 3')
     #@flask_sijax.route(app, "/hello")
     ##@app.route('/hello')
     #def hello():
@@ -180,14 +154,12 @@ def create_app(test_config=None):
         #return render_template('chat.html')
         ##return 'Hello, World!'
 
-    log.info('success in __init__.py:create_app() 4')
     from . import db
     db.init_app(app)
     '''adds teardown_appcontext
     and new flask command `init-db` which calls db's init_db_command()
     '''
 
-    log.info('success in __init__.py:create_app() 5')
 
     from . import auth
     app.register_blueprint(auth.bp)
@@ -196,17 +168,15 @@ def create_app(test_config=None):
     app.register_blueprint().
     '''
 
-    log.info('success in __init__.py:create_app() 6')
 
     try:
         from . import jax
     except Exception as e:
         log.exception(f'''Exception in importing jax from __init__
-        e: {e}''')
+                      e: {e}''')
     app.register_blueprint(jax.bp)
 
 
-    log.info('success in __init__.py:create_app() 7')
 
 
     #from . import blog
@@ -215,7 +185,6 @@ def create_app(test_config=None):
     #app.add_url_rule('/', endpoint='index')
 
 
-    log.info('success in __init__.py:create_app() 8')
     '''Now registering marca Blueprint'''
     #import logging as log
     #log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
@@ -226,8 +195,6 @@ def create_app(test_config=None):
     app.add_url_rule('/', endpoint='index')
 
 
-    #log.info(app1.config)
-    #logAppDetails(app1)
     log.info(app.config)
     logAppDetails(app)
 
@@ -246,7 +213,7 @@ def create_app(test_config=None):
         if "_csrf_token" not in session:
             session["_csrf_token"] = os.urandom(128)
         return hmac.new(app.secret_key, session["_csrf_token"],
-                digestmod=sha1).hexdigest()
+                        digestmod=sha1).hexdigest()
 
 
     '''TODO address this'''
@@ -264,9 +231,7 @@ def create_app(test_config=None):
             abort(400)
 
 
-    log.info('success in __init__.py:create_app()')
     return app
-
 
 def get_db(app):
     return MySQL(app, cursorclass=DictCursor)
@@ -281,6 +246,8 @@ def runAndGetApp():
     CGIHandler().run(app)
     return app
 
+
+app = create_app()
 
 if __name__ == '__main__':
     app = runAndGetApp()

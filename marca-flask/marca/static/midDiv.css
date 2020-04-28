@@ -18,18 +18,6 @@
     align-self: stretch; /*(inherited) auto | flex-start | flex-end | center | baseline | stretch;*/
 }
 
-#nav-bar, #documentTitle, #paragraph-summary, #document-navigation {
-    /*TODO undo this after testing*/
-/*     visibility: hidden;  */
-}
-body * {
-    /*TODO undo this after testing*/
-    /*    border: .1px solid black;*/
-    /*background-color: #80808021;*/ 
-}
-
-/*END TESTING*/
-
 
 
 /*MIDDLE DIVIDER SECTION*/

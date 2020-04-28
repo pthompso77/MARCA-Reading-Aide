@@ -1,57 +1,24 @@
 
-try2_0 = function() {
-    Sijax.request('jaxy',['arggg'],{url: '/jax' });
-};
-
-try2_1 = function() {
-    Sijax.request('jaxy',['argggs from JS'],{url: '/jax' });
-};
 
 try2 = function(arg) {
     Sijax.request('jaxy',[arg, arg.id],{url: '/jax' });
 };
-
-// reload the paragraph based on the paragraphParent of active Highlight
-
-/*
-    - Retrieves a FullText object from the database
-    - sends the text object to the review template to fill:
-        + First paragraph
-            - with highlights highlighted
-        + all other highlights in Navigation panel
-            - with paragraph separators
-        + First Highlight selected:
-            - active-highlight span filled
-            - notes filled (from DB)
-            - rating filled (from DB)
-*/
-
-
-
-// reload the Highlight review section based on active Highlight
-
-
-/*
-A Highlight object has:
-textobject
-highlightText
-*/
 
 getHighlight = function(H_id) {
     H_id = 0;
     Sijax.request('getHighlight',[H_id],{url: '/jax' });
 }
 
-var texty = {
-  firstName: function() {
+//var texty = {
+  //firstName: function() {
 
-  },
-  lastName : "Doe",
-  id       : 5566,
-  fullName : function() {
-    return this.firstName + " " + this.lastName;
-  }
-};
+  //},
+  //lastName : "Doe",
+  //id       : 5566,
+  //fullName : function() {
+    //return this.firstName + " " + this.lastName;
+  //}
+//};
 
 getTextID = function() {
     return $("#textobjectID").val()
@@ -73,26 +40,21 @@ makeInactive = function() {
 }
 
 /* This should happen any time something changes on the page! */
-
 refresh_active_highlight = function(obj) {
-    //highlightID = getHighlightID();
-    //if (highlightID != "") {
-        //saveNotes();
-        //console.log('saved notes for ' +highlightID);
-    //}
-    // get the integer value of the highlight ID (after the H)
-    objID = obj.id
+    console.log('obj passed is:')
+    console.log(obj)
+    // TODO something is not working here, not finding id ?
+    refresh_active_highlight_from_ID(obj.id);
+}
+
+refresh_active_highlight_from_ID = function(objID) {
     if (objID[0] == "N") {substringStart = 3;}
-    else {substringStart = 1;}
+    if (objID[0] == "H") {substringStart = 1;}
+    else {substringStart = 0;}
     newHighlightIndex = parseInt(objID.substr(substringStart));
     textID = getTextID();
     setHighlightID(newHighlightIndex);
-    //console.log('requesting '
-    //+"\n"+ 'refresh_active_highlight'
-    //+"\n"+ textID
-    //+"\n"+  newHighlightIndex
-    //+"\n"+ "url: '/jax'"
-    //);
+    // refresh with Sijax/ajax
     Sijax.request('refresh_active_highlight',
         [textID,newHighlightIndex],
         {url: '/jax' }
@@ -130,4 +92,46 @@ saveNotes = function() {
         {url: '/jax' }
         );
 }
+
+
+navigateParagraph = function() {
+    // get current paragraph
+    // get previous or next paragraph
+    // get first highlight from that paragraph
+    // refresh the page with that highlight
+}
+
+get_currentParagraph = function() {
+    return $('a.active[id^=Nav]').children(0).text();
+}
+
+navigateParagraph_previous = function() {
+    thisParagraph = get_currentParagraph();
+    alert('thisParagraph is '+ thisParagraph)
+    Sijax.request('getPreviousParagraph',
+    [thisParagraph],
+    {url: '/jax'}
+    );
+}
+
+navigateParagraph_next = function() {
+    thisParagraph = get_currentParagraph();
+    Sijax.request('getNextParagraph',
+    [thisParagraph],
+    {url: '/jax'}
+    );
+}
+
+initializePage = function() {
+    // bind methods to document navigation arrows on document ready
+    $("#left-arrow").bind("click",navigateParagraph_previous);
+    $("#right-arrow").bind("click",navigateParagraph_next);
+    // activate first highlight
+    highlights = $('#paragraph-summary>.highlighted');
+    console.log(highlights)
+    firstHighlight = highlights[0];
+    refresh_active_highlight(firstHighlight);
+}
+
+
 

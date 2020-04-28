@@ -1,18 +1,11 @@
 import logging as log
 log.basicConfig(filename='marcaBP.log', level=log.DEBUG, format='%(asctime)s %(message)s')
 i=0
-i+=1; log.info(f'''got to SijaxHandler at state {i}''') #1
 from marca.text_tools.FullText import FullText
-i+=1; log.info(f'''got to SijaxHandler at state {i}
-importing Highlight''') #2
 from marca.text_tools.FullText import Highlight
-i+=1; log.info(f'''got to SijaxHandler at state {i}''')
 from marca.text_tools.FullText import escape
-i+=1; log.info(f'''got to SijaxHandler at state {i}''')
 from marca.text_tools.FullText import Highlight
-i+=1; log.info(f'''got to SijaxHandler at state {i}''')
 from flask import g, session, current_app, flash, request
-i+=1; log.info(f'''got to SijaxHandler at state {i}''')
 class SijaxHandler(object):
     """A container class for all Sijax handlers.
 
@@ -166,6 +159,21 @@ class SijaxHandler(object):
         highlight = Highlight.getHighlightFromDB(textobject, highlightIndex)
         highlight.saveRating(ratingValue)
         obj_response.script(f'''console.log('updated the user rating');''')
+
+
+    @staticmethod
+    def getPreviousParagraph(obj_response, textobjectID, paragraphStart):
+        textobject = FullText.getFullText_fromDB(textobjectID)
+        paragraphDelims = textobject.getTextFromParagraphStart(paragraphStart, returnSliceOnly=True)
+        obj_response.script(f'''Sijax.request('refresh_active_highlight',
+        [{textobjectID},newHighlightIndex],
+        {{url: '/jax'}} \
+        );''')
+
+
+    @staticmethod
+    def getNextParagraph(obj_response, arg):
+        obj_response.alert('Sijax got arg: '+arg)
 
 
 

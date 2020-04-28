@@ -18,17 +18,6 @@
     align-self: stretch; /*(inherited) auto | flex-start | flex-end | center | baseline | stretch;*/
 }
 
-#nav-bar, #documentTitle, #paragraph-summary {
-    /*TODO undo this after testing*/
-    /*visibility: hidden;*/
-}
-body * {
-    /*TODO undo this after testing*/
-    /*    border: .1px solid black;*/
-/*         background-color: #80808021; */
-}
-
-/*END TESTING*/
 
 
 
@@ -64,4 +53,29 @@ body * {
     background-color: lightgray;
 }
 
+#nav-arrow-container {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 0;
+}
 
+.nav-arrow {
+    align-self: center;
+    font-size: 2em;
+    font-weight: 800;
+    margin: .1em .3em;
+    border: .2px solid gray;
+    border-radius: 25px;
+    line-height: .65;
+  box-shadow: .1px .1px 2px grey;
+}
+
+#left-arrow {
+    padding: 0em 0.7em 0.16em 0.65em;
+}
+#right-arrow {
+    padding: 0em 0.65em 0.16em 0.7em;
+}
+
+
+/* * {border: 1px dotted blue;} */

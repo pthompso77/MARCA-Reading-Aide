@@ -1,0 +1,18 @@
+{% extends 'marca_base.html' %}
+
+
+{% block summaryH2 %}
+    Summary ({{percentOfOriginal}}%)
+{% endblock summaryH2 %}
+
+{% block keywords %}
+
+                    <!--<span class="arg">{{sentences | safe}}</span>-->
+            {% if summary %}
+            
+                {% for sentence in  summary%}
+                    <span class="arg">{{sentence}}</span><br>
+                {% endfor %}
+                
+            {% endif %}
+{% endblock keywords %}
