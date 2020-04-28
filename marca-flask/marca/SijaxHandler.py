@@ -6,6 +6,11 @@ from marca.text_tools.FullText import Highlight
 from marca.text_tools.FullText import escape
 from marca.text_tools.FullText import Highlight
 from flask import g, session, current_app, flash, request
+
+def logg(message):
+    log.info(f'''from SijaxHandler: {message}''')
+
+
 class SijaxHandler(object):
     """A container class for all Sijax handlers.
 
@@ -105,6 +110,9 @@ class SijaxHandler(object):
 
     @staticmethod
     def refresh_active_highlight(obj_response, db_ID, newHighlightIndex):
+        logg(f'''message from refresh_active_highlight
+        db_ID = {db_ID}
+        newHighlightIndex = {newHighlightIndex}''')
         textobject = FullText.getFullText_fromDB(db_ID)
         newHighlight = Highlight.getHighlightFromDB(textobject, newHighlightIndex)
         obj_response.script("$('.active').each(makeInactive)")

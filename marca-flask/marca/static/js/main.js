@@ -39,17 +39,9 @@ makeInactive = function() {
     $(this).removeClass('active');
 }
 
-/* This should happen any time something changes on the page! */
-refresh_active_highlight = function(obj) {
-    console.log('obj passed is:')
-    console.log(obj)
-    // TODO something is not working here, not finding id ?
-    refresh_active_highlight_from_ID(obj.id);
-}
-
 refresh_active_highlight_from_ID = function(objID) {
     if (objID[0] == "N") {substringStart = 3;}
-    if (objID[0] == "H") {substringStart = 1;}
+    else if (objID[0] == "H") {substringStart = 1;}
     else {substringStart = 0;}
     newHighlightIndex = parseInt(objID.substr(substringStart));
     textID = getTextID();
@@ -59,6 +51,14 @@ refresh_active_highlight_from_ID = function(objID) {
         [textID,newHighlightIndex],
         {url: '/jax' }
         );
+}
+
+/* This should happen any time something changes on the page! */
+refresh_active_highlight = function(obj) {
+    console.log('obj passed is:');
+    console.log(obj);
+    // TODO something is not working here, not finding id ?
+    refresh_active_highlight_from_ID(obj.id);
 }
 
 
