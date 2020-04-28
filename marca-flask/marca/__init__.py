@@ -172,7 +172,7 @@ def create_app(test_config=None):
     try:
         from . import jax
     except Exception as e:
-        log.exception(f'''Exception in importing jax from __init__
+        log.info(f'''Exception in importing jax from __init__
                       e: {e}''')
     app.register_blueprint(jax.bp)
 
