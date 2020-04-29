@@ -12,60 +12,7 @@ def logg(message):
 
 
 class SijaxHandler(object):
-    """A container class for all Sijax handlers.
-
-    Grouping all Sijax handler functions in a class
-    (or a Python module) allows them all to be registered with
-    a single line of code.
-    """
-
-    @staticmethod
-    def save_message(obj_response, message):
-
-        message = message.strip()
-        if message == '':
-            return obj_response.alert("Empty messages are not allowed!")
-
-        # Save message to database or whatever..
-
-        import time, hashlib
-        time_txt = time.strftime("%H:%M:%S", time.gmtime(time.time()))
-        message_id = 'message_%s' % hashlib.sha256(time_txt.encode("utf-8")).hexdigest()
-
-        message = """
-        <div id="%s" style="opacity: 0;">
-            [<strong>%s</strong>] %s
-        </div>
-        """ % (message_id, time_txt, message)
-
-        # Add message to the end of the container
-        obj_response.html_append('#messages', message)
-
-        # Clear the textbox and give it focus in case it has lost it
-        obj_response.attr('#message', 'value', '')
-        obj_response.script("$('#message').focus();")
-
-        # Scroll down the messages area
-        obj_response.script("$('#messages').attr('scrollTop', $('#messages').attr('scrollHeight'));")
-
-        # Make the new message appear in 400ms
-        obj_response.script("$('#%s').animate({opacity: 1}, 400);" % message_id)
-
-
-    @staticmethod
-    def clear_messages(obj_response):
-
-        # Delete all messages from the database
-
-        # Clear the messages container
-        obj_response.html('#messages', '')
-
-        # Clear the textbox
-        obj_response.attr('#message', 'value', '')
-
-        # Ensure the texbox has focus
-        obj_response.script("$('#message').focus();")
-
+    """A container class for all Sijax methods."""
 
     @staticmethod
     def getText(obj_response, ID):
