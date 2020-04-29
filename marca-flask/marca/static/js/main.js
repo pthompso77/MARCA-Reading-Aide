@@ -100,14 +100,6 @@ saveNotes = function() {
         );
 }
 
-
-navigateParagraph = function() {
-    // get current paragraph
-    // get previous or next paragraph
-    // get first highlight from that paragraph
-    // refresh the page with that highlight
-}
-
 get_currentParagraph = function() {
     return $('a.active[id^=Nav]').children(0).text();
 }
