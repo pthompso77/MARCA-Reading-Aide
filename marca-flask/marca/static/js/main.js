@@ -9,16 +9,6 @@ getHighlight = function(H_id) {
     Sijax.request('getHighlight',[H_id],{url: '/jax' });
 }
 
-//var texty = {
-  //firstName: function() {
-
-  //},
-  //lastName : "Doe",
-  //id       : 5566,
-  //fullName : function() {
-    //return this.firstName + " " + this.lastName;
-  //}
-//};
 
 getTextID = function() {
     return $("#textobjectID").val()
