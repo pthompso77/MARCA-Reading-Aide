@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "starting virtual environment"
+cd /home/pthompso/public_html/MARCA-Reading-Aide/marca-flask
+python3 -m pip install --upgrade pip
+python3 -m pip install --no-cache-dir  virtualenv
+python3 -m virtualenv myvenv
+source myvenv/bin/activate
+python3 -m pip install --upgrade pip
+export FLASK_APP=marca
+export FLASK_ENV=development
+python3 -m pip install --no-cache-dir -r requirements.txt
+flask run

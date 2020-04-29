@@ -1,6 +1,7 @@
 """Sets up connection to database"""
 
-from flaskext.mysql import MySQL
+#from flaskext.mysql import MySQL
+from flask_mysqldb import MySQL
 #from mysql import connector
 #print('got mysql',connector)
 
