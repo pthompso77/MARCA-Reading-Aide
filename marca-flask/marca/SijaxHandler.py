@@ -36,24 +36,8 @@ class SijaxHandler(object):
         user = g.user['userID']
         highlights = g.user['Highlights']
         activeHighlight = g.user['activeHighlight']
-        '''TODO
-        - build the Highlight object by ID
-          - getting it's parent text
-          - get the paragraph text from the full text
-        - get ratings and notes from DB (after making this table!)
-        -
-        '''
         obj_response.alert(f'got user: {user} and H_id: {H_id}')
 
-
-    @staticmethod
-    def shell(obj_response, cmd):
-        '''no...'''
-        def my_exec(code):
-            exec('global i; i = %s' % code)
-            global i
-            return i
-        obj_response.html('#shell',my_exec(cmd))
 
     @staticmethod
     def refresh_active_highlight(obj_response, db_ID, newHighlightIndex):
@@ -101,7 +85,6 @@ class SijaxHandler(object):
 
     @staticmethod
     def saveUserNotes(obj_response, textobjectID, highlightIndex, newNotes):
-        #saveNotes
         textobject = FullText.getFullText_fromDB(textobjectID)
         highlight = Highlight.getHighlightFromDB(textobject, highlightIndex)
         highlight.saveNotes(newNotes)
@@ -110,7 +93,6 @@ class SijaxHandler(object):
 
     @staticmethod
     def saveUserRating(obj_response, textobjectID, highlightIndex, ratingValue):
-        #saveNotes
         textobject = FullText.getFullText_fromDB(textobjectID)
         highlight = Highlight.getHighlightFromDB(textobject, highlightIndex)
         highlight.saveRating(ratingValue)
