@@ -50,7 +50,11 @@ refresh_active_highlight_from_ID = function(objID) {
     if (objID[0] == "N") {substringStart = 3;}
     else if (objID[0] == "H") {substringStart = 1;}
     else {substringStart = 0;}
-    newHighlightIndex = parseInt(objID.substr(substringStart));
+    if (typeof(objID)=="string") {
+        newHighlightIndex = parseInt(objID.substr(substringStart));
+    } else {
+        newHighlightIndex = objID;
+    }
     textID = getTextID();
     setHighlightID(newHighlightIndex);
     // refresh with Sijax/ajax
@@ -67,8 +71,6 @@ refresh_active_highlight = function(obj) {
     // TODO something is not working here, not finding id ?
     refresh_active_highlight_from_ID(obj.id);
 }
-
-
 
 
 setRating = function(ratingValue) {
@@ -121,8 +123,27 @@ get_highlightIDforNextParagraph = function(thisHighlightID) {
     }
 }
 
+get_parentParagraph_fromNavHighlight = function(navElem) {
+    return parseInt(navElem.firstElementChild.innerHTML);
+}
 
-get_highlightIDforPreviousParagraph = function(thisHighlightID) {
+get_highlightIDforNextParagraph = function() {
+    var navs = document.getElementsByClassName('nav-links');
+    var currentParagraphID = thisID = get_currentParagraph();
+    for (i = 0; i < navs.length; i++) {
+        var nav = navs[i];
+        var thisID = getIDfromHighlightObjectID(nav.id);
+        if (thisID > currentParagraphID) { // then this highlight comes after the current paragraph (but might still be in it)
+            var parent = get_parentParagraph_fromNavHighlight(nav);
+            if (parent != currentParagraphID) { // then this is the next paragraph
+                return thisID;
+            }
+        }
+    }
+}
+
+
+get_highlightIDforPreviousParagraph = function() {
     var navs = document.getElementsByClassName('nav-links');
     var currentParagraphID = thisID = get_currentParagraph();
     for (i = navs.length-1; i >= 0; i--) {
@@ -135,22 +156,13 @@ get_highlightIDforPreviousParagraph = function(thisHighlightID) {
 }
 
 navigateParagraph_previous = function() {
-    thisParagraph = get_currentParagraph();
-    fulltextID = getTextID();
-    alert('thisParagraph is '+ thisParagraph)
-    Sijax.request('getPreviousParagraph',
-    [fulltextID, thisParagraph],
-    {url: '/jax'}
-    );
-
+    var IDfromPreviousParagraph = get_highlightIDforPreviousParagraph();
+    refresh_active_highlight_from_ID(IDfromPreviousParagraph);
 }
 
 navigateParagraph_next = function() {
-    thisParagraph = get_currentParagraph();
-    Sijax.request('getNextParagraph',
-    [thisParagraph],
-    {url: '/jax'}
-    );
+    var IDfromNextParagraph = get_highlightIDforNextParagraph();
+    refresh_active_highlight_from_ID(IDfromNextParagraph);
 }
 
 initializePage = function() {
