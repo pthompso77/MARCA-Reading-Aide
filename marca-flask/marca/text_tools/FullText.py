@@ -183,8 +183,15 @@ class FullText(dict):
         #''')
 
         # get things from DB
-        query = f'''SELECT * FROM FullTextObject WHERE  FullText_ID = {FullText_ID}'''
-        cur.execute(query)
+        try:
+            query = f'''SELECT * FROM FullTextObject WHERE  FullText_ID = {FullText_ID}'''
+            cur.execute(query)
+            log.info(f'''FullText getFullText_fromDB SUCCESS with query: {query}''')
+        except Exception as e:
+            log.info(f'''FullText getFullText_fromDB has problems with query: {query}''')
+            query = f'''SELECT * FROM FullText WHERE  FullText_ID = {FullText_ID}'''
+            cur.execute(query)
+            log.info(f'''FullText getFullText_fromDB SUCCESS with query: {query}''')
         GET_FROM_DB = cur.fetchone()
         #flash(f'query is {query}')
         #flash(f'Got GET_FROM_DB: {GET_FROM_DB}')

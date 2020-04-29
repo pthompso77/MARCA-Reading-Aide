@@ -39,6 +39,13 @@ makeInactive = function() {
     $(this).removeClass('active');
 }
 
+getIDfromHighlightObjectID = function(objID) {
+    if (objID[0] == "N") {substringStart = 3;}
+    else if (objID[0] == "H") {substringStart = 1;}
+    else {substringStart = 0;}
+    return parseInt(objID.substr(substringStart));
+}
+
 refresh_active_highlight_from_ID = function(objID) {
     if (objID[0] == "N") {substringStart = 3;}
     else if (objID[0] == "H") {substringStart = 1;}
@@ -105,13 +112,66 @@ get_currentParagraph = function() {
     return $('a.active[id^=Nav]').children(0).text();
 }
 
+get_highlightIDforNextParagraph = function(thisHighlightID) {
+    var navs = document.getElementsByClassName('nav-links');
+    // set previousID to the last ID in the list
+    var previousHighlight = parseInt(navs[navs.length-1].firstElementChild.innerHTML);
+    for (i = navs.length-1; i >= 0; i--) {
+        var n = navs[i];
+        var p = n.firstElementChild.innerHTML;
+        p = parseInt(p);
+        if (p <= thisHighlightID) {
+            return previousHighlight.id;
+        }
+        console.log('looking at ' + p);
+        console.log('\tnav is '+ n.id);
+        var previousHighlight = n;
+    }
+}
+
+
+get_highlightIDforPreviousParagraph = function(thisHighlightID) {
+    var navs = document.getElementsByClassName('nav-links');
+    var currentParagraphID = thisID = get_currentParagraph();
+    console.log('this paragraphID = ' + thisID)
+    for (i = navs.length-1; i >= 0; i--) {
+        var n = navs[i];
+        var thisID = getIDfromHighlightObjectID(n.id);
+        console.log('thisID = ' + thisID)
+        if (thisID < currentParagraphID) {
+            return thisID;
+        }
+    }
+}
+
+    // set previousID to the first ID in the list
+    var previousHighlight = parseInt(navs[0].firstElementChild.innerHTML);
+    targetHighlight = 0;
+    for (i = 0; i < navs.length; i++) {
+        var n = navs[i];
+        var p = n.firstElementChild.innerHTML;
+        p = parseInt(p);
+
+        //
+
+        //if (p >= thisHighlightID) {
+            //return previousHighlight.id;
+        //}
+        //console.log('looking at ' + p);
+        //console.log('\tnav is '+ n.id + '\n\tparent is');
+        //var previousHighlight = n;
+    }
+}
+
 navigateParagraph_previous = function() {
     thisParagraph = get_currentParagraph();
+    fulltextID = getTextID();
     alert('thisParagraph is '+ thisParagraph)
     Sijax.request('getPreviousParagraph',
-    [thisParagraph],
+    [fulltextID, thisParagraph],
     {url: '/jax'}
     );
+
 }
 
 navigateParagraph_next = function() {
@@ -128,7 +188,6 @@ initializePage = function() {
     $("#right-arrow").bind("click",navigateParagraph_next);
     // activate first highlight
     highlights = $('#paragraph-summary>.highlighted');
-    console.log(highlights)
     firstHighlight = highlights[0];
     refresh_active_highlight(firstHighlight);
 }
