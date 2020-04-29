@@ -247,8 +247,7 @@ def load_logged_in_user():
     exist, g.user will be None.
     '''
     user_id = session.get('user_id')
-    log.info(f'''
-    in load_logged_in_user: got user_id = {user_id}''')
+    #log.info(f'''in load_logged_in_user: got user_id = {user_id}''')
     #user_id = 1
     #return f'user_id in load_logged...{user_id}'
 
@@ -263,15 +262,7 @@ def load_logged_in_user():
         )
         db.commit()
         g.user = cur.fetchone()
-        log.info(f'''
-
-        ==================
-        GOT USER
-
-        user = {g.user}
-
-        ==================
-        ''')
+        #log.info(f'''GOT user = {g.user}''')
 
     return
 

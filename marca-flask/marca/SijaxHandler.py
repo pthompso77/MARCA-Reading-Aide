@@ -110,9 +110,6 @@ class SijaxHandler(object):
 
     @staticmethod
     def refresh_active_highlight(obj_response, db_ID, newHighlightIndex):
-        logg(f'''message from refresh_active_highlight
-        db_ID = {db_ID}
-        newHighlightIndex = {newHighlightIndex}''')
         textobject = FullText.getFullText_fromDB(db_ID)
         newHighlight = Highlight.getHighlightFromDB(textobject, newHighlightIndex)
         obj_response.script("$('.active').each(makeInactive)")
@@ -147,7 +144,11 @@ class SijaxHandler(object):
         # notes
         userNotes = newHighlight.userNotes
         #userNotes = escape(userNotes)
-        obj_response.script(f'''$("#userNotes").val(escape('{userNotes}'))''')
+        log.info(f'userNotes = {userNotes}')
+        from marca.text_tools.FullText import escape
+        userNotes = escape(userNotes)
+        #obj_response.script(f'''$("#userNotes").val(unescape(escape("{userNotes}")))''')
+        obj_response.script(f'''$("#userNotes").val('{userNotes}')''')
 
 
 
@@ -171,12 +172,26 @@ class SijaxHandler(object):
 
     @staticmethod
     def getPreviousParagraph(obj_response, textobjectID, paragraphStart):
-        textobject = FullText.getFullText_fromDB(textobjectID)
+        try:
+            textobject = FullText.getFullText_fromDB(textobjectID)
+        except Exception as e:
+            logg(f'''Exception trying to get FullText with ID={textobjectID} \
+            in paragraphStart1: {e}''')
+            textobject = None
+
         paragraphDelims = textobject.getTextFromParagraphStart(paragraphStart, returnSliceOnly=True)
-        obj_response.script(f'''Sijax.request('refresh_active_highlight',
-        [{textobjectID},newHighlightIndex],
-        {{url: '/jax'}} \
-        );''')
+        logg(f'ok so far 2...paragraphDelims = {paragraphDelims.start}')
+
+        try:
+            obj_response.script(f'''alert('trying nested Sijax with index: ' + newHighlightIndex);
+            Sijax.request('refresh_active_highlight',
+            [{textobjectID},newHighlightIndex],
+            {{url: '/jax'}} \
+            );
+            console.log("{textobject.paragraphDelims}")''')
+            logg('ok so far 3...')
+        except Exception as e:
+            logg(f'''Exception in paragraphStart2: {e}''')
 
 
     @staticmethod
