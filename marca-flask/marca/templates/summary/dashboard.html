@@ -140,8 +140,11 @@ Dashboard
     <h2>Your Saved Documents</h2>
     <h4>select a text to review</h4>
     {% for text in userTexts %}
+        {% set textID1 = text['FullText_ID'] %}
+        {% set url = url_for('marcaBP.review', textID=textID1) %}
         <div id="{{text['FullText_ID']}}" class="documentPreview flex-column"
-        onclick="location.href='{{text['FullText_ID']}}/review';">
+        onclick="location.href='{{ url }}';">
+
             <span class="docTitle" style="min-height: 1em">
                 {{text['title']}}
             </span>
@@ -187,7 +190,7 @@ Dashboard
             <h2>Load New Document</h2>
         {% endblock bottom_H1 %}
             <div id="uploadText" class="flex-column">
-                <form id="uploadTextForm"  class="flex-column" action="/dashboard" method="POST">
+                <form id="uploadTextForm"  class="flex-column" action="{{ url_for('marcaBP.dashboard') }}" method="POST">
                     <input type="text" name="textTitle" placeholder="Title (optional)">
                     <textarea id="newFullText" name="newFullText"></textarea>
                     <input type="submit" value="Submit">
