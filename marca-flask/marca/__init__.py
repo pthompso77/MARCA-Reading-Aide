@@ -104,7 +104,7 @@ def create_app(test_config=None):
         #MYSQL_CURSORCLASS = 'DictCursor'
     #)
     app.config.from_mapping(
-        SECRET_KEY= os.urandom(128),#'dev',
+        SECRET_KEY='dev'.encode(), # os.urandom(128),#'dev',
         MYSQL_DATABASE_HOST = host,
         MYSQL_DATABASE_USER = user,
         MYSQL_DATABASE_PASSWORD = pw,

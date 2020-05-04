@@ -325,7 +325,10 @@ def stringToList(stringIn, replaceStr="), ", replaceWith=")|", splitOn="|"):
     tempList = stringIn.replace(replaceStr,replaceWith).split(splitOn)
     #: evaluate each item in the list
     for thing in tempList:
-        listOut.append(eval(thing))
+        try:
+            listOut.append(eval(thing))
+        except SyntaxError as s:
+            log.info(f'''SyntaxError in FullText.stringToList with tempList = {tempList}''')
     return listOut
 
 

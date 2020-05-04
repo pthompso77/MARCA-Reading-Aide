@@ -34,7 +34,9 @@
     .TODO {background-color: red; max-width: 50px; display: none}
     </style>
     <script>
-      // $(window).load(initializePage());
+      getJaxURL = function() {
+        return '{{ url_for('jax.jax') }}';
+      }
       window.onload = initializePage;
     </script>
 

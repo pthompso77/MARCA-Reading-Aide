@@ -246,10 +246,12 @@ def load_logged_in_user():
     the length of the request. If there is no user id, or if the id doesn’t
     exist, g.user will be None.
     '''
+    try:
+        logClientRequest()
+    except:
+        log.info('some problem in trying logClientRequest')
+
     user_id = session.get('user_id')
-    #log.info(f'''in load_logged_in_user: got user_id = {user_id}''')
-    #user_id = 1
-    #return f'user_id in load_logged...{user_id}'
 
     if user_id is None:
         g.user = None
@@ -267,4 +269,33 @@ def load_logged_in_user():
     return
 
 
+def logClientRequest():
+    try:
+        logformat = log.Formatter('%(asctime)s %(message)s')
+    except Exception as e:
+        log.info(f'some problem in logClientRequest1: {e}')
+        return
+
+    try:
+        handler = log.FileHandler('request_activity.log')
+        handler.setFormatter(logformat)
+        requestLog = log.getLogger('request_activity')
+        requestLog.addHandler(handler)
+    except Exception as e:
+        log.info(f'''some problem in logClientRequest2: {e}''')
+        return
+
+
+
+    from os import environ
+    client = ""
+    try:
+        #client = environ['REMOTE_HOST']
+        client = environ['REMOTE_ADDR']
+    except Exception as e:
+        client = f"? {e}"
+    try:
+        requestLog.info(f'''request from IP: {client}''')
+    except Exception as e:
+        log.info(f'''some problem in logClientRequest3: {e}''')
 

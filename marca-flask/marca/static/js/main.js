@@ -1,24 +1,14 @@
 
 
 try2 = function(arg) {
-    Sijax.request('jaxy',[arg, arg.id],{url: '/jax' });
+    Sijax.request('jaxy',[arg, arg.id],{url: getJaxURL()});
 };
 
 getHighlight = function(H_id) {
     H_id = 0;
-    Sijax.request('getHighlight',[H_id],{url: '/jax' });
+    Sijax.request('getHighlight',[H_id],{url: getJaxURL()});
 }
 
-//var texty = {
-  //firstName: function() {
-
-  //},
-  //lastName : "Doe",
-  //id       : 5566,
-  //fullName : function() {
-    //return this.firstName + " " + this.lastName;
-  //}
-//};
 
 getTextID = function() {
     return $("#textobjectID").val()
@@ -50,13 +40,17 @@ refresh_active_highlight_from_ID = function(objID) {
     if (objID[0] == "N") {substringStart = 3;}
     else if (objID[0] == "H") {substringStart = 1;}
     else {substringStart = 0;}
-    newHighlightIndex = parseInt(objID.substr(substringStart));
+    if (typeof(objID)=="string") {
+        newHighlightIndex = parseInt(objID.substr(substringStart));
+    } else {
+        newHighlightIndex = objID;
+    }
     textID = getTextID();
     setHighlightID(newHighlightIndex);
     // refresh with Sijax/ajax
     Sijax.request('refresh_active_highlight',
         [textID,newHighlightIndex],
-        {url: '/jax' }
+        {url: getJaxURL()}
         );
 }
 
@@ -69,8 +63,6 @@ refresh_active_highlight = function(obj) {
 }
 
 
-
-
 setRating = function(ratingValue) {
     textobjectID = getTextID();
     highlightID = getHighlightID();
@@ -81,7 +73,7 @@ setRating = function(ratingValue) {
     console.log('requesting ' + [textobjectID,highlightID,ratingValue])
     Sijax.request('saveUserRating',
     [textobjectID,highlightID,ratingValue],
-    {url: '/jax' }
+    {url: getJaxURL()}
     );
 }
 
@@ -96,20 +88,61 @@ saveNotes = function() {
     newNotes = $("#userNotes").val();
     Sijax.request('saveUserNotes',
         [textobjectID,highlightID,newNotes],
-        {url: '/jax' }
+        {url: getJaxURL()}
         );
-}
-
-
-navigateParagraph = function() {
-    // get current paragraph
-    // get previous or next paragraph
-    // get first highlight from that paragraph
-    // refresh the page with that highlight
 }
 
 get_currentParagraph = function() {
     return $('a.active[id^=Nav]').children(0).text();
+}
+
+get_highlightIDforNextParagraph = function(thisHighlightID) {
+    var navs = document.getElementsByClassName('nav-links');
+    // set previousID to the last ID in the list
+    var previousHighlight = parseInt(navs[navs.length-1].firstElementChild.innerHTML);
+    for (i = navs.length-1; i >= 0; i--) {
+        var n = navs[i];
+        var p = n.firstElementChild.innerHTML;
+        p = parseInt(p);
+        if (p <= thisHighlightID) {
+            return previousHighlight.id;
+        }
+        console.log('looking at ' + p);
+        console.log('\tnav is '+ n.id);
+        var previousHighlight = n;
+    }
+}
+
+get_parentParagraph_fromNavHighlight = function(navElem) {
+    return parseInt(navElem.firstElementChild.innerHTML);
+}
+
+get_highlightIDforNextParagraph = function() {
+    var navs = document.getElementsByClassName('nav-links');
+    var currentParagraphID = thisID = get_currentParagraph();
+    for (i = 0; i < navs.length; i++) {
+        var nav = navs[i];
+        var thisID = getIDfromHighlightObjectID(nav.id);
+        if (thisID > currentParagraphID) { // then this highlight comes after the current paragraph (but might still be in it)
+            var parent = get_parentParagraph_fromNavHighlight(nav);
+            if (parent != currentParagraphID) { // then this is the next paragraph
+                return thisID;
+            }
+        }
+    }
+}
+
+
+get_highlightIDforPreviousParagraph = function() {
+    var navs = document.getElementsByClassName('nav-links');
+    var currentParagraphID = thisID = get_currentParagraph();
+    for (i = navs.length-1; i >= 0; i--) {
+        var n = navs[i];
+        var thisID = getIDfromHighlightObjectID(n.id);
+        if (thisID < currentParagraphID) {
+            return thisID;
+        }
+    }
 }
 
 get_highlightIDforNextParagraph = function(thisHighlightID) {
@@ -164,22 +197,11 @@ get_highlightIDforPreviousParagraph = function(thisHighlightID) {
 }
 
 navigateParagraph_previous = function() {
-    thisParagraph = get_currentParagraph();
-    fulltextID = getTextID();
-    alert('thisParagraph is '+ thisParagraph)
-    Sijax.request('getPreviousParagraph',
-    [fulltextID, thisParagraph],
-    {url: '/jax'}
-    );
-
 }
 
 navigateParagraph_next = function() {
-    thisParagraph = get_currentParagraph();
-    Sijax.request('getNextParagraph',
-    [thisParagraph],
-    {url: '/jax'}
-    );
+    var IDfromNextParagraph = get_highlightIDforNextParagraph();
+    refresh_active_highlight_from_ID(IDfromNextParagraph);
 }
 
 initializePage = function() {
