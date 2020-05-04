@@ -88,11 +88,6 @@ userTable = 'userAccounts'
 
 @bp.route('/')
 def index():
-    #db = get_db().connect()
-    #cur = db.cursor()
-
-    # TODO -
-
     return render_template('summary/index.html')
 
 
@@ -212,7 +207,11 @@ def review(textID):
         # TODO: get more than just the text from DB, etc... (make a FullText object?)
 
     g.user['Highlights'] = highlightedSections
-    g.user['activeHighlight'] = next(iter(highlightedSections.values()))
+    try:
+        g.user['activeHighlight'] = next(iter(highlightedSections.values()))
+    except StopIteration as s:
+        log.info(f'''marcaBP.review() excepted StopIteration: {s}''')
+        g.user['activeHighlight'] = ""
 
     return render_template('summary/review.html',textID=textID,
                            text=textobject.text, textobject=textobject,
@@ -252,8 +251,14 @@ def prepareParagraphForDisplay(textobject, paragraphIndex=0, paragraphStartDelim
             continue
         if delim.start >= stop:
             break
+        '''start delete?'''
+        delim_start = '...'
+        try:
+            delim_start = wordsDict[delim.start]
+        except:
+            pass
         startWord = f'''&nbsp;<span id="H{delim.start}"class=highlighted onclick="refresh_active_highlight(this)">
-        {wordsDict[delim.start]}'''
+        {delim_start}'''
         wordsDict[delim.start] = startWord
         if previousPointer >= 0:
             wordsDict[previousPointer] =  '</span>' + wordsDict[previousPointer]
@@ -265,7 +270,8 @@ def prepareParagraphForDisplay(textobject, paragraphIndex=0, paragraphStartDelim
         #flash(wordsDict[delim.start])
         #flash(wordsDict[delim.stop])
     # finish up
-    wordsDict[previousPointer] =  '</span>' + wordsDict[previousPointer]
+    if previousPointer >= 0:
+        wordsDict[previousPointer] =  '</span>' + wordsDict[previousPointer]
 
     for index, word in wordsDict.items():
         if index < start:

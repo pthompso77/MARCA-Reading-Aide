@@ -1,12 +1,12 @@
 
 
 try2 = function(arg) {
-    Sijax.request('jaxy',[arg, arg.id],{url: '/jax' });
+    Sijax.request('jaxy',[arg, arg.id],{url: getJaxURL()});
 };
 
 getHighlight = function(H_id) {
     H_id = 0;
-    Sijax.request('getHighlight',[H_id],{url: '/jax' });
+    Sijax.request('getHighlight',[H_id],{url: getJaxURL()});
 }
 
 
@@ -50,7 +50,7 @@ refresh_active_highlight_from_ID = function(objID) {
     // refresh with Sijax/ajax
     Sijax.request('refresh_active_highlight',
         [textID,newHighlightIndex],
-        {url: '/jax' }
+        {url: getJaxURL()}
         );
 }
 
@@ -73,7 +73,7 @@ setRating = function(ratingValue) {
     console.log('requesting ' + [textobjectID,highlightID,ratingValue])
     Sijax.request('saveUserRating',
     [textobjectID,highlightID,ratingValue],
-    {url: '/jax' }
+    {url: getJaxURL()}
     );
 }
 
@@ -88,7 +88,7 @@ saveNotes = function() {
     newNotes = $("#userNotes").val();
     Sijax.request('saveUserNotes',
         [textobjectID,highlightID,newNotes],
-        {url: '/jax' }
+        {url: getJaxURL()}
         );
 }
 
