@@ -25,6 +25,6 @@ regex==2020.4.4
 Sijax==0.3.2
 six==1.14.0
 tqdm==4.66.3
-virtualenv==20.0.18
+virtualenv==20.26.6
 Werkzeug>=2.2.3
 zipp==3.19.1
